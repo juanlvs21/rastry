@@ -1,0 +1,11 @@
+{
+  "$schema": "../../packages/contracts/schema/pipeline.schema.json",
+  "version": 1,
+  "name": "web",
+  "operations": [
+    { "type": "resize", "width": 1600, "fit": "contain" },
+    { "type": "convert", "format": "webp", "quality": 82 },
+    { "type": "strip-metadata" }
+  ]
+}
+
