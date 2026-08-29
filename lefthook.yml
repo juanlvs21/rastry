@@ -1,0 +1,11 @@
+commit-msg:
+  commands:
+    commitlint:
+      run: bun run lint:commit --edit "{1}"
+      fail_text: "Commit message does not follow Conventional Commits. Use type(scope): subject."
+
+pre-push:
+  commands:
+    check:
+      run: bun run check
+      fail_text: "Project checks must pass before pushing."

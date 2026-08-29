@@ -17,5 +17,12 @@ Thanks for helping build Rastry. Keep changes aligned with the local-first and n
 - The desktop webview never receives direct filesystem access; privileged operations belong in the Electrobun main process and are exposed through typed RPC.
 - Source files are never overwritten by default.
 
-Use Conventional Commit-style subjects where practical, for example `feat(cli): add preset loading` or `fix(core): reject output collisions`.
+## Commits
 
+All commits must use the Conventional Commits format:
+
+- `feat(cli): add preset loading`
+- `fix(core): reject output collisions`
+- `docs(docs): update installation guide`
+
+The `commit-msg` hook validates commit messages with commitlint, and the `pre-push` hook runs `bun run check`. Lefthook is installed automatically by `bun install` through the root `prepare` script.

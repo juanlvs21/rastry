@@ -16,6 +16,8 @@
     }
   },
   "scripts": {
+    "prepare": "lefthook install",
+    "lint:commit": "commitlint",
     "dev:cli": "bun --filter @rastry/cli dev",
     "dev:desktop": "bun --filter @rastry/desktop dev",
     "dev:desktop:hmr": "bun --filter @rastry/desktop dev:hmr",
@@ -24,5 +26,10 @@
     "typecheck": "bun --filter './packages/*' typecheck && bun --filter @rastry/cli typecheck && bun --filter @rastry/desktop typecheck",
     "test": "bun test",
     "check": "bun run typecheck && bun run test"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "21.2.2",
+    "@commitlint/config-conventional": "21.2.2",
+    "lefthook": "2.1.10"
   }
 }
