@@ -4,6 +4,12 @@ Rastry is a local-first, open-source image optimization and transformation tool.
 
 The project is at the foundation stage. The CLI can already parse a safe transformation request and produce an execution plan without touching source files. Actual image encoding remains behind the `@rastry/image-engine` adapter while the Bun image API spike is completed.
 
+## Why Rastry exists
+
+Rastry started as a personal need. While working on products, landing pages, websites, and posts for my own site, I kept repeating the same workflow: open one app to crop an image, another to compress the result, and a third one to convert it to a different format. Rastry is an attempt to bring that everyday workflow into one local-first tool.
+
+The rise of AI-assisted software development also shaped the project. The CLI makes image optimization available to coding agents such as Codex and Claude Code, so they can transform images as part of an automated workflow instead of requiring every step to be done manually in a separate app.
+
 ## Requirements
 
 - [Bun](https://bun.sh/) 1.4.0 or newer.
