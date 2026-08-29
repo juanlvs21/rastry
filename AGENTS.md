@@ -37,7 +37,11 @@ Dependency direction is `apps -> core/image-engine -> contracts`. Never import f
 
 - Prefer small modules with named exports and explicit types at package boundaries.
 - Use `unknown` at untrusted boundaries, validate it, and avoid `any`.
-- Add tests beside the package under `test/` for every safety or planning rule.
+- Keep tests in a dedicated `test/` tree owned by the package or app; never place test files beside the source file they exercise.
+- Organize tests by behavior or user-facing feature (for example, `test/integration/safe-planning.test.ts`), not by production file. One test file may cover several modules when they form one meaningful workflow.
+- Prefer integration and public-contract tests through package or CLI boundaries. Add unit tests only for pure logic with meaningful edge cases that are not already covered by integration tests.
+- Cover safety invariants, important failure modes, and observable behavior; do not add tests solely to increase line or branch coverage.
+- Use deterministic fixtures or temporary directories, and explicitly verify that dry-run and planning paths perform no filesystem mutations.
 - Update an ADR in `docs/adr/` for decisions that alter package boundaries, runtime choices, persistence formats, or security guarantees.
 - Keep generated directories (`node_modules`, `dist`, `build`, `.hutch`) untracked.
 

@@ -1,6 +1,10 @@
 #!/usr/bin/env bun
 
-import type { ImageFormat, PipelineOperation } from "@rastry/contracts";
+import {
+  isSupportedOutputFormat,
+  type ImageFormat,
+  type PipelineOperation,
+} from "@rastry/contracts";
 import { createExecutionPlan, RastryError } from "@rastry/core";
 
 const VERSION = "0.0.0";
@@ -13,12 +17,12 @@ Usage:
   rastry <input...> --to <png|jpeg|webp> [options]
 
 Options:
-  --to <format>        Output format (required in the initial scaffold)
+  --to <format>        Output format (required for planning)
   --quality <1-100>    JPEG/WebP quality
   --max-width <px>     Proportional maximum width
   --max-height <px>    Proportional maximum height
   --output <directory> Output directory (default: ./rastry-output beside input)
-  --dry-run            Print the plan without writing files (current default)
+  --dry-run            Print the plan without writing files (default)
   --json               Print machine-readable JSON
   --help                Show this help
   --version             Show the version
@@ -75,7 +79,7 @@ function parseArgs(args: string[]): CliOptions {
     index += 1;
 
     if (argument === "--to") {
-      if (value !== "png" && value !== "jpeg" && value !== "webp") {
+      if (!isSupportedOutputFormat(value)) {
         throw new RastryError("INVALID_OPTION", `Unsupported format: ${value}.`);
       }
       options.format = value;
@@ -107,7 +111,7 @@ function run(args: string[]): void {
 
   const options = parseArgs(args);
   if (options.format === undefined) {
-    throw new RastryError("MISSING_FORMAT", "--to is required in the initial scaffold.");
+    throw new RastryError("MISSING_FORMAT", "--to is required for planning.");
   }
 
   const operations: PipelineOperation[] = [];

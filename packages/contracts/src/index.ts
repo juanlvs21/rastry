@@ -5,6 +5,10 @@ export const supportedOutputFormats = ["png", "jpeg", "webp"] as const;
 
 export type ImageFormat = (typeof supportedInputFormats)[number];
 
+export function isSupportedOutputFormat(value: unknown): value is ImageFormat {
+  return typeof value === "string" && supportedOutputFormats.some((format) => format === value);
+}
+
 export type ResizeOperation = {
   type: "resize";
   width?: number;
