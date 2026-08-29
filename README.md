@@ -43,7 +43,7 @@ packages/
   contracts/       Shared, versioned configuration types
   core/            Planning, validation, and output-path safety
   image-engine/    Bun image processing adapter boundary
-docs/adr/           Architecture decision records
+docs/changes/       ADRs, features, and implementation change records
 examples/presets/   Versioned example configurations
 ```
 

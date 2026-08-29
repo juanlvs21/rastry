@@ -42,7 +42,7 @@ Dependency direction is `apps -> core/image-engine -> contracts`. Never import f
 - Prefer integration and public-contract tests through package or CLI boundaries. Add unit tests only for pure logic with meaningful edge cases that are not already covered by integration tests.
 - Cover safety invariants, important failure modes, and observable behavior; do not add tests solely to increase line or branch coverage.
 - Use deterministic fixtures or temporary directories, and explicitly verify that dry-run and planning paths perform no filesystem mutations.
-- Update an ADR in `docs/adr/` for decisions that alter package boundaries, runtime choices, persistence formats, or security guarantees.
+- Update a record in `docs/changes/` for decisions or implementation changes that alter package boundaries, runtime choices, persistence formats, security guarantees, or user-facing behavior. Use the shared `Change NNNN` format and continue the directory's sequential numbering.
 - Keep generated directories (`node_modules`, `dist`, `build`, `.hutch`) untracked.
 
 ## Codebase discovery
