@@ -2,7 +2,7 @@
 
 Rastry is a local-first, open-source image optimization and transformation tool. This repository contains the shared TypeScript core, a Bun CLI, and an Electrobun + React desktop application.
 
-The project is at the foundation stage. The CLI can already parse a safe transformation request and produce an execution plan without touching source files. Actual image encoding remains behind the `@rastry/image-engine` adapter while the Bun image API spike is completed.
+The project is at the foundation stage. The CLI can parse a safe transformation request and execute local PNG, JPEG, and WebP transformations through the `@rastry/image-engine` adapter. Planning remains the default, so source files are never modified unless `--execute` is explicitly provided.
 
 ## Why Rastry exists
 
@@ -22,6 +22,7 @@ The rise of AI-assisted software development also shaped the project. The CLI ma
 bun install
 bun run dev:cli -- --help
 bun run dev:cli -- photo.png --to webp --quality 82 --dry-run
+bun run dev:cli -- assets/test/landscape-mountains.jpg --to webp --max-width 1200 --execute
 ```
 
 Launch the desktop application with:

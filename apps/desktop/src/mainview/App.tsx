@@ -32,8 +32,8 @@ export function App() {
         </p>
         <div className="dropzone" role="group" aria-label="File area not yet enabled">
           <span className="dropIcon">↘</span>
-          <strong>Engine ready to connect</strong>
-          <small>Image processing is coming in the next increment.</small>
+          <strong>Engine ready for the CLI</strong>
+          <small>Desktop execution will connect through typed RPC in the next increment.</small>
         </div>
       </section>
 

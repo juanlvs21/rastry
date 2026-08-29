@@ -3,9 +3,11 @@
 import {
   isSupportedOutputFormat,
   type ImageFormat,
+  type ExecutionSummary,
   type PipelineOperation,
 } from "@rastry/contracts";
 import { createExecutionPlan, RastryError } from "@rastry/core";
+import { createImageEngine } from "@rastry/image-engine";
 
 const VERSION = "0.0.0";
 
@@ -17,12 +19,13 @@ Usage:
   rastry <input...> --to <png|jpeg|webp> [options]
 
 Options:
-  --to <format>        Output format (required for planning)
+  --to <format>        Output format (required)
   --quality <1-100>    JPEG/WebP quality
   --max-width <px>     Proportional maximum width
   --max-height <px>    Proportional maximum height
   --output <directory> Output directory (default: ./rastry-output beside input)
   --dry-run            Print the plan without writing files (default)
+  --execute            Process files and write new outputs safely
   --json               Print machine-readable JSON
   --help                Show this help
   --version             Show the version
@@ -40,6 +43,7 @@ type CliOptions = {
   maxHeight?: number;
   output?: string;
   json: boolean;
+  dryRun: boolean;
 };
 
 function readValue(args: string[], index: number, flag: string): string {
@@ -59,7 +63,7 @@ function parseInteger(value: string, flag: string): number {
 }
 
 function parseArgs(args: string[]): CliOptions {
-  const options: CliOptions = { inputs: [], json: false };
+  const options: CliOptions = { inputs: [], json: false, dryRun: true };
 
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index]!;
@@ -69,7 +73,14 @@ function parseArgs(args: string[]): CliOptions {
       continue;
     }
 
-    if (argument === "--dry-run") continue;
+    if (argument === "--dry-run") {
+      options.dryRun = true;
+      continue;
+    }
+    if (argument === "--execute") {
+      options.dryRun = false;
+      continue;
+    }
     if (argument === "--json") {
       options.json = true;
       continue;
@@ -99,7 +110,26 @@ function parseArgs(args: string[]): CliOptions {
   return options;
 }
 
-function run(args: string[]): void {
+function printExecutionSummary(summary: ExecutionSummary): void {
+  console.log(
+    `Processed: ${summary.processed} · Skipped: ${summary.skipped} · Failed: ${summary.failed}`,
+  );
+  console.log(`Bytes: ${summary.bytesBefore} -> ${summary.bytesAfter}`);
+
+  for (const file of summary.files) {
+    if (file.status === "processed") {
+      console.log(`  ${file.input} -> ${file.output}`);
+      continue;
+    }
+    if (file.status === "failed") {
+      console.error(
+        `  ${file.input} -> ${file.output}: ${file.error?.code} ${file.error?.message}`,
+      );
+    }
+  }
+}
+
+async function run(args: string[]): Promise<void> {
   if (args.includes("--help") || args.length === 0) {
     console.log(help);
     return;
@@ -134,25 +164,35 @@ function run(args: string[]): void {
     inputs: options.inputs,
     ...(options.output === undefined ? {} : { outputDirectory: options.output }),
     pipeline: { version: 1, operations },
+    dryRun: options.dryRun,
   });
 
-  if (options.json) {
+  if (plan.dryRun && options.json) {
     console.log(JSON.stringify(plan, null, 2));
     return;
   }
 
-  console.log(`Dry run: ${plan.files.length} file(s)`);
-  for (const file of plan.files) console.log(`  ${file.input} -> ${file.output}`);
-  for (const warning of plan.warnings) console.warn(`Warning: ${warning}`);
+  if (plan.dryRun) {
+    console.log(`Dry run: ${plan.files.length} file(s)`);
+    for (const file of plan.files) console.log(`  ${file.input} -> ${file.output}`);
+    for (const warning of plan.warnings) console.warn(`Warning: ${warning}`);
+    return;
+  }
+
+  const summary = await createImageEngine().execute(plan);
+  if (options.json) {
+    console.log(JSON.stringify(summary, null, 2));
+  } else {
+    printExecutionSummary(summary);
+  }
+  if (summary.failed > 0) process.exitCode = 1;
 }
 
-try {
-  run(Bun.argv.slice(2));
-} catch (error) {
+void run(Bun.argv.slice(2)).catch((error: unknown) => {
   if (error instanceof RastryError) {
     console.error(`rastry: ${error.message}`);
     process.exitCode = 2;
   } else {
     throw error;
   }
-}
+});

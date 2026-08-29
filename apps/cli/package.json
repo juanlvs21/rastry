@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@rastry/contracts": "workspace:*",
-    "@rastry/core": "workspace:*"
+    "@rastry/core": "workspace:*",
+    "@rastry/image-engine": "workspace:*"
   },
   "devDependencies": {
     "@types/bun": "catalog:",

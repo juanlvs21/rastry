@@ -50,8 +50,9 @@ filesystem mutations.
 ## Scope
 
 This change covers the package boundaries, runtime responsibilities, safety
-invariants, and interface boundary shared by the CLI and desktop application.
-It does not itself implement pixel processing, desktop RPC, or preset loading.
+invariants, the shared execution contract, and the initial local image-engine
+implementation used by the CLI. It does not implement desktop RPC, preset
+loading, or the remaining v0.1 pixel operations.
 
 ## Acceptance criteria
 
@@ -114,11 +115,14 @@ Electrobun main process, with a typed RPC boundary for the webview.
 - Package dependency direction is `apps -> core/image-engine -> contracts`.
 - Core has no UI or native desktop imports.
 - Dry-run and output safety have public integration coverage.
-- Image-engine and desktop boundaries have explicit contracts.
+- `packages/image-engine` executes supported PNG, JPEG, and WebP conversions
+  locally through Bun.Image.
+- The desktop webview still has no direct filesystem authority; typed RPC is
+  intentionally deferred until the desktop execution surface is implemented.
 
 ## Follow-up
 
-- Complete the Bun.Image technical spike for PNG, JPEG, and WebP.
-- Define the execution result and per-file summary contract.
-- Add input format/existence validation at the appropriate boundary.
-- Add typed desktop RPC only after the shared execution contract is stable.
+- Complete compatibility and build verification on macOS and Linux.
+- Extend the adapter for the remaining v0.1 pixel operations: crop, trim, and
+  padding.
+- Add typed desktop RPC over the stable execution and summary contracts.

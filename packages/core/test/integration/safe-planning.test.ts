@@ -50,7 +50,7 @@ describe("safe transformation planning", () => {
       outputDirectory: resolve("rastry-output"),
       files: [{ input: resolve("photo.png"), output: resolve("rastry-output", "photo.webp") }],
     });
-    expect(plan.warnings).toContain("Planning only: image execution is not available yet.");
+    expect(plan.warnings).toContain("Dry run: no files were written.");
   });
 
   test("preserves the pipeline and maps a batch into the explicit output directory", () => {

@@ -153,6 +153,7 @@ function pathComparisonKey(path: string): string {
 
 export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
   validatePipeline(request.pipeline);
+  const dryRun = request.dryRun ?? true;
 
   if (!Array.isArray(request.inputs) || request.inputs.length === 0) {
     throw new RastryError("NO_INPUT", "At least one input path is required.");
@@ -205,10 +206,10 @@ export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
   });
 
   return {
-    dryRun: true,
+    dryRun,
     outputDirectory: resolvedOutput,
     files,
     pipeline: request.pipeline,
-    warnings: ["Planning only: image execution is not available yet."],
+    warnings: dryRun ? ["Dry run: no files were written."] : [],
   };
 }

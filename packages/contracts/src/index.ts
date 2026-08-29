@@ -5,6 +5,10 @@ export const supportedOutputFormats = ["png", "jpeg", "webp"] as const;
 
 export type ImageFormat = (typeof supportedInputFormats)[number];
 
+export function isSupportedInputFormat(value: unknown): value is ImageFormat {
+  return typeof value === "string" && supportedInputFormats.some((format) => format === value);
+}
+
 export function isSupportedOutputFormat(value: unknown): value is ImageFormat {
   return typeof value === "string" && supportedOutputFormats.some((format) => format === value);
 }
@@ -39,6 +43,7 @@ export type PlanRequest = {
   outputDirectory?: string;
   pipeline: PipelineConfig;
   overwrite?: boolean;
+  dryRun?: boolean;
 };
 
 export type PlannedFile = {
@@ -47,9 +52,35 @@ export type PlannedFile = {
 };
 
 export type ExecutionPlan = {
-  dryRun: true;
+  dryRun: boolean;
   outputDirectory: string;
   files: PlannedFile[];
   pipeline: PipelineConfig;
   warnings: string[];
+};
+
+export type ExecutionFileStatus = "processed" | "skipped" | "failed";
+
+export type ExecutionError = {
+  code: string;
+  message: string;
+};
+
+export type ExecutionFileResult = {
+  input: string;
+  output: string;
+  status: ExecutionFileStatus;
+  bytesBefore?: number;
+  bytesAfter?: number;
+  error?: ExecutionError;
+};
+
+export type ExecutionSummary = {
+  dryRun: boolean;
+  files: ExecutionFileResult[];
+  processed: number;
+  skipped: number;
+  failed: number;
+  bytesBefore: number;
+  bytesAfter: number;
 };
