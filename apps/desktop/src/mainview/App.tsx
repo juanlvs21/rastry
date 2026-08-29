@@ -1,7 +1,7 @@
 const foundations = [
-  ["Core", "Planes deterministas y salidas seguras"],
-  ["CLI", "Ejecución local y automatizable"],
-  ["Desktop", "Electrobun, Bun y React"],
+  ["Core", "Deterministic plans and safe outputs"],
+  ["CLI", "Local and automatable execution"],
+  ["Desktop", "Electrobun, Bun, and React"],
 ] as const;
 
 export function App() {
@@ -20,24 +20,24 @@ export function App() {
       </header>
 
       <section className="hero">
-        <p className="eyebrow">Fundaciones · v0.0.0</p>
+        <p className="eyebrow">Foundations · v0.0.0</p>
         <h1>
-          Imágenes más ligeras.
+          Lighter images.
           <br />
-          Tus archivos se quedan contigo.
+          Your files stay with you.
         </h1>
         <p className="lede">
-          La estructura base está lista para convertir, redimensionar y optimizar lotes desde una
-          interfaz nativa o la terminal.
+          The foundation is ready to convert, resize, and optimize batches from a native interface
+          or the terminal.
         </p>
-        <div className="dropzone" role="group" aria-label="Área de archivos aún no habilitada">
+        <div className="dropzone" role="group" aria-label="File area not yet enabled">
           <span className="dropIcon">↘</span>
-          <strong>Motor preparado para conectar</strong>
-          <small>El procesamiento de imágenes llega en el siguiente incremento.</small>
+          <strong>Engine ready to connect</strong>
+          <small>Image processing is coming in the next increment.</small>
         </div>
       </section>
 
-      <section className="foundations" aria-label="Capas disponibles">
+      <section className="foundations" aria-label="Available layers">
         {foundations.map(([title, description], index) => (
           <article key={title}>
             <span>0{index + 1}</span>

@@ -1,86 +1,90 @@
 # Rastry
 
-> Herramienta local y open source para optimizar y transformar imágenes.
+> A local-first, open-source tool for optimizing and transforming images.
 
-**Documento maestro de producto**  
-Dominio: **rastry.dev** · Licencia: **Apache-2.0** · Estado: **Definición de producto**
+**Product master document**
 
-## Resumen ejecutivo
+Domain: **rastry.dev** · License: **Apache-2.0** · Status: **Product definition**
 
-Rastry es una herramienta local-first para optimizar, transformar y organizar imágenes por lotes mediante operaciones reproducibles. Estará disponible como CLI y aplicación desktop, ambas construidas sobre un motor común en TypeScript que usa Bun.Image. No requiere cuentas, no sube archivos y no depende de una nube para hacer su trabajo.
+The Spanish translation is available in [rastry-es.md](./rastry-es.md).
 
-La primera versión prioriza una experiencia segura y útil para desarrolladores, diseñadores y equipos web: convertir PNG/JPEG/WebP, reducir peso, redimensionar, recortar, aplicar padding, eliminar metadata y procesar lotes. Las configuraciones podrán guardarse como presets y pipelines reutilizables.
+## Executive summary
 
-## Decisión de producto
+Rastry is a local-first tool for optimizing, transforming, and organizing images in batches through reproducible operations. It will be available as both a CLI and a desktop application, built on a shared TypeScript engine that uses Bun.Image. It requires no accounts, uploads no files, and does not depend on a cloud service to do its work.
 
-| Principio       | Decisión                                                                                       |
-| --------------- | ---------------------------------------------------------------------------------------------- |
-| Privacidad      | Todo el procesamiento ocurre localmente; no hay subida de imágenes ni cuenta obligatoria.      |
-| Arquitectura    | Un motor TypeScript sobre Bun.Image; CLI y desktop invocan las mismas reglas de dominio.       |
-| Seguridad       | No se sobrescriben originales por defecto. Las salidas van a una carpeta explícita o derivada. |
-| Alcance inicial | No incluir background removal, OCR, AVIF ni capturas de pantalla en v0.1.                      |
-| Distribución    | Repositorio monorepo, releases instalables y documentación oficial en rastry.dev.              |
+The first version prioritizes a safe and useful experience for developers, designers, and web teams: converting PNG/JPEG/WebP, reducing file size, resizing, cropping, adding padding, removing metadata, and processing batches. Configurations can be saved as reusable presets and pipelines.
 
-## 1. Visión, usuario y propuesta de valor
+## Product decision
 
-### Visión
+| Principle     | Decision                                                                                      |
+| ------------- | --------------------------------------------------------------------------------------------- |
+| Privacy       | All processing happens locally; images are never uploaded and no account is required.         |
+| Architecture  | A TypeScript engine built on Bun.Image; the CLI and desktop app invoke the same domain rules. |
+| Safety        | Originals are never overwritten by default. Outputs go to an explicit or derived directory.   |
+| Initial scope | Do not include background removal, OCR, AVIF, or screenshot capture in v0.1.                  |
+| Distribution  | Monorepo, installable releases, and official documentation at rastry.dev.                     |
 
-Convertir la optimización de imágenes en una tarea local, rápida y repetible: tan cómoda para arrastrar una carpeta a una app de escritorio como para automatizarla desde una terminal o un pipeline de desarrollo.
+## 1. Vision, users, and value proposition
 
-### Usuarios prioritarios
+### Vision
 
-- Desarrolladores web que necesitan optimizar assets antes de publicar.
+Turn image optimization into a local, fast, and repeatable task: as convenient as dragging a folder into a desktop app and as easy to automate from a terminal or development pipeline.
 
-- Diseñadores y creadores que preparan lotes de imágenes sin entregar archivos a un tercero.
+### Priority users
 
-- Equipos pequeños que quieren presets consistentes para web, e-commerce, redes o documentación.
+- Web developers who need to optimize assets before publishing.
 
-- Usuarios avanzados y agentes de automatización que requieren una CLI clara y predecible.
+- Designers and creators who prepare image batches without handing files to a third party.
 
-### Propuesta de valor
+- Small teams that want consistent presets for the web, e-commerce, social media, or documentation.
 
-| Necesidad             | Respuesta de Rastry                                                                                       |
-| --------------------- | --------------------------------------------------------------------------------------------------------- |
-| Privacidad y control  | Procesamiento 100% local; los archivos permanecen en el equipo.                                           |
-| Resultados repetibles | Pipelines y presets expresan una transformación como configuración versionable.                           |
-| Uso simple            | Una GUI para tareas visuales y una CLI para scripts, CI y agentes.                                        |
-| Operación segura      | Dry-run, previsualización y política explícita de no sobrescritura.                                       |
-| Proyecto sostenible   | Código abierto con una ruta futura de monetización por conveniencia, no por bloqueo de funciones básicas. |
+- Power users and automation agents that require a clear and predictable CLI.
 
-## 2. Alcance funcional
+### Value proposition
 
-### MVP: formatos de entrada y salida
+| Need                | Rastry's response                                                                                     |
+| ------------------- | ----------------------------------------------------------------------------------------------------- |
+| Privacy and control | 100% local processing; files stay on the user's device.                                               |
+| Repeatable results  | Pipelines and presets express a transformation as version-controlled configuration.                   |
+| Simple usage        | A GUI for visual tasks and a CLI for scripts, CI, and agents.                                         |
+| Safe operation      | Dry-run, plan preview, and an explicit no-overwrite policy.                                           |
+| Sustainable project | Open source with a future monetization path based on convenience, not on locking away basic features. |
 
-- Entrada: PNG, JPEG y WebP.
+## 2. Functional scope
 
-- Salida: PNG, JPEG y WebP.
+### MVP: input and output formats
 
-- Opciones de codificación: calidad para JPEG/WebP, preservación de transparencia cuando el formato lo permita y eliminación de metadata.
+- Input: PNG, JPEG, and WebP.
 
-### MVP: operaciones
+- Output: PNG, JPEG, and WebP.
 
-| Operación           | Comportamiento esperado                                                         |
-| ------------------- | ------------------------------------------------------------------------------- |
-| Resize proporcional | Limita ancho y/o alto manteniendo la relación de aspecto.                       |
-| Resize exacto       | Produce dimensiones definidas; la política de ajuste se declara explícitamente. |
-| Crop                | Recorte por área o anclaje; preparado para exposición visual en desktop.        |
-| Trim transparente   | Elimina bordes transparentes innecesarios en imágenes compatibles.              |
-| Padding             | Añade margen alrededor de la imagen, con color/fondo configurable.              |
-| Conversión          | Convierte entre PNG, JPEG y WebP.                                               |
-| Compresión          | Aplica calidad y parámetros de salida para reducir peso.                        |
-| Eliminar metadata   | Quita EXIF y metadata no necesaria de las salidas.                              |
-| Batch               | Aplica la misma configuración a múltiples archivos y carpetas.                  |
+- Encoding options: JPEG/WebP quality, transparency preservation when supported by the format, and metadata removal.
 
-### Fuera de v0.1
+### MVP: operations
 
-Quedan deliberadamente fuera: eliminación de fondo, OCR, AVIF, generación de screenshots, sincronización cloud, cuentas, colaboración en tiempo real y un sistema de plugins. Esta restricción protege la velocidad de entrega y evita introducir modelos, binarios grandes o inferencia local antes de validar la utilidad central.
+| Operation           | Expected behavior                                                       |
+| ------------------- | ----------------------------------------------------------------------- |
+| Proportional resize | Limits width and/or height while preserving the aspect ratio.           |
+| Exact resize        | Produces defined dimensions; the fitting policy is declared explicitly. |
+| Crop                | Crops by area or anchor; ready for visual exposure in the desktop app.  |
+| Transparent trim    | Removes unnecessary transparent borders from compatible images.         |
+| Padding             | Adds space around the image with a configurable color/background.       |
+| Conversion          | Converts between PNG, JPEG, and WebP.                                   |
+| Compression         | Applies quality and output parameters to reduce file size.              |
+| Metadata removal    | Removes EXIF and unnecessary metadata from outputs.                     |
+| Batch               | Applies the same configuration to multiple files and folders.           |
 
-## 3. Experiencia de uso y garantías de seguridad
+### Out of scope for v0.1
 
-### CLI como ciudadano de primera clase
+Deliberately out of scope: background removal, OCR, AVIF, screenshot generation, cloud sync, accounts, real-time collaboration, and a plugin system. This constraint protects delivery speed and avoids introducing models, large binaries, or local inference before the core utility has been validated.
 
-La CLI debe ser legible, scriptable y estable. Ejemplos de la dirección deseada:
+## 3. User experience and safety guarantees
 
+### CLI as a first-class citizen
+
+The CLI must be readable, scriptable, and stable. Examples of the intended direction:
+
+```text
 rastry photo.png --to webp
 
 rastry photo.png --to webp --quality 82 --max-width 1600
@@ -88,208 +92,209 @@ rastry photo.png --to webp --quality 82 --max-width 1600
 rastry ./assets --to webp --quality 80 --output ./optimized
 
 rastry run ./public --preset web
+```
 
-### Batch, pipelines y presets
+### Batches, pipelines, and presets
 
-- Batch procesa una selección de archivos o una carpeta, con filtrado por formato y resumen final.
+- A batch processes a selection of files or a folder, with format filtering and a final summary.
 
-- Un pipeline es una secuencia declarativa de operaciones: por ejemplo, trim → resize → convertir a WebP → eliminar metadata.
+- A pipeline is a declarative sequence of operations; for example, trim → resize → convert to WebP → remove metadata.
 
-- Un preset es un pipeline nombrado y reutilizable, inicialmente almacenado localmente como archivo de configuración legible.
+- A preset is a named, reusable pipeline initially stored locally as a readable configuration file.
 
-- Los presets podrán invocarse desde la GUI y desde la CLI; el comportamiento debe ser idéntico.
+- Presets can be invoked from both the GUI and the CLI; behavior must be identical.
 
-### Dry-run y no sobrescritura
+### Dry-run and no overwrites
 
-Por defecto Rastry nunca modifica un original. La salida se escribe en una carpeta indicada por el usuario o en una carpeta derivada como ./rastry-output. Si un nombre entra en conflicto, la herramienta falla con un mensaje claro o usa una estrategia de sufijo explícita; no reemplaza silenciosamente.
+By default, Rastry never modifies an original. Output is written to a directory specified by the user or to a derived directory such as `./rastry-output`. If a name conflicts, the tool fails with a clear message or uses an explicit suffixing strategy; it never silently replaces a file.
 
-- --dry-run muestra archivos afectados, operaciones, ruta de salida estimada y posibles conflictos sin escribir nada.
+- `--dry-run` shows affected files, operations, the estimated output path, and possible conflicts without writing anything.
 
-- La opción de sobrescritura, si se ofrece, será explícita y difícil de activar accidentalmente.
+- If an overwrite option is offered, it must be explicit and difficult to activate accidentally.
 
-- La app desktop debe mostrar una vista previa del plan antes de ejecutar un lote.
+- The desktop app must show a plan preview before executing a batch.
 
-- Cada ejecución entrega un resumen: procesados, omitidos, fallidos, tamaño antes/después y ubicación de salida.
+- Every run provides a summary: processed, skipped, failed, size before/after, and output location.
 
-## 4. Arquitectura técnica
+## 4. Technical architecture
 
-La regla arquitectónica es simple: la interfaz no transforma imágenes y la CLI tampoco. Ambas invocan el mismo motor de dominio TypeScript. Bun.Image realiza el procesamiento local; Electrobun ofrece el runtime Bun, la capa de escritorio y el puente RPC seguro entre interfaz y proceso principal. Esto reduce divergencias, permite pruebas sólidas y mantiene abierta la puerta a futuras integraciones.
+The architectural rule is simple: neither the interface nor the CLI transforms images directly. Both invoke the same TypeScript domain engine. Bun.Image performs local processing; Electrobun provides the Bun runtime, desktop layer, and secure RPC bridge between the interface and the main process. This reduces divergence, enables strong testing, and keeps the door open for future integrations.
 
-| Capa                         | Responsabilidad                                                                                                             |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Core · TypeScript            | Pipelines, validación, planificación, rutas de salida, dry-run, métricas y errores de dominio; sin dependencia de interfaz. |
-| Image Engine · Bun.Image     | Decodificación/codificación, resize, crop, trim, padding, conversión, calidad y escritura local de resultados.              |
-| CLI · Bun                    | Parseo de argumentos, carga de presets, presentación de resultados, códigos de salida y compilación en binario autónomo.    |
-| Desktop · Electrobun + React | Interfaz React en WebView; proceso principal con Bun; ventanas, diálogos, menús y RPC tipado para invocar el motor.         |
-| Configuración                | Esquema compartido de pipelines/presets; serialización local, validación por versión y migraciones futuras.                 |
-| Web                          | Landing, documentación y blog estáticos, independientes del binario y publicados en rastry.dev.                             |
+| Layer                        | Responsibility                                                                                                  |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Core · TypeScript            | Pipelines, validation, planning, output paths, dry-run, metrics, and domain errors; no UI dependency.           |
+| Image Engine · Bun.Image     | Decoding/encoding, resize, crop, trim, padding, conversion, quality, and local result writes.                   |
+| CLI · Bun                    | Argument parsing, preset loading, result presentation, exit codes, and standalone binary compilation.           |
+| Desktop · Electrobun + React | React interface in a WebView; Bun main process; windows, dialogs, menus, and typed RPC for invoking the engine. |
+| Configuration                | Shared pipeline/preset schema; local serialization, version validation, and future migrations.                  |
+| Web                          | Static landing page, documentation, and blog, independent of the binary and published at rastry.dev.            |
 
-### Principios de implementación
+### Implementation principles
 
-- Core determinista y testeable sin UI.
+- Deterministic, testable core without UI dependencies.
 
-- Pipelines validados antes de procesar archivos.
+- Pipelines are validated before files are processed.
 
-- Errores por archivo aislados en batch; un fallo no oculta el resultado de los demás.
+- Batch errors are isolated per file; one failure does not hide the results of the others.
 
-- La interfaz no obtiene acceso directo al filesystem: usa RPC tipado hacia el proceso principal.
+- The interface has no direct filesystem access; it uses typed RPC to the main process.
 
-- Bun.Image usa límites como maxPixels y errores estables para proteger el procesamiento.
+- Bun.Image uses limits such as `maxPixels` and stable errors to protect processing.
 
-- Telemetría desactivada por defecto; si alguna vez existe, debe ser opt-in y transparente.
+- Telemetry is disabled by default; if it ever exists, it must be opt-in and transparent.
 
-## 5. Estructura propuesta del monorepo
+## 5. Proposed monorepo structure
 
-Un solo repositorio mantiene el core, los adaptadores y la web alineados, sin forzar que el sitio dependa del ciclo de release de la aplicación.
+A single repository keeps the core, adapters, and web experience aligned without forcing the site to depend on the application's release cycle.
 
 ```text
 rastry/
 apps/
-cli/ # comando rastry: Bun --compile
+cli/ # rastry command: Bun --compile
 desktop/ # Electrobun + React
-web/ # Astro: landing, docs y blog
+web/ # Astro: landing page, docs, and blog
 packages/
-core/ # pipelines, dry-run, validación y rutas de salida
-image-engine/ # adaptador Bun.Image
-contracts/ # tipos y esquemas compartidos
-docs/ # ADRs, guías de contribución y decisiones
-examples/ # presets y casos de uso
-scripts/ # release, generación y verificación
-.github/ # CI, issues, PR templates y releases
+core/ # pipelines, dry-run, validation, and output paths
+image-engine/ # Bun.Image adapter
+contracts/ # shared types and schemas
+docs/ # ADRs, contribution guides, and decisions
+examples/ # presets and use cases
+scripts/ # release, generation, and verification
+.github/ # CI, issues, PR templates, and releases
 LICENSE # Apache-2.0
 README.md
 ```
 
-## 6. Web oficial: landing, documentación y SEO
+## 6. Official web: landing page, documentation, and SEO
 
-### Stack web
+### Web stack
 
-La web vive dentro del monorepo en apps/web y utiliza Astro como framework estático, Starlight para la documentación y Content Collections para contenidos tipados (docs, blog, presets, operaciones y comparativas). Esta combinación favorece rendimiento, mantenimiento y una estructura SEO predecible.
+The website lives in `apps/web` within the monorepo and uses Astro as its static framework, Starlight for documentation, and Content Collections for typed content (docs, blog, presets, operations, and comparisons). This combination supports performance, maintainability, and a predictable SEO structure.
 
-### Arquitectura de contenido
+### Content architecture
 
-| Área                         | Objetivo y contenido                                                                                                                                       |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Landing                      | Qué es Rastry, privacidad local-first, funciones, ejemplos CLI, descargas, roadmap y CTA a GitHub.                                                         |
-| Documentación                | Instalación, quickstart, referencia CLI, operaciones, batch, pipelines, presets, configuración, troubleshooting y contribución.                            |
-| Blog                         | Guías prácticas y notas de producto: optimización para web, PNG vs JPEG vs WebP, flujos de trabajo y lanzamientos.                                         |
-| Páginas programáticas útiles | Una página por operación, formato, preset y caso de uso; todas con ejemplos reales y enlaces internos. No crear páginas vacías orientadas solo a keywords. |
-| Changelog                    | Cambios por versión, compatibilidad y notas de migración.                                                                                                  |
-| Legal                        | Licencia, política de privacidad local-first y aviso de marcas.                                                                                            |
+| Area                      | Goal and content                                                                                                                             |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Landing page              | What Rastry is, local-first privacy, features, CLI examples, downloads, roadmap, and a CTA to GitHub.                                        |
+| Documentation             | Installation, quickstart, CLI reference, operations, batches, pipelines, presets, configuration, troubleshooting, and contribution.          |
+| Blog                      | Practical guides and product notes: web optimization, PNG vs. JPEG vs. WebP, workflows, and releases.                                        |
+| Useful programmatic pages | One page per operation, format, preset, and use case; all with real examples and internal links. Do not create empty keyword-targeted pages. |
+| Changelog                 | Version changes, compatibility, and migration notes.                                                                                         |
+| Legal                     | License, local-first privacy policy, and trademark notice.                                                                                   |
 
-### SEO técnico no negociable
+### Non-negotiable technical SEO
 
-- HTML estático rápido, URLs limpias, sitemap.xml, robots.txt y canonical URLs.
+- Fast static HTML, clean URLs, `sitemap.xml`, `robots.txt`, and canonical URLs.
 
-- Metadatos únicos por página: title, description, Open Graph y Twitter cards.
+- Unique metadata per page: title, description, Open Graph, and Twitter cards.
 
-- Schema.org donde aporte valor: SoftwareApplication, TechArticle, FAQPage y BreadcrumbList.
+- Schema.org where it adds value: SoftwareApplication, TechArticle, FAQPage, and BreadcrumbList.
 
-- Hreflang cuando se publique contenido multilingüe; empezar con español o inglés de forma consistente, sin traducciones incompletas.
+- Use hreflang when multilingual content is published; start consistently with Spanish or English rather than incomplete translations.
 
-- Imágenes web optimizadas, fuentes mínimas, Core Web Vitals como métrica de producto y enlaces internos semánticos.
+- Optimized web images, minimal fonts, Core Web Vitals as a product metric, and semantic internal links.
 
-- RSS del blog, feed de releases y datos de descarga/versionado visibles para indexación.
+- Blog RSS, a release feed, and visible download/version data for indexing.
 
-- No indexar resultados internos, previews ni páginas de baja calidad.
+- Do not index internal results, previews, or low-quality pages.
 
-### Páginas programáticas iniciales
+### Initial programmatic pages
 
-- /docs/operations/resize, /crop, /trim, /padding, /convert y /strip-metadata.
+- `/docs/operations/resize`, `/crop`, `/trim`, `/padding`, `/convert`, and `/strip-metadata`.
 
-- /docs/formats/png, /jpeg y /webp.
+- `/docs/formats/png`, `/jpeg`, and `/webp`.
 
-- /presets/web, /ecommerce y /social (solo cuando cada preset tenga instrucciones y configuración sustantiva).
+- `/presets/web`, `/ecommerce`, and `/social` (only when each preset has substantive instructions and configuration).
 
-- /guides/optimize-images-for-web, /convert-png-to-webp y /batch-resize-images.
+- `/guides/optimize-images-for-web`, `/convert-png-to-webp`, and `/batch-resize-images`.
 
-## 7. Roadmap de producto
+## 7. Product roadmap
 
-| Versión              | Objetivo                                         | Funciones principales                                                                                                                                       | Criterio de salida                                                                        |
-| -------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| v0.1 · Fundaciones   | Resolver el caso de uso central con seguridad.   | Core TypeScript; Bun.Image; CLI Bun compilada; PNG/JPEG/WebP; resize, crop, trim, padding, conversión, calidad, metadata, batch, dry-run y salidas seguras. | Un lote real puede ejecutarse sin sobrescribir originales y con resultados reproducibles. |
-| v0.2 · Desktop       | Hacer accesible el motor a usuarios no técnicos. | Electrobun + React; proceso principal Bun; selección/arrastre de archivos; formulario de operaciones; preview del plan; progreso y resumen vía RPC.         | GUI y CLI producen resultados equivalentes con la misma configuración.                    |
-| v0.3 · Reutilización | Convertir tareas repetidas en flujos guardables. | Pipelines declarativos; presets locales; import/export; historial básico de ejecuciones; docs de recetas.                                                   | Un preset se puede compartir e invocar de forma confiable desde CLI y desktop.            |
-| v0.4 · Integración   | Madurar automatización y distribución.           | Watch mode inicial; instaladores y releases; actualizaciones/documentación de migración; mejoras de rendimiento y observabilidad local opcional.            | Watch mode es explícito, seguro ante bucles y conserva la política de no sobrescritura.   |
+| Version            | Goal                                               | Main features                                                                                                                                              | Exit criterion                                                                     |
+| ------------------ | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| v0.1 · Foundations | Solve the core use case safely.                    | TypeScript core; Bun.Image; compiled Bun CLI; PNG/JPEG/WebP; resize, crop, trim, padding, conversion, quality, metadata, batch, dry-run, and safe outputs. | A real batch can run without overwriting originals and with reproducible results.  |
+| v0.2 · Desktop     | Make the engine accessible to non-technical users. | Electrobun + React; Bun main process; file selection/drag and drop; operation form; plan preview; progress and summary through RPC.                        | GUI and CLI produce equivalent results with the same configuration.                |
+| v0.3 · Reuse       | Turn repeated tasks into savable workflows.        | Declarative pipelines; local presets; import/export; basic execution history; recipe documentation.                                                        | A preset can be shared and invoked reliably from the CLI and desktop app.          |
+| v0.4 · Integration | Mature automation and distribution.                | Initial watch mode; installers and releases; updates/migration documentation; performance improvements and optional local observability.                   | Watch mode is explicit, safe against loops, and preserves the no-overwrite policy. |
 
-### Nota sobre watch mode
+### Note on watch mode
 
-Watch mode se reserva para v0.4 porque requiere un diseño cuidadoso: carpetas observadas, exclusión de la carpeta de salida, de-duplicación de eventos, estabilidad del archivo antes de procesarlo, cola con reintentos y un registro claro. Debe ser un modo explícito y reversible, nunca una automatización silenciosa.
+Watch mode is reserved for v0.4 because it requires careful design: watched folders, output-directory exclusion, event deduplication, file stability before processing, a retry queue, and a clear log. It must be an explicit and reversible mode, never a silent automation.
 
-## 8. Plan de acción por fases
+## 8. Phased action plan
 
-1. Definición y base del repositorio: crear el monorepo Bun, establecer Apache-2.0, README, CONTRIBUTING, Code of Conduct, ADR inicial y esquema de configuración de pipelines.
+1. Repository definition and foundation: create the Bun monorepo, establish Apache-2.0, add the README, CONTRIBUTING, Code of Conduct, initial ADR, and pipeline configuration schema.
 
-1. Spike técnico Bun/Electrobun: comprobar PNG/JPEG/WebP, operaciones críticas, batch con progreso/cancelación y builds en Windows, macOS y Linux antes de fijar el stack.
+2. Bun/Electrobun technical spike: verify PNG/JPEG/WebP, critical operations, batches with progress/cancellation, and builds on Windows, macOS, and Linux before locking the stack.
 
-1. Core y CLI v0.1: implementar operaciones con Bun.Image, pruebas unitarias y fixtures; definir el plan de ejecución, dry-run, rutas de salida y resumen de batch.
+3. Core and CLI v0.1: implement operations with Bun.Image, unit tests, and fixtures; define the execution plan, dry-run, output paths, and batch summary.
 
-1. Calidad de release: añadir CI para pruebas, lint, builds de la CLI, pruebas de compatibilidad de formatos y generación de changelog.
+4. Release quality: add CI for tests and linting, CLI builds, format compatibility tests, and changelog generation.
 
-1. Web desde el inicio: construir la landing, Starlight, referencia CLI y las primeras guías SEO; publicar en rastry.dev antes o junto al alpha.
+5. Web from the beginning: build the landing page, Starlight documentation, CLI reference, and first SEO guides; publish at rastry.dev before or alongside the alpha.
 
-1. Alpha cerrada: validar con flujos reales de assets web; recoger problemas de seguridad, nomenclatura, rendimiento y ergonomía.
+6. Closed alpha: validate with real web-asset workflows; collect issues involving safety, naming, performance, and ergonomics.
 
-1. Desktop v0.2: integrar Electrobun + React sobre RPC tipado hacia el proceso Bun; verificar equivalencia con la CLI y completar onboarding.
+7. Desktop v0.2: integrate Electrobun + React over typed RPC to the Bun process; verify parity with the CLI and complete onboarding.
 
-1. Pipelines/presets v0.3 y watch mode v0.4: avanzar solo cuando los casos de uso repetidos y la estabilidad del core lo justifiquen.
+8. Pipelines/presets v0.3 and watch mode v0.4: move forward only when recurring use cases and core stability justify it.
 
-## 9. Métricas y criterios de éxito
+## 9. Metrics and success criteria
 
-| Área          | Criterio de éxito inicial                                                                                         |
-| ------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Utilidad      | Un usuario puede optimizar una carpeta de assets web con un solo comando o flujo visual, sin editar originales.   |
-| Confiabilidad | Resultados deterministas, mensajes de error accionables y cobertura fuerte de operaciones críticas.               |
-| Rendimiento   | Procesamiento competitivo para lotes comunes, sin bloquear la interfaz y con progreso comprensible.               |
-| Adopción OSS  | Issues bien triados, ejemplos reproducibles, contribuciones externas y releases regulares.                        |
-| Web/SEO       | Documentación indexable y útil que atrae búsquedas de intención práctica, no solo tráfico de marca.               |
-| Confianza     | La propuesta local-first se entiende en menos de un minuto y la política de archivos evita pérdidas accidentales. |
+| Area         | Initial success criterion                                                                                   |
+| ------------ | ----------------------------------------------------------------------------------------------------------- |
+| Utility      | A user can optimize a web-asset folder with one command or visual workflow without editing originals.       |
+| Reliability  | Deterministic results, actionable error messages, and strong coverage of critical operations.               |
+| Performance  | Competitive processing for common batches, without blocking the interface and with understandable progress. |
+| OSS adoption | Well-triaged issues, reproducible examples, external contributions, and regular releases.                   |
+| Web/SEO      | Useful, indexable documentation that attracts practical-intent searches, not just branded traffic.          |
+| Trust        | The local-first promise is clear in under a minute and the file policy prevents accidental loss.            |
 
-## 10. Modelo open source y monetización futura
+## 10. Open-source model and future monetization
 
-### Licencia: Apache-2.0
+### License: Apache-2.0
 
-Rastry se publicará bajo Apache License 2.0. Es una licencia permisiva, compatible con uso comercial y contribuciones empresariales, e incluye una concesión explícita de patentes. El repositorio debe incluir LICENSE, NOTICE si corresponde, cabeceras de copyright donde tenga sentido y una política de contribución clara.
+Rastry will be released under the Apache License 2.0. It is a permissive license compatible with commercial use and enterprise contributions, and it includes an explicit patent grant. The repository should include `LICENSE`, `NOTICE` when applicable, copyright headers where appropriate, and a clear contribution policy.
 
-### Principio de monetización
+### Monetization principle
 
-La funcionalidad central seguirá siendo abierta: CLI, desktop, conversión, compresión, batch, pipelines y presets. Si el proyecto llega a monetizarse, el usuario paga por conveniencia, soporte o distribución, no por recuperar capacidades básicas.
+Core functionality will remain open: CLI, desktop app, conversion, compression, batches, pipelines, and presets. If the project eventually monetizes, users will pay for convenience, support, or distribution—not to regain access to basic capabilities.
 
-| Vía potencial                   | Qué podría ofrecer                                                                                  | Cuándo considerarla                                                                  |
-| ------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| Sponsors                        | GitHub Sponsors, OpenCollective y sponsors corporativos.                                            | Desde los primeros usuarios; no altera el producto.                                  |
-| Distribución oficial de pago    | Instaladores firmados, actualizaciones automáticas, builds certificados e integraciones de sistema. | Tras lograr releases estables y una demanda clara de conveniencia.                   |
-| Pro por automatización avanzada | Reglas complejas, colecciones de presets, historial/gestión avanzada o integraciones empresariales. | Solo si existe una capa claramente adicional; no antes de validar el núcleo abierto. |
-| Servicios empresariales         | Soporte, integración CI/CD, desarrollo de procesadores personalizados o despliegues internos.       | Cuando haya adopción de equipos y necesidades repetidas.                             |
+| Potential path             | What it could offer                                                                         | When to consider it                                                  |
+| -------------------------- | ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Sponsors                   | GitHub Sponsors, OpenCollective, and corporate sponsors.                                    | From the first users; does not alter the product.                    |
+| Official paid distribution | Signed installers, automatic updates, certified builds, and system integrations.            | After stable releases and clear demand for convenience.              |
+| Advanced automation Pro    | Complex rules, preset collections, advanced history/management, or enterprise integrations. | Only if it is clearly additive; not before validating the open core. |
+| Enterprise services        | Support, CI/CD integration, custom processor development, or internal deployments.          | When teams adopt the project and recurring needs emerge.             |
 
-## 11. Por qué Rastry
+## 11. Why Rastry
 
-Rastry nace de raster: el tipo de imagen que la herramienta procesa. El nombre conserva esa asociación técnica sin sentirse rígido, es corto, memorable y pronunciable en español e inglés. La terminación “-y” le da una identidad de producto más cálida y distintiva, mientras que rastry.dev comunica con claridad su lugar: una herramienta para personas que construyen, optimizan y automatizan. Además, el dominio rastry.dev está disponible en la decisión actual, lo que permite alinear nombre, proyecto y documentación bajo una sola marca.
+Rastry comes from raster, the type of image the tool processes. The name keeps that technical association without feeling rigid; it is short, memorable, and pronounceable in both Spanish and English. The “-y” ending gives it a warmer, more distinctive product identity, while rastry.dev clearly communicates its place: a tool for people who build, optimize, and automate. The rastry.dev domain is also available under the current decision, allowing the name, project, and documentation to align under one brand.
 
-## 12. Decisiones a mantener explícitas
+## 12. Decisions to keep explicit
 
-- Rastry es local-first y no exige cuenta.
+- Rastry is local-first and requires no account.
 
-- El core TypeScript y Bun.Image son la única fuente de verdad para transformaciones.
+- The TypeScript core and Bun.Image are the single source of truth for transformations.
 
-- CLI Bun compilada y desktop Electrobun tienen paridad de comportamiento.
+- The compiled Bun CLI and Electrobun desktop app have behavioral parity.
 
-- Los originales no se sobrescriben por defecto.
+- Originals are never overwritten by default.
 
-- v0.1 se mantiene deliberadamente pequeño y completo.
+- v0.1 remains deliberately small and complete.
 
-- La web, documentación y SEO son parte del producto desde el primer día.
+- The web, documentation, and SEO are part of the product from day one.
 
-- Apache-2.0 permite adopción amplia sin renunciar a una ruta sostenible de monetización por conveniencia.
+- Apache-2.0 enables broad adoption while preserving a sustainable convenience-based monetization path.
 
-## Apéndice A. Próximas decisiones concretas
+## Appendix A. Concrete next decisions
 
-- Confirmar el nombre de la CLI (rastry) y los paquetes del monorepo Bun.
+- Confirm the CLI name (`rastry`) and the Bun monorepo packages.
 
-- Ejecutar el spike Bun.Image + Electrobun: compatibilidad, rendimiento, progreso, cancelación y builds en tres plataformas.
+- Run the Bun.Image + Electrobun spike: compatibility, performance, progress, cancellation, and builds on three platforms.
 
-- Definir el formato inicial de presets (por ejemplo YAML o JSON) y publicar un esquema versionado.
+- Define the initial preset format (for example, YAML or JSON) and publish a versioned schema.
 
-- Crear los primeros tres presets de ejemplo: web, e-commerce y social.
+- Create the first three example presets: web, e-commerce, and social.
 
-- Redactar el README inicial y publicar la primera landing/documentación de “coming soon”.
+- Draft the initial README and publish the first “coming soon” landing page/documentation.
