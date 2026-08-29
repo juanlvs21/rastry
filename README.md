@@ -45,16 +45,19 @@ Read [rastry.md](./rastry.md) for the product definition and [CONTRIBUTING.md](.
 
 ## Common commands
 
-| Command | Purpose |
-| --- | --- |
-| `bun run dev:cli -- --help` | Run the CLI from source. |
-| `bun run dev:desktop` | Build the React view and launch Electrobun. |
-| `bun run dev:desktop:hmr` | Launch Vite HMR and the desktop shell together. |
-| `bun run build:cli` | Compile the CLI to `apps/cli/dist/rastry`. |
-| `bun run build:desktop` | Build an Electrobun stable artifact. |
-| `bun run check` | Type-check supported workspaces and run tests. |
+| Command                     | Purpose                                          |
+| --------------------------- | ------------------------------------------------ |
+| `bun run dev:cli -- --help` | Run the CLI from source.                         |
+| `bun run dev:desktop`       | Build the React view and launch Electrobun.      |
+| `bun run dev:desktop:hmr`   | Launch Vite HMR and the desktop shell together.  |
+| `bun run build:cli`         | Compile the CLI to `apps/cli/dist/rastry`.       |
+| `bun run build:desktop`     | Build an Electrobun stable artifact.             |
+| `bun run format`            | Format supported source and configuration files. |
+| `bun run format:check`      | Verify that files use the repository format.     |
+| `bun run lint`              | Lint JavaScript and TypeScript with Oxlint.      |
+| `bun run lint:fix`          | Apply Oxlint's safe automatic fixes.             |
+| `bun run check`             | Format-check, lint, type-check, and run tests.   |
 
 ## License
 
 Licensed under the [Apache License 2.0](./LICENSE).
-

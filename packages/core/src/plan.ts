@@ -42,7 +42,10 @@ export function validatePipeline(pipeline: PipelineConfig): void {
 
     if (operation.type === "convert") {
       if (!supportedOutputFormats.includes(operation.format)) {
-        throw new RastryError("INVALID_PIPELINE", `Unsupported output format: ${operation.format}.`);
+        throw new RastryError(
+          "INVALID_PIPELINE",
+          `Unsupported output format: ${operation.format}.`,
+        );
       }
       if (
         operation.quality !== undefined &&
@@ -86,7 +89,8 @@ export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
   }
 
   const firstInput = resolve(request.inputs[0]!);
-  const requestedOutput = request.outputDirectory ?? join(dirname(firstInput), DEFAULT_OUTPUT_DIRECTORY);
+  const requestedOutput =
+    request.outputDirectory ?? join(dirname(firstInput), DEFAULT_OUTPUT_DIRECTORY);
   const resolvedOutput = resolve(requestedOutput);
   const seenOutputs = new Set<string>();
 
@@ -98,7 +102,10 @@ export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
       throw new RastryError("OUTPUT_EQUALS_INPUT", `Output would overwrite input: ${input}`);
     }
     if (seenOutputs.has(output)) {
-      throw new RastryError("OUTPUT_COLLISION", `Multiple inputs resolve to the same output: ${output}`);
+      throw new RastryError(
+        "OUTPUT_COLLISION",
+        `Multiple inputs resolve to the same output: ${output}`,
+      );
     }
 
     seenOutputs.add(output);
@@ -113,4 +120,3 @@ export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
     warnings: ["Planning only: the image engine is not wired to filesystem writes yet."],
   };
 }
-

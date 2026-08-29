@@ -14,6 +14,7 @@ async function resolveMainViewUrl(): Promise<string> {
   return "views://mainview/index.html";
 }
 
+// oxlint-disable-next-line no-new -- BrowserWindow construction registers the desktop window.
 new BrowserWindow({
   title: "Rastry",
   url: await resolveMainViewUrl(),
@@ -24,4 +25,3 @@ new BrowserWindow({
     y: 120,
   },
 });
-

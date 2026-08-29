@@ -7,4 +7,3 @@ Be considerate in technical discussions, assume good intent, critique ideas rath
 Project maintainers may remove, edit, or reject contributions and communication that violate these expectations. Serious or repeated violations may result in temporary or permanent exclusion from project spaces.
 
 Until a private reporting address is published, report conduct concerns privately to the repository owner. Reports will be handled as confidentially as reasonably possible.
-

@@ -22,10 +22,7 @@ export type StripMetadataOperation = {
   type: "strip-metadata";
 };
 
-export type PipelineOperation =
-  | ResizeOperation
-  | ConvertOperation
-  | StripMetadataOperation;
+export type PipelineOperation = ResizeOperation | ConvertOperation | StripMetadataOperation;
 
 export type PipelineConfig = {
   version: typeof PIPELINE_SCHEMA_VERSION;
@@ -52,4 +49,3 @@ export type ExecutionPlan = {
   pipeline: PipelineConfig;
   warnings: string[];
 };
-

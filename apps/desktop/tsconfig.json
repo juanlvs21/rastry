@@ -6,4 +6,3 @@
   },
   "include": ["src/mainview/**/*.ts", "src/mainview/**/*.tsx", "vite.config.ts"]
 }
-

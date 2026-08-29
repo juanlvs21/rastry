@@ -8,4 +8,3 @@ export default {
     build: "hutch pm exec -- vite build && hutch electrobun build --env=stable",
   },
 };
-

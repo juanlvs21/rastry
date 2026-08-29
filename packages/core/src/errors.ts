@@ -7,4 +7,3 @@ export class RastryError extends Error {
     this.code = code;
   }
 }
-

@@ -48,4 +48,3 @@ This repository uses the codebase-memory knowledge graph. Prefer its structural 
 ## Definition of done
 
 A change is complete when relevant types pass, tests pass, CLI/desktop behavior is verified in proportion to the change, documentation matches user-visible behavior, and no generated or unrelated files are included.
-

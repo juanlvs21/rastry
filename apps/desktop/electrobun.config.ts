@@ -24,4 +24,3 @@ export default {
     exitOnLastWindowClosed: true,
   },
 } satisfies ElectrobunConfig;
-

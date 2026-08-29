@@ -9,17 +9,26 @@ export function App() {
     <main className="shell">
       <header className="topbar">
         <a className="brand" href="https://rastry.dev">
-          <span className="brandMark" aria-hidden="true">R</span>
+          <span className="brandMark" aria-hidden="true">
+            R
+          </span>
           Rastry
         </a>
-        <span className="status"><i /> Local-first</span>
+        <span className="status">
+          <i /> Local-first
+        </span>
       </header>
 
       <section className="hero">
         <p className="eyebrow">Fundaciones · v0.0.0</p>
-        <h1>Imágenes más ligeras.<br />Tus archivos se quedan contigo.</h1>
+        <h1>
+          Imágenes más ligeras.
+          <br />
+          Tus archivos se quedan contigo.
+        </h1>
         <p className="lede">
-          La estructura base está lista para convertir, redimensionar y optimizar lotes desde una interfaz nativa o la terminal.
+          La estructura base está lista para convertir, redimensionar y optimizar lotes desde una
+          interfaz nativa o la terminal.
         </p>
         <div className="dropzone" role="group" aria-label="Área de archivos aún no habilitada">
           <span className="dropIcon">↘</span>
@@ -40,4 +49,3 @@ export function App() {
     </main>
   );
 }
-

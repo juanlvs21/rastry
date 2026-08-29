@@ -1,3 +1,15 @@
+pre-commit:
+  commands:
+    format:
+      glob: "*.{js,jsx,ts,tsx,mjs,cjs,mts,cts,json,jsonc,yaml,yml,toml,html,css,scss,md}"
+      run: bun run format -- {staged_files}
+      stage_fixed: true
+      fail_text: "Staged files are not formatted. Run 'bun run format' and stage the changes."
+    lint:
+      glob: "*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}"
+      run: bun run lint -- {staged_files}
+      fail_text: "Oxlint found problems in staged files."
+
 commit-msg:
   commands:
     commitlint:
