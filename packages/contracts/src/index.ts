@@ -13,11 +13,68 @@ export function isSupportedOutputFormat(value: unknown): value is ImageFormat {
   return typeof value === "string" && supportedOutputFormats.some((format) => format === value);
 }
 
+export const supportedAnchors = [
+  "top-left",
+  "top",
+  "top-right",
+  "left",
+  "center",
+  "right",
+  "bottom-left",
+  "bottom",
+  "bottom-right",
+] as const;
+
+export type Anchor = (typeof supportedAnchors)[number];
+
+export type CropArea = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+export type CropOperation =
+  | {
+      type: "crop";
+      area: CropArea;
+    }
+  | {
+      type: "crop";
+      width: number;
+      height: number;
+      anchor: Anchor;
+    };
+
+export type TrimOperation = {
+  type: "trim";
+  alphaThreshold?: number;
+};
+
+export type PaddingBackground =
+  | {
+      transparent: true;
+    }
+  | {
+      color: `#${string}`;
+      alpha?: number;
+    };
+
+export type PaddingOperation = {
+  type: "padding";
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+  background: PaddingBackground;
+};
+
 export type ResizeOperation = {
   type: "resize";
   width?: number;
   height?: number;
   fit?: "contain" | "cover" | "fill";
+  anchor?: Anchor;
 };
 
 export type ConvertOperation = {
@@ -30,7 +87,13 @@ export type StripMetadataOperation = {
   type: "strip-metadata";
 };
 
-export type PipelineOperation = ResizeOperation | ConvertOperation | StripMetadataOperation;
+export type PipelineOperation =
+  | ResizeOperation
+  | CropOperation
+  | TrimOperation
+  | PaddingOperation
+  | ConvertOperation
+  | StripMetadataOperation;
 
 export type PipelineConfig = {
   version: typeof PIPELINE_SCHEMA_VERSION;

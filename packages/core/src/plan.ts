@@ -3,6 +3,7 @@ import { basename, dirname, extname, join, normalize, resolve } from "node:path"
 import {
   PIPELINE_SCHEMA_VERSION,
   isSupportedOutputFormat,
+  supportedAnchors,
   type ExecutionPlan,
   type ImageFormat,
   type PipelineConfig,
@@ -13,7 +14,12 @@ import { RastryError } from "./errors";
 
 const DEFAULT_OUTPUT_DIRECTORY = "rastry-output";
 const PIPELINE_FIELDS = ["version", "name", "operations"] as const;
-const RESIZE_FIELDS = ["type", "width", "height", "fit"] as const;
+const RESIZE_FIELDS = ["type", "width", "height", "fit", "anchor"] as const;
+const CROP_FIELDS = ["type", "area", "width", "height", "anchor"] as const;
+const CROP_AREA_FIELDS = ["x", "y", "width", "height"] as const;
+const TRIM_FIELDS = ["type", "alphaThreshold"] as const;
+const PADDING_FIELDS = ["type", "top", "right", "bottom", "left", "background"] as const;
+const PADDING_BACKGROUND_FIELDS = ["transparent", "color", "alpha"] as const;
 const CONVERT_FIELDS = ["type", "format", "quality"] as const;
 const STRIP_METADATA_FIELDS = ["type"] as const;
 const RESIZE_FITS = ["contain", "cover", "fill"] as const;
@@ -44,6 +50,41 @@ function assertPositiveInteger(value: unknown, field: string): void {
   ) {
     throw new RastryError("INVALID_PIPELINE", `${field} must be a positive integer.`);
   }
+}
+
+function assertNonNegativeInteger(value: unknown, field: string): void {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
+    throw new RastryError("INVALID_PIPELINE", `${field} must be a non-negative integer.`);
+  }
+}
+
+function assertByte(value: unknown, field: string): void {
+  if (typeof value !== "number" || !Number.isInteger(value) || value < 0 || value > 255) {
+    throw new RastryError("INVALID_PIPELINE", `${field} must be an integer between 0 and 255.`);
+  }
+}
+
+function isAnchor(value: unknown): boolean {
+  return typeof value === "string" && supportedAnchors.some((anchor) => anchor === value);
+}
+
+function isTransparentBackground(value: Record<string, unknown>): boolean {
+  return value.transparent === true && value.color === undefined && value.alpha === undefined;
+}
+
+function isTransparentPadding(operation: Record<string, unknown>): boolean {
+  const background = operation.background;
+  if (!isRecord(background)) {
+    return false;
+  }
+  if (isTransparentBackground(background)) {
+    return true;
+  }
+  return (
+    typeof background.color === "string" &&
+    typeof background.alpha === "number" &&
+    background.alpha < 255
+  );
 }
 
 function isResizeFit(value: unknown): value is (typeof RESIZE_FITS)[number] {
@@ -91,6 +132,110 @@ export function validatePipeline(pipeline: PipelineConfig): void {
       }
       if (operation.fit !== undefined && !isResizeFit(operation.fit)) {
         throw new RastryError("INVALID_PIPELINE", "resize.fit must be contain, cover, or fill.");
+      }
+      if (operation.anchor !== undefined && !isAnchor(operation.anchor)) {
+        throw new RastryError("INVALID_PIPELINE", "resize.anchor is not a supported anchor.");
+      }
+      if (operation.fit === "cover") {
+        if (operation.width === undefined || operation.height === undefined) {
+          throw new RastryError("INVALID_PIPELINE", "resize.fit=cover requires width and height.");
+        }
+        if (operation.anchor === undefined) {
+          throw new RastryError("INVALID_PIPELINE", "resize.fit=cover requires an anchor.");
+        }
+      } else if (operation.anchor !== undefined) {
+        throw new RastryError(
+          "INVALID_PIPELINE",
+          "resize.anchor is only valid when resize.fit is cover.",
+        );
+      }
+      if (
+        operation.fit === "fill" &&
+        (operation.width === undefined || operation.height === undefined)
+      ) {
+        throw new RastryError("INVALID_PIPELINE", "resize.fit=fill requires width and height.");
+      }
+      continue;
+    }
+
+    if (operation.type === "crop") {
+      assertKnownFields(operation, CROP_FIELDS, "Crop operation");
+      const hasArea = operation.area !== undefined;
+      const hasTargetDimensions = operation.width !== undefined || operation.height !== undefined;
+      const hasAnchor = operation.anchor !== undefined;
+
+      if (hasArea) {
+        if (!isRecord(operation.area)) {
+          throw new RastryError("INVALID_PIPELINE", "crop.area must be an object.");
+        }
+        assertKnownFields(operation.area, CROP_AREA_FIELDS, "Crop area");
+        assertNonNegativeInteger(operation.area.x, "crop.area.x");
+        assertNonNegativeInteger(operation.area.y, "crop.area.y");
+        assertPositiveInteger(operation.area.width, "crop.area.width");
+        assertPositiveInteger(operation.area.height, "crop.area.height");
+        if (hasTargetDimensions || hasAnchor) {
+          throw new RastryError(
+            "INVALID_PIPELINE",
+            "crop.area cannot be combined with width, height, or anchor.",
+          );
+        }
+      } else {
+        assertPositiveInteger(operation.width, "crop.width");
+        assertPositiveInteger(operation.height, "crop.height");
+        if (operation.width === undefined || operation.height === undefined) {
+          throw new RastryError("INVALID_PIPELINE", "Anchored crop requires width and height.");
+        }
+        if (operation.anchor === undefined || !isAnchor(operation.anchor)) {
+          throw new RastryError("INVALID_PIPELINE", "Anchored crop requires a supported anchor.");
+        }
+      }
+      continue;
+    }
+
+    if (operation.type === "trim") {
+      assertKnownFields(operation, TRIM_FIELDS, "Trim operation");
+      if (operation.alphaThreshold !== undefined) {
+        assertByte(operation.alphaThreshold, "trim.alphaThreshold");
+      }
+      continue;
+    }
+
+    if (operation.type === "padding") {
+      assertKnownFields(operation, PADDING_FIELDS, "Padding operation");
+      assertNonNegativeInteger(operation.top, "padding.top");
+      assertNonNegativeInteger(operation.right, "padding.right");
+      assertNonNegativeInteger(operation.bottom, "padding.bottom");
+      assertNonNegativeInteger(operation.left, "padding.left");
+      if (
+        operation.top === 0 &&
+        operation.right === 0 &&
+        operation.bottom === 0 &&
+        operation.left === 0
+      ) {
+        throw new RastryError("INVALID_PIPELINE", "Padding requires at least one non-zero side.");
+      }
+      if (!isRecord(operation.background)) {
+        throw new RastryError("INVALID_PIPELINE", "Padding background must be an object.");
+      }
+      assertKnownFields(operation.background, PADDING_BACKGROUND_FIELDS, "Padding background");
+      const background = operation.background;
+      if (background.transparent !== undefined) {
+        if (!isTransparentBackground(background)) {
+          throw new RastryError(
+            "INVALID_PIPELINE",
+            "Transparent padding background cannot be combined with color or alpha.",
+          );
+        }
+      } else {
+        if (typeof background.color !== "string" || !/^#[0-9A-Fa-f]{6}$/.test(background.color)) {
+          throw new RastryError(
+            "INVALID_PIPELINE",
+            "padding.background.color must use the #RRGGBB format.",
+          );
+        }
+        if (background.alpha !== undefined) {
+          assertByte(background.alpha, "padding.background.alpha");
+        }
       }
       continue;
     }
@@ -153,6 +298,20 @@ function pathComparisonKey(path: string): string {
 
 export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
   validatePipeline(request.pipeline);
+
+  let transparentPadding = false;
+  for (const operation of request.pipeline.operations) {
+    if (operation.type === "padding" && isTransparentPadding(operation)) {
+      transparentPadding = true;
+    }
+    if (operation.type === "convert" && operation.format === "jpeg" && transparentPadding) {
+      throw new RastryError(
+        "INVALID_PIPELINE",
+        "Transparent padding cannot be followed by JPEG conversion.",
+      );
+    }
+  }
+
   const dryRun = request.dryRun ?? true;
 
   if (!Array.isArray(request.inputs) || request.inputs.length === 0) {
@@ -162,6 +321,23 @@ export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
   for (const input of request.inputs) {
     if (typeof input !== "string" || input.trim().length === 0) {
       throw new RastryError("INVALID_INPUT", "Input paths must be non-empty strings.");
+    }
+  }
+
+  if (transparentPadding) {
+    const finalConversionFormat = request.pipeline.operations.reduce<ImageFormat | undefined>(
+      (format, operation) => (operation.type === "convert" ? operation.format : format),
+      undefined,
+    );
+    for (const input of request.inputs) {
+      const inputExtension = extname(input).replace(/^\./, "").toLowerCase();
+      const inputFormat = inputExtension === "jpg" ? "jpeg" : inputExtension || "png";
+      if ((finalConversionFormat ?? inputFormat) === "jpeg") {
+        throw new RastryError(
+          "INVALID_PIPELINE",
+          "Transparent padding cannot produce a JPEG output.",
+        );
+      }
     }
   }
 

@@ -21,9 +21,115 @@
               "type": { "const": "resize" },
               "width": { "type": "integer", "minimum": 1 },
               "height": { "type": "integer", "minimum": 1 },
-              "fit": { "enum": ["contain", "cover", "fill"] }
+              "fit": { "enum": ["contain", "cover", "fill"] },
+              "anchor": { "$ref": "#/$defs/anchor" }
             },
-            "anyOf": [{ "required": ["width"] }, { "required": ["height"] }]
+            "allOf": [
+              { "anyOf": [{ "required": ["width"] }, { "required": ["height"] }] },
+              {
+                "if": { "properties": { "fit": { "const": "cover" } }, "required": ["fit"] },
+                "then": { "required": ["width", "height", "anchor"] }
+              },
+              {
+                "if": { "properties": { "fit": { "const": "fill" } }, "required": ["fit"] },
+                "then": { "required": ["width", "height"] }
+              },
+              {
+                "if": {
+                  "properties": { "fit": { "enum": ["contain", "fill"] } },
+                  "required": ["fit"]
+                },
+                "then": { "not": { "required": ["anchor"] } }
+              },
+              {
+                "if": { "required": ["anchor"] },
+                "then": { "required": ["fit"], "properties": { "fit": { "const": "cover" } } }
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type"],
+            "properties": {
+              "type": { "const": "crop" },
+              "area": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["x", "y", "width", "height"],
+                "properties": {
+                  "x": { "type": "integer", "minimum": 0 },
+                  "y": { "type": "integer", "minimum": 0 },
+                  "width": { "type": "integer", "minimum": 1 },
+                  "height": { "type": "integer", "minimum": 1 }
+                }
+              },
+              "width": { "type": "integer", "minimum": 1 },
+              "height": { "type": "integer", "minimum": 1 },
+              "anchor": { "$ref": "#/$defs/anchor" }
+            },
+            "oneOf": [
+              {
+                "required": ["area"],
+                "not": {
+                  "anyOf": [
+                    { "required": ["width"] },
+                    { "required": ["height"] },
+                    { "required": ["anchor"] }
+                  ]
+                }
+              },
+              {
+                "required": ["width", "height", "anchor"],
+                "not": { "required": ["area"] }
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type"],
+            "properties": {
+              "type": { "const": "trim" },
+              "alphaThreshold": { "type": "integer", "minimum": 0, "maximum": 255 }
+            }
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "top", "right", "bottom", "left", "background"],
+            "properties": {
+              "type": { "const": "padding" },
+              "top": { "type": "integer", "minimum": 0 },
+              "right": { "type": "integer", "minimum": 0 },
+              "bottom": { "type": "integer", "minimum": 0 },
+              "left": { "type": "integer", "minimum": 0 },
+              "background": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["transparent"],
+                    "properties": { "transparent": { "const": true } }
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["color"],
+                    "properties": {
+                      "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+                      "alpha": { "type": "integer", "minimum": 0, "maximum": 255 }
+                    }
+                  }
+                ]
+              }
+            },
+            "anyOf": [
+              { "properties": { "top": { "minimum": 1 } } },
+              { "properties": { "right": { "minimum": 1 } } },
+              { "properties": { "bottom": { "minimum": 1 } } },
+              { "properties": { "left": { "minimum": 1 } } }
+            ]
           },
           {
             "type": "object",
@@ -43,6 +149,21 @@
           }
         ]
       }
+    }
+  },
+  "$defs": {
+    "anchor": {
+      "enum": [
+        "top-left",
+        "top",
+        "top-right",
+        "left",
+        "center",
+        "right",
+        "bottom-left",
+        "bottom",
+        "bottom-right"
+      ]
     }
   }
 }

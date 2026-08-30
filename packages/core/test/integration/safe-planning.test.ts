@@ -199,4 +199,126 @@ describe("safe transformation planning", () => {
       createExecutionPlan({ inputs: [""], pipeline: webPipeline }),
     );
   });
+
+  test("accepts explicit geometry and rejects invalid operation combinations", () => {
+    const plan = createExecutionPlan({
+      inputs: ["photo.png"],
+      pipeline: {
+        version: 1,
+        operations: [
+          { type: "crop", width: 100, height: 80, anchor: "bottom-right" },
+          {
+            type: "padding",
+            top: 4,
+            right: 0,
+            bottom: 4,
+            left: 0,
+            background: { transparent: true },
+          },
+          { type: "resize", width: 64, height: 64, fit: "cover", anchor: "center" },
+          { type: "convert", format: "png" },
+        ],
+      },
+    });
+
+    expect(plan.pipeline.operations).toHaveLength(4);
+
+    const invalidPipelines: PipelineConfig[] = [
+      {
+        version: 1,
+        operations: [{ type: "resize", width: 100, height: 100, fit: "cover" } as never],
+      },
+      {
+        version: 1,
+        operations: [
+          { type: "resize", width: 100, height: 100, fit: "contain", anchor: "center" } as never,
+        ],
+      },
+      {
+        version: 1,
+        operations: [
+          { type: "crop", area: { x: 0, y: 0, width: 10, height: 10 }, anchor: "center" } as never,
+        ],
+      },
+      {
+        version: 1,
+        operations: [{ type: "crop", width: 100, height: 100 } as never],
+      },
+      {
+        version: 1,
+        operations: [{ type: "trim", alphaThreshold: 256 } as never],
+      },
+      {
+        version: 1,
+        operations: [
+          {
+            type: "padding",
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            background: { color: "#ffffff" },
+          } as never,
+        ],
+      },
+      {
+        version: 1,
+        operations: [
+          {
+            type: "padding",
+            top: 1,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            background: { transparent: true, color: "#ffffff" },
+          } as never,
+        ],
+      },
+    ];
+
+    for (const pipeline of invalidPipelines) {
+      expectRastryError("INVALID_PIPELINE", () =>
+        createExecutionPlan({ inputs: ["photo.png"], pipeline }),
+      );
+    }
+
+    expectRastryError("INVALID_PIPELINE", () =>
+      createExecutionPlan({
+        inputs: ["photo.png"],
+        pipeline: {
+          version: 1,
+          operations: [
+            {
+              type: "padding",
+              top: 1,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              background: { transparent: true },
+            },
+            { type: "convert", format: "jpeg" },
+          ],
+        },
+      }),
+    );
+
+    expectRastryError("INVALID_PIPELINE", () =>
+      createExecutionPlan({
+        inputs: ["photo.jpg"],
+        pipeline: {
+          version: 1,
+          operations: [
+            {
+              type: "padding",
+              top: 1,
+              right: 0,
+              bottom: 0,
+              left: 0,
+              background: { transparent: true },
+            },
+          ],
+        },
+      }),
+    );
+  });
 });

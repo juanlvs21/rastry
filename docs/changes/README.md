@@ -32,3 +32,4 @@ live in their own dedicated areas when those sections are introduced.
 | --------------------------------------------------------------------------------------------------------------- | ----------- |
 | [Change 0001: Shared TypeScript core with a local image adapter](./0001-shared-core-and-local-image-adapter.md) | Accepted    |
 | [Change 0002: Safe planning and dry-run](./0002-safe-planning-and-dry-run.md)                                   | Implemented |
+| [Change 0003: Complete v0.1 image operations](./0003-complete-v0-1-image-operations.md)                         | Implemented |

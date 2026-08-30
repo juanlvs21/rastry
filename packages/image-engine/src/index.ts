@@ -1,6 +1,8 @@
 import { dirname } from "node:path";
 import { mkdir, open, rm, stat } from "node:fs/promises";
 
+import type { ConvertOperation, PaddingOperation, ResizeOperation } from "@rastry/contracts";
+
 import {
   isSupportedInputFormat,
   type ExecutionError,
@@ -9,8 +11,20 @@ import {
   type ExecutionSummary,
   type PipelineOperation,
   type PlannedFile,
-  type ResizeOperation,
 } from "@rastry/contracts";
+
+import {
+  cropRaster,
+  cropRasterByAnchor,
+  decodePng,
+  encodePng,
+  hasTransparency,
+  padRaster,
+  RasterError,
+  trimRaster,
+  type Raster,
+  type Rgba,
+} from "./raster";
 
 const DEFAULT_MAX_PIXELS = 268_402_689;
 
@@ -21,6 +35,9 @@ export type ImageEngineErrorCode =
   | "INPUT_READ_FAILED"
   | "UNSUPPORTED_INPUT_FORMAT"
   | "IMAGE_TOO_LARGE"
+  | "INVALID_GEOMETRY"
+  | "ALPHA_NOT_SUPPORTED"
+  | "EMPTY_ALPHA_BOUNDS"
   | "DECODE_FAILED"
   | "ENCODE_FAILED"
   | "OUTPUT_EXISTS"
@@ -140,70 +157,161 @@ function mapOutputError(error: unknown, output: string): ImageEngineError {
   );
 }
 
-function applyResize(
-  image: Bun.Image,
-  operation: ResizeOperation,
-  current: Dimensions,
-): { image: Bun.Image; dimensions: Dimensions } {
-  const { width, height, fit } = operation;
-
-  if (width !== undefined && height !== undefined) {
-    if (fit === "cover") {
-      throw new ImageEngineError(
-        "UNSUPPORTED_OPERATION",
-        "resize.fit=cover is not supported by the Bun.Image adapter yet.",
-      );
-    }
-
-    if (fit === "contain") {
-      const scale = Math.min(width / current.width, height / current.height, 1);
-      return {
-        image: image.resize(width, height, { fit: "inside", withoutEnlargement: true }),
-        dimensions: {
-          width: Math.max(1, Math.round(current.width * scale)),
-          height: Math.max(1, Math.round(current.height * scale)),
-        },
-      };
-    }
-
-    return {
-      image: image.resize(width, height, { fit: "fill" }),
-      dimensions: { width, height },
-    };
+function mapRasterError(error: RasterError): ImageEngineError {
+  if (error.code === "IMAGE_TOO_LARGE") {
+    return new ImageEngineError("IMAGE_TOO_LARGE", error.message);
   }
-
-  if (width !== undefined) {
-    const nextWidth = Math.min(width, current.width);
-    const nextHeight = Math.max(1, Math.round((current.height * nextWidth) / current.width));
-    return {
-      image: image.resize(nextWidth, nextHeight, { fit: "inside", withoutEnlargement: true }),
-      dimensions: { width: nextWidth, height: nextHeight },
-    };
+  if (error.code === "INVALID_GEOMETRY") {
+    return new ImageEngineError("INVALID_GEOMETRY", error.message);
   }
+  if (error.code === "EMPTY_ALPHA_BOUNDS") {
+    return new ImageEngineError("EMPTY_ALPHA_BOUNDS", error.message);
+  }
+  return new ImageEngineError("DECODE_FAILED", error.message);
+}
 
-  const nextHeight = Math.min(height ?? current.height, current.height);
-  const nextWidth = Math.max(1, Math.round((current.width * nextHeight) / current.height));
+function pixelLimitExceeded(width: number, height: number, maxPixels: number): boolean {
+  return (
+    !Number.isSafeInteger(width) ||
+    !Number.isSafeInteger(height) ||
+    width <= 0 ||
+    height <= 0 ||
+    width > Math.floor(maxPixels / height)
+  );
+}
+
+function assertPixelLimit(width: number, height: number, maxPixels: number): void {
+  if (pixelLimitExceeded(width, height, maxPixels)) {
+    throw new ImageEngineError(
+      "IMAGE_TOO_LARGE",
+      "The transformed image exceeds the configured pixel limit.",
+    );
+  }
+}
+
+function roundedProportionalDimension(value: number, scale: number): number {
+  return Math.max(1, Math.round(value * scale));
+}
+
+function getContainDimensions(current: Dimensions, width: number, height: number): Dimensions {
+  const scale = Math.min(width / current.width, height / current.height, 1);
   return {
-    image: image.resize(nextWidth, nextHeight, { fit: "inside", withoutEnlargement: true }),
-    dimensions: { width: nextWidth, height: nextHeight },
+    width: roundedProportionalDimension(current.width, scale),
+    height: roundedProportionalDimension(current.height, scale),
   };
 }
 
-function applyConversion(
-  image: Bun.Image,
-  operation: Extract<PipelineOperation, { type: "convert" }>,
-): Bun.Image {
-  if (operation.format === "png") {
-    return image.png();
+function getCoverDimensions(current: Dimensions, width: number, height: number): Dimensions {
+  const widthScale = width / current.width;
+  const heightScale = height / current.height;
+  if (widthScale >= heightScale) {
+    return { width, height: Math.max(height, Math.ceil(current.height * widthScale)) };
   }
-  if (operation.format === "jpeg") {
-    return operation.quality === undefined
-      ? image.jpeg()
-      : image.jpeg({ quality: operation.quality });
+  return { width: Math.max(width, Math.ceil(current.width * heightScale)), height };
+}
+
+async function rasterize(image: Bun.Image, maxPixels: number): Promise<Raster> {
+  try {
+    const bytes = await image.png().bytes();
+    return decodePng(bytes, maxPixels);
+  } catch (error) {
+    if (error instanceof RasterError) throw error;
+    throw mapEncodeError(error);
   }
-  return operation.quality === undefined
-    ? image.webp()
-    : image.webp({ quality: operation.quality });
+}
+
+async function rasterizeInput(image: Bun.Image, maxPixels: number): Promise<Raster> {
+  try {
+    const bytes = await image.png().bytes();
+    return decodePng(bytes, maxPixels);
+  } catch (error) {
+    if (error instanceof RasterError) throw error;
+    throw mapInputError(error);
+  }
+}
+
+async function resizeWithBun(
+  raster: Raster,
+  operation: ResizeOperation,
+  maxPixels: number,
+): Promise<Raster> {
+  const { width, height, fit } = operation;
+  if (width !== undefined && height !== undefined && fit === "cover") {
+    const scaled = getCoverDimensions(raster, width, height);
+    assertPixelLimit(scaled.width, scaled.height, maxPixels);
+    const resized = await rasterize(
+      new Bun.Image(encodePng(raster)).resize(scaled.width),
+      maxPixels,
+    );
+    if (resized.width < width || resized.height < height) {
+      throw new ImageEngineError(
+        "INVALID_GEOMETRY",
+        "The cover resize could not fill the requested dimensions.",
+      );
+    }
+    assertPixelLimit(width, height, maxPixels);
+    return cropRasterByAnchor(resized, width, height, operation.anchor!);
+  }
+
+  if (width !== undefined && height !== undefined) {
+    const dimensions =
+      fit === "contain" ? getContainDimensions(raster, width, height) : { width, height };
+    assertPixelLimit(dimensions.width, dimensions.height, maxPixels);
+    const resized = new Bun.Image(encodePng(raster)).resize(
+      width,
+      height,
+      fit === "contain" ? { fit: "inside", withoutEnlargement: true } : { fit: "fill" },
+    );
+    return rasterize(resized, maxPixels);
+  }
+
+  if (width !== undefined) {
+    const nextWidth = Math.min(width, raster.width);
+    const nextHeight = roundedProportionalDimension(raster.height, nextWidth / raster.width);
+    assertPixelLimit(nextWidth, nextHeight, maxPixels);
+    return rasterize(new Bun.Image(encodePng(raster)).resize(nextWidth), maxPixels);
+  }
+
+  const nextHeight = Math.min(height ?? raster.height, raster.height);
+  const nextWidth = roundedProportionalDimension(raster.width, nextHeight / raster.height);
+  assertPixelLimit(nextWidth, nextHeight, maxPixels);
+  return rasterize(new Bun.Image(encodePng(raster)).resize(nextWidth, undefined), maxPixels);
+}
+
+function paddingColor(operation: PaddingOperation): Rgba {
+  if ("transparent" in operation.background) {
+    return [0, 0, 0, 0];
+  }
+  const color = operation.background.color;
+  if (!/^#[0-9A-Fa-f]{6}$/.test(color)) {
+    throw new ImageEngineError("INVALID_GEOMETRY", "Padding background color must use #RRGGBB.");
+  }
+  return [
+    Number.parseInt(color.slice(1, 3), 16),
+    Number.parseInt(color.slice(3, 5), 16),
+    Number.parseInt(color.slice(5, 7), 16),
+    operation.background.alpha ?? 255,
+  ];
+}
+
+function paddedDimensions(raster: Dimensions, operation: PaddingOperation): Dimensions {
+  const width = raster.width + operation.left + operation.right;
+  const height = raster.height + operation.top + operation.bottom;
+  if (!Number.isSafeInteger(width) || !Number.isSafeInteger(height)) {
+    throw new ImageEngineError(
+      "IMAGE_TOO_LARGE",
+      "The transformed image dimensions overflow safely.",
+    );
+  }
+  return { width, height };
+}
+
+function finalConversion(operations: readonly PipelineOperation[]): ConvertOperation | undefined {
+  let conversion: ConvertOperation | undefined;
+  for (const operation of operations) {
+    if (operation.type === "convert") conversion = operation;
+  }
+  return conversion;
 }
 
 async function writeExclusive(output: string, bytes: Uint8Array): Promise<number> {
@@ -243,7 +351,12 @@ async function processFile(
     throw mapInputError(error);
   }
 
-  const image = new Bun.Image(file.input, { maxPixels });
+  let image: Bun.Image;
+  try {
+    image = new Bun.Image(file.input, { maxPixels });
+  } catch (error) {
+    throw mapInputError(error);
+  }
   let metadata: Awaited<ReturnType<Bun.Image["metadata"]>>;
   try {
     metadata = await image.metadata();
@@ -258,27 +371,75 @@ async function processFile(
     );
   }
 
-  let transformed = image;
-  let dimensions: Dimensions = { width: metadata.width, height: metadata.height };
+  const sourceRaster = await rasterizeInput(image, maxPixels);
+  const sourceHasTransparency = hasTransparency(sourceRaster);
+  if (
+    sourceHasTransparency &&
+    operations.some((operation) => operation.type === "convert" && operation.format === "jpeg")
+  ) {
+    throw new ImageEngineError(
+      "ALPHA_NOT_SUPPORTED",
+      "JPEG output cannot represent transparency from the input image.",
+    );
+  }
+
+  let raster = sourceRaster;
   for (const operation of operations) {
     if (operation.type === "resize") {
-      const resized = applyResize(transformed, operation, dimensions);
-      transformed = resized.image;
-      dimensions = resized.dimensions;
+      raster = await resizeWithBun(raster, operation, maxPixels);
       continue;
     }
-    if (operation.type === "convert") {
-      transformed = applyConversion(transformed, operation);
+    if (operation.type === "crop") {
+      raster =
+        "area" in operation
+          ? cropRaster(raster, operation.area)
+          : cropRasterByAnchor(raster, operation.width, operation.height, operation.anchor);
       continue;
     }
-    // Bun.Image re-encodes the result at the terminal and does not expose a
-    // metadata-preserving write path; this operation therefore needs no chain call.
+    if (operation.type === "trim") {
+      if (metadata.format === "jpeg" || !sourceHasTransparency) {
+        throw new ImageEngineError(
+          "ALPHA_NOT_SUPPORTED",
+          "Transparent trim requires an image with an alpha channel.",
+        );
+      }
+      raster = trimRaster(raster, operation.alphaThreshold ?? 0);
+      continue;
+    }
+    if (operation.type === "padding") {
+      const dimensions = paddedDimensions(raster, operation);
+      assertPixelLimit(dimensions.width, dimensions.height, maxPixels);
+      raster = padRaster(raster, operation, paddingColor(operation));
+      continue;
+    }
   }
 
   let bytes: Uint8Array;
   try {
-    bytes = await transformed.bytes();
+    const conversion = finalConversion(operations);
+    const outputFormat = conversion?.format ?? metadata.format;
+    if (outputFormat === "jpeg" && hasTransparency(raster)) {
+      throw new ImageEngineError(
+        "ALPHA_NOT_SUPPORTED",
+        "JPEG output cannot represent transparency.",
+      );
+    }
+    if (outputFormat === "png") {
+      bytes = encodePng(raster);
+    } else {
+      const outputImage = new Bun.Image(encodePng(raster));
+      if (outputFormat === "jpeg") {
+        bytes = await (conversion?.quality === undefined
+          ? outputImage.jpeg().bytes()
+          : outputImage.jpeg({ quality: conversion.quality }).bytes());
+      } else {
+        bytes = await (conversion?.quality === undefined
+          ? outputImage.webp().bytes()
+          : outputImage.webp({ quality: conversion.quality }).bytes());
+      }
+    }
   } catch (error) {
+    if (error instanceof ImageEngineError || error instanceof RasterError) throw error;
     throw mapEncodeError(error);
   }
 
@@ -293,7 +454,12 @@ async function processFile(
 }
 
 function toExecutionError(error: unknown): ExecutionError {
-  const normalized = error instanceof ImageEngineError ? error : mapInputError(error);
+  const normalized =
+    error instanceof ImageEngineError
+      ? error
+      : error instanceof RasterError
+        ? mapRasterError(error)
+        : mapInputError(error);
   return { code: normalized.code, message: normalized.message };
 }
 
