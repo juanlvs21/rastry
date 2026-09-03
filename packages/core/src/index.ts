@@ -1,2 +1,9 @@
 export { RastryError } from "./errors";
-export { createExecutionPlan, validatePipeline } from "./plan";
+export { createExecutionPlan, createExecutionPlanFromInputs, validatePipeline } from "./plan";
+export type {
+  DiscoveredInputs,
+  PlanningDirectoryEntry,
+  PlanningFileSystem,
+  PlanningPathInfo,
+  PlanningPathKind,
+} from "./discovery";

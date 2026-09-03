@@ -112,6 +112,7 @@ export type PlanRequest = {
 export type PlannedFile = {
   input: string;
   output: string;
+  preflightError?: ExecutionError;
 };
 
 export type ExecutionPlan = {
@@ -122,7 +123,7 @@ export type ExecutionPlan = {
   warnings: string[];
 };
 
-export type ExecutionFileStatus = "processed" | "skipped" | "failed";
+export type ExecutionFileStatus = "processed" | "skipped" | "failed" | "cancelled";
 
 export type ExecutionError = {
   code: string;
@@ -138,12 +139,34 @@ export type ExecutionFileResult = {
   error?: ExecutionError;
 };
 
+export type ExecutionProgressPhase =
+  | "started"
+  | "file-started"
+  | "file-finished"
+  | "cancelled"
+  | "completed";
+
+export type ExecutionProgress = {
+  phase: ExecutionProgressPhase;
+  completed: number;
+  total: number;
+  file?: PlannedFile;
+  result?: ExecutionFileResult;
+};
+
+export type ExecutionControl = {
+  onProgress?: (progress: ExecutionProgress) => void;
+  isCancelled?: () => boolean;
+};
+
 export type ExecutionSummary = {
   dryRun: boolean;
+  total: number;
   files: ExecutionFileResult[];
   processed: number;
   skipped: number;
   failed: number;
+  cancelled: number;
   bytesBefore: number;
   bytesAfter: number;
 };

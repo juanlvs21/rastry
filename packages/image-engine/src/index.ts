@@ -6,6 +6,7 @@ import type { ConvertOperation, PaddingOperation, ResizeOperation } from "@rastr
 import {
   isSupportedInputFormat,
   type ExecutionError,
+  type ExecutionControl,
   type ExecutionFileResult,
   type ExecutionPlan,
   type ExecutionSummary,
@@ -59,7 +60,7 @@ export type ImageEngineOptions = {
 };
 
 export type ImageEngine = {
-  execute(plan: ExecutionPlan): Promise<ExecutionSummary>;
+  execute(plan: ExecutionPlan, control?: ExecutionControl): Promise<ExecutionSummary>;
 };
 
 type Dimensions = {
@@ -466,21 +467,43 @@ function toExecutionError(error: unknown): ExecutionError {
 function summarize(files: ExecutionFileResult[], dryRun: boolean): ExecutionSummary {
   return {
     dryRun,
+    total: files.length,
     files,
     processed: files.filter((file) => file.status === "processed").length,
     skipped: files.filter((file) => file.status === "skipped").length,
     failed: files.filter((file) => file.status === "failed").length,
+    cancelled: files.filter((file) => file.status === "cancelled").length,
     bytesBefore: files.reduce((total, file) => total + (file.bytesBefore ?? 0), 0),
     bytesAfter: files.reduce((total, file) => total + (file.bytesAfter ?? 0), 0),
   };
 }
 
-async function executePlan(plan: ExecutionPlan, maxPixels: number): Promise<ExecutionSummary> {
+function preflightFailure(file: PlannedFile): ExecutionFileResult | undefined {
+  return file.preflightError === undefined
+    ? undefined
+    : {
+        input: file.input,
+        output: file.output,
+        status: "failed",
+        error: file.preflightError,
+      };
+}
+
+async function executePlan(
+  plan: ExecutionPlan,
+  maxPixels: number,
+  control?: ExecutionControl,
+): Promise<ExecutionSummary> {
   if (plan.dryRun) {
-    return summarize(
-      plan.files.map((file) => ({ input: file.input, output: file.output, status: "skipped" })),
+    const summary = summarize(
+      plan.files.map(
+        (file) =>
+          preflightFailure(file) ?? { input: file.input, output: file.output, status: "skipped" },
+      ),
       true,
     );
+    control?.onProgress?.({ phase: "completed", completed: summary.total, total: summary.total });
+    return summary;
   }
 
   // The Bun backend uses the same static codecs and geometry implementation on
@@ -488,20 +511,51 @@ async function executePlan(plan: ExecutionPlan, maxPixels: number): Promise<Exec
   Bun.Image.backend = "bun";
 
   const files: ExecutionFileResult[] = [];
-  for (const file of plan.files) {
-    try {
-      files.push(await processFile(file, plan.pipeline.operations, maxPixels));
-    } catch (error) {
-      files.push({
-        input: file.input,
-        output: file.output,
-        status: "failed",
-        error: toExecutionError(error),
-      });
+  const total = plan.files.length;
+  control?.onProgress?.({ phase: "started", completed: 0, total });
+
+  for (const [index, file] of plan.files.entries()) {
+    if (control?.isCancelled?.()) {
+      files.push(
+        ...plan.files.slice(index).map((remaining) => ({
+          input: remaining.input,
+          output: remaining.output,
+          status: "cancelled" as const,
+        })),
+      );
+      control.onProgress?.({ phase: "cancelled", completed: files.length, total });
+      break;
     }
+
+    control?.onProgress?.({ phase: "file-started", completed: files.length, total, file });
+    const knownFailure = preflightFailure(file);
+    if (knownFailure !== undefined) {
+      files.push(knownFailure);
+    } else {
+      try {
+        files.push(await processFile(file, plan.pipeline.operations, maxPixels));
+      } catch (error) {
+        files.push({
+          input: file.input,
+          output: file.output,
+          status: "failed",
+          error: toExecutionError(error),
+        });
+      }
+    }
+    const result = files[files.length - 1]!;
+    control?.onProgress?.({
+      phase: "file-finished",
+      completed: files.length,
+      total,
+      file,
+      result,
+    });
   }
 
-  return summarize(files, false);
+  const summary = summarize(files, false);
+  control?.onProgress?.({ phase: "completed", completed: summary.total, total: summary.total });
+  return summary;
 }
 
 export function createImageEngine(options: ImageEngineOptions = {}): ImageEngine {
@@ -511,8 +565,8 @@ export function createImageEngine(options: ImageEngineOptions = {}): ImageEngine
   }
 
   return {
-    execute(plan) {
-      return executePlan(plan, maxPixels);
+    execute(plan, control) {
+      return executePlan(plan, maxPixels, control);
     },
   };
 }

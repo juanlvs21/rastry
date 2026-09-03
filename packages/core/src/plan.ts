@@ -4,6 +4,7 @@ import {
   PIPELINE_SCHEMA_VERSION,
   isSupportedOutputFormat,
   supportedAnchors,
+  type ExecutionError,
   type ExecutionPlan,
   type ImageFormat,
   type PipelineConfig,
@@ -11,6 +12,8 @@ import {
 } from "@rastry/contracts";
 
 import { RastryError } from "./errors";
+import { discoverInputs, type PlanningFileSystem } from "./discovery";
+import { pathComparisonKey } from "./paths";
 
 const DEFAULT_OUTPUT_DIRECTORY = "rastry-output";
 const PIPELINE_FIELDS = ["version", "name", "operations"] as const;
@@ -291,16 +294,9 @@ function outputName(input: string, pipeline: PipelineConfig): string {
   return `${stem}.${normalizedExtension}`;
 }
 
-function pathComparisonKey(path: string): string {
-  const normalized = normalize(path);
-  return process.platform === "win32" ? normalized.toLowerCase() : normalized;
-}
-
-export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
-  validatePipeline(request.pipeline);
-
+function assertPipelineCompatibility(pipeline: PipelineConfig, inputs: readonly string[]): void {
   let transparentPadding = false;
-  for (const operation of request.pipeline.operations) {
+  for (const operation of pipeline.operations) {
     if (operation.type === "padding" && isTransparentPadding(operation)) {
       transparentPadding = true;
     }
@@ -312,24 +308,12 @@ export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
     }
   }
 
-  const dryRun = request.dryRun ?? true;
-
-  if (!Array.isArray(request.inputs) || request.inputs.length === 0) {
-    throw new RastryError("NO_INPUT", "At least one input path is required.");
-  }
-
-  for (const input of request.inputs) {
-    if (typeof input !== "string" || input.trim().length === 0) {
-      throw new RastryError("INVALID_INPUT", "Input paths must be non-empty strings.");
-    }
-  }
-
   if (transparentPadding) {
-    const finalConversionFormat = request.pipeline.operations.reduce<ImageFormat | undefined>(
+    const finalConversionFormat = pipeline.operations.reduce<ImageFormat | undefined>(
       (format, operation) => (operation.type === "convert" ? operation.format : format),
       undefined,
     );
-    for (const input of request.inputs) {
+    for (const input of inputs) {
       const inputExtension = extname(input).replace(/^\./, "").toLowerCase();
       const inputFormat = inputExtension === "jpg" ? "jpeg" : inputExtension || "png";
       if ((finalConversionFormat ?? inputFormat) === "jpeg") {
@@ -338,6 +322,20 @@ export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
           "Transparent padding cannot produce a JPEG output.",
         );
       }
+    }
+  }
+}
+
+function validatePlanRequest(request: PlanRequest): void {
+  validatePipeline(request.pipeline);
+
+  if (!Array.isArray(request.inputs) || request.inputs.length === 0) {
+    throw new RastryError("NO_INPUT", "At least one input path is required.");
+  }
+
+  for (const input of request.inputs) {
+    if (typeof input !== "string" || input.trim().length === 0) {
+      throw new RastryError("INVALID_INPUT", "Input paths must be non-empty strings.");
     }
   }
 
@@ -354,11 +352,57 @@ export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
   ) {
     throw new RastryError("INVALID_OUTPUT_DIRECTORY", "Output directory must be a non-empty path.");
   }
+}
 
+function resolveOutputDirectory(request: PlanRequest): string {
   const firstInput = resolve(request.inputs[0]!);
   const requestedOutput =
     request.outputDirectory ?? join(dirname(firstInput), DEFAULT_OUTPUT_DIRECTORY);
-  const resolvedOutput = resolve(requestedOutput);
+  return resolve(requestedOutput);
+}
+
+async function preflightOutputDirectory(
+  outputDirectory: string,
+  fileSystem: PlanningFileSystem,
+): Promise<void> {
+  let output: Awaited<ReturnType<PlanningFileSystem["inspect"]>>;
+  try {
+    output = await fileSystem.inspect(outputDirectory);
+  } catch (error) {
+    const code =
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      typeof error.code === "string"
+        ? error.code
+        : undefined;
+    throw new RastryError(
+      code === "EACCES" || code === "EPERM" ? "OUTPUT_NOT_WRITABLE" : "OUTPUT_PREFLIGHT_FAILED",
+      `The output directory could not be inspected: ${outputDirectory}.`,
+    );
+  }
+  if (output === undefined) return;
+  if (output.kind !== "directory") {
+    throw new RastryError(
+      "INVALID_OUTPUT_DIRECTORY",
+      `The output path is not a directory: ${outputDirectory}`,
+    );
+  }
+  if (!output.writable) {
+    throw new RastryError(
+      "OUTPUT_NOT_WRITABLE",
+      `The output directory cannot be written: ${outputDirectory}`,
+    );
+  }
+}
+
+function buildExecutionPlan(
+  request: PlanRequest,
+  preflightErrors: ReadonlyMap<string, ExecutionError> = new Map(),
+  additionalWarnings: readonly string[] = [],
+): ExecutionPlan {
+  const dryRun = request.dryRun ?? true;
+  const resolvedOutput = resolveOutputDirectory(request);
   const seenOutputs = new Set<string>();
 
   const files = request.inputs.map((input) => {
@@ -378,7 +422,10 @@ export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
     }
 
     seenOutputs.add(outputKey);
-    return { input: resolvedInput, output };
+    const preflightError = preflightErrors.get(resolvedInput);
+    return preflightError === undefined
+      ? { input: resolvedInput, output }
+      : { input: resolvedInput, output, preflightError };
   });
 
   return {
@@ -386,6 +433,70 @@ export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
     outputDirectory: resolvedOutput,
     files,
     pipeline: request.pipeline,
-    warnings: dryRun ? ["Dry run: no files were written."] : [],
+    warnings: [...(dryRun ? ["Dry run: no files were written."] : []), ...additionalWarnings],
+  };
+}
+
+export function createExecutionPlan(request: PlanRequest): ExecutionPlan {
+  validatePlanRequest(request);
+  assertPipelineCompatibility(request.pipeline, request.inputs);
+  return buildExecutionPlan(request);
+}
+
+export async function createExecutionPlanFromInputs(
+  request: PlanRequest,
+  fileSystem: PlanningFileSystem,
+): Promise<ExecutionPlan> {
+  validatePlanRequest(request);
+  const outputDirectory = resolveOutputDirectory(request);
+  await preflightOutputDirectory(outputDirectory, fileSystem);
+  const discovered = await discoverInputs(request.inputs, outputDirectory, fileSystem);
+  assertPipelineCompatibility(request.pipeline, discovered.inputs);
+
+  const plan = buildExecutionPlan(
+    { ...request, inputs: discovered.inputs },
+    discovered.preflightErrors,
+    discovered.warnings,
+  );
+  const outputPreflightErrors = new Map<string, ExecutionError>();
+
+  for (const file of plan.files) {
+    if (file.preflightError !== undefined) {
+      continue;
+    }
+    try {
+      const output = await fileSystem.inspect(file.output);
+      if (output !== undefined) {
+        outputPreflightErrors.set(file.input, {
+          code: "OUTPUT_EXISTS",
+          message: `Refusing to overwrite existing output: ${file.output}`,
+        });
+      }
+    } catch (error) {
+      const code =
+        typeof error === "object" &&
+        error !== null &&
+        "code" in error &&
+        typeof error.code === "string"
+          ? error.code
+          : undefined;
+      outputPreflightErrors.set(file.input, {
+        code:
+          code === "EACCES" || code === "EPERM" ? "OUTPUT_NOT_WRITABLE" : "OUTPUT_PREFLIGHT_FAILED",
+        message: `The output path could not be inspected: ${file.output}.`,
+      });
+    }
+  }
+
+  if (outputPreflightErrors.size === 0) {
+    return plan;
+  }
+
+  return {
+    ...plan,
+    files: plan.files.map((file) => {
+      const preflightError = outputPreflightErrors.get(file.input);
+      return preflightError === undefined ? file : { ...file, preflightError };
+    }),
   };
 }

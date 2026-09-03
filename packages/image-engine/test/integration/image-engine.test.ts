@@ -1,4 +1,4 @@
-import { access, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
+import { access, copyFile, mkdir, mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -447,6 +447,50 @@ describe("Bun.Image execution adapter", () => {
       const outputBytes = new Uint8Array(await readFile(metadataPlan.files[0]!.output));
       expect(metadataSummary.processed).toBe(1);
       expect(new TextDecoder().decode(outputBytes)).not.toContain("metadata-fixture");
+    } finally {
+      await rm(temporaryRoot, { recursive: true, force: true });
+    }
+  });
+
+  test("reports ordered progress and cancels remaining files cooperatively", async () => {
+    const temporaryRoot = await mkdtemp(join(tmpdir(), "rastry-image-engine-progress-"));
+    const outputDirectory = join(temporaryRoot, "output");
+    const firstInput = join(temporaryRoot, "a.jpg");
+    const secondInput = join(temporaryRoot, "b.jpg");
+    const phases: string[] = [];
+    let cancellationChecks = 0;
+
+    try {
+      await copyFile(fixture, firstInput);
+      await copyFile(fixture, secondInput);
+      const plan = createExecutionPlan({
+        inputs: [firstInput, secondInput],
+        outputDirectory,
+        pipeline: { version: 1, operations: [{ type: "convert", format: "webp" }] },
+        dryRun: false,
+      });
+
+      const summary = await createImageEngine().execute(plan, {
+        isCancelled: () => cancellationChecks++ > 0,
+        onProgress: (progress) => phases.push(progress.phase),
+      });
+
+      expect(summary).toMatchObject({
+        total: 2,
+        processed: 1,
+        skipped: 0,
+        failed: 0,
+        cancelled: 1,
+      });
+      expect(phases).toEqual([
+        "started",
+        "file-started",
+        "file-finished",
+        "cancelled",
+        "completed",
+      ]);
+      expect(await pathExists(join(outputDirectory, "a.webp"))).toBe(true);
+      expect(await pathExists(join(outputDirectory, "b.webp"))).toBe(false);
     } finally {
       await rm(temporaryRoot, { recursive: true, force: true });
     }

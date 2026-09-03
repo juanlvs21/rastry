@@ -6,8 +6,10 @@ import {
   type ExecutionSummary,
   type PipelineOperation,
 } from "@rastry/contracts";
-import { createExecutionPlan, RastryError } from "@rastry/core";
+import { createExecutionPlanFromInputs, RastryError } from "@rastry/core";
 import { createImageEngine } from "@rastry/image-engine";
+
+import { cliPlanningFileSystem } from "./filesystem";
 
 const VERSION = "0.0.0";
 
@@ -112,7 +114,7 @@ function parseArgs(args: string[]): CliOptions {
 
 function printExecutionSummary(summary: ExecutionSummary): void {
   console.log(
-    `Processed: ${summary.processed} · Skipped: ${summary.skipped} · Failed: ${summary.failed}`,
+    `Processed: ${summary.processed} · Skipped: ${summary.skipped} · Failed: ${summary.failed} · Cancelled: ${summary.cancelled}`,
   );
   console.log(`Bytes: ${summary.bytesBefore} -> ${summary.bytesAfter}`);
 
@@ -160,12 +162,15 @@ async function run(args: string[]): Promise<void> {
   });
   operations.push({ type: "strip-metadata" });
 
-  const plan = createExecutionPlan({
-    inputs: options.inputs,
-    ...(options.output === undefined ? {} : { outputDirectory: options.output }),
-    pipeline: { version: 1, operations },
-    dryRun: options.dryRun,
-  });
+  const plan = await createExecutionPlanFromInputs(
+    {
+      inputs: options.inputs,
+      ...(options.output === undefined ? {} : { outputDirectory: options.output }),
+      pipeline: { version: 1, operations },
+      dryRun: options.dryRun,
+    },
+    cliPlanningFileSystem,
+  );
 
   if (plan.dryRun && options.json) {
     console.log(JSON.stringify(plan, null, 2));
@@ -174,7 +179,13 @@ async function run(args: string[]): Promise<void> {
 
   if (plan.dryRun) {
     console.log(`Dry run: ${plan.files.length} file(s)`);
-    for (const file of plan.files) console.log(`  ${file.input} -> ${file.output}`);
+    for (const file of plan.files) {
+      const suffix =
+        file.preflightError === undefined
+          ? ""
+          : ` [${file.preflightError.code}] ${file.preflightError.message}`;
+      console.log(`  ${file.input} -> ${file.output}${suffix}`);
+    }
     for (const warning of plan.warnings) console.warn(`Warning: ${warning}`);
     return;
   }

@@ -1,6 +1,6 @@
-import { access, mkdtemp, rm } from "node:fs/promises";
+import { access, copyFile, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { basename, join, resolve } from "node:path";
 
 import { describe, expect, test } from "bun:test";
 
@@ -138,6 +138,84 @@ describe("safe transformation planning CLI", () => {
       expect(JSON.parse(result.stdout)).toEqual(
         expect.objectContaining({ processed: 0, skipped: 0, failed: 1 }),
       );
+    } finally {
+      await rm(temporaryRoot, { recursive: true, force: true });
+    }
+  });
+
+  test("expands a folder in stable order, filters non-images, and excludes output", async () => {
+    const temporaryRoot = await mkdtemp(join(tmpdir(), "rastry-cli-directory-plan-"));
+    const inputDirectory = join(temporaryRoot, "inputs");
+    const outputDirectory = join(inputDirectory, "optimized");
+    const nestedDirectory = join(inputDirectory, "nested");
+
+    try {
+      await mkdir(nestedDirectory, { recursive: true });
+      await mkdir(outputDirectory, { recursive: true });
+      await writeFile(join(inputDirectory, "z.jpg"), "not decoded during dry-run");
+      await writeFile(join(inputDirectory, "notes.txt"), "ignored");
+      await writeFile(join(nestedDirectory, "a.jpeg"), "not decoded during dry-run");
+      await writeFile(join(outputDirectory, "old.jpg"), "excluded");
+
+      const result = await runCli([
+        inputDirectory,
+        "--to",
+        "webp",
+        "--output",
+        outputDirectory,
+        "--dry-run",
+        "--json",
+      ]);
+
+      expect(result.exitCode).toBe(0);
+      expect(result.stderr).toBe("");
+      const plan = JSON.parse(result.stdout) as {
+        files: Array<{ input: string; output: string }>;
+        warnings: string[];
+      };
+      expect(plan.files.map((file) => basename(file.input))).toEqual(["a.jpeg", "z.jpg"]);
+      expect(plan.files.map((file) => basename(file.output))).toEqual(["a.webp", "z.webp"]);
+      expect(plan.warnings).toContain(
+        "Ignored 1 non-PNG/JPEG/WebP path(s) during directory expansion.",
+      );
+      expect(result.stdout).not.toContain("old.jpg");
+    } finally {
+      await rm(temporaryRoot, { recursive: true, force: true });
+    }
+  });
+
+  test("isolates an existing output conflict in a folder execution", async () => {
+    const temporaryRoot = await mkdtemp(join(tmpdir(), "rastry-cli-directory-execute-"));
+    const inputDirectory = join(temporaryRoot, "inputs");
+    const nestedDirectory = join(inputDirectory, "nested");
+    const outputDirectory = join(inputDirectory, "optimized");
+    const existingOutput = join(outputDirectory, "z.webp");
+    const sentinel = new Uint8Array([3, 1, 4, 1, 5]);
+
+    try {
+      await mkdir(nestedDirectory, { recursive: true });
+      await mkdir(outputDirectory, { recursive: true });
+      await copyFile(fixture, join(inputDirectory, "z.jpg"));
+      await copyFile(fixture, join(nestedDirectory, "a.jpg"));
+      await writeFile(existingOutput, sentinel);
+
+      const result = await runCli([
+        inputDirectory,
+        "--to",
+        "webp",
+        "--output",
+        outputDirectory,
+        "--execute",
+        "--json",
+      ]);
+
+      expect(result.exitCode).toBe(1);
+      expect(result.stderr).toBe("");
+      expect(JSON.parse(result.stdout)).toEqual(
+        expect.objectContaining({ total: 2, processed: 1, skipped: 0, failed: 1, cancelled: 0 }),
+      );
+      expect(await pathExists(join(outputDirectory, "a.webp"))).toBe(true);
+      expect(new Uint8Array(await Bun.file(existingOutput).arrayBuffer())).toEqual(sentinel);
     } finally {
       await rm(temporaryRoot, { recursive: true, force: true });
     }
