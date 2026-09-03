@@ -1,0 +1,10 @@
+{
+  "$schema": "../../packages/contracts/schema/pipeline.schema.json",
+  "version": 1,
+  "name": "social",
+  "operations": [
+    { "type": "resize", "width": 1080, "height": 1080, "fit": "cover", "anchor": "center" },
+    { "type": "convert", "format": "webp", "quality": 86 },
+    { "type": "strip-metadata" }
+  ]
+}

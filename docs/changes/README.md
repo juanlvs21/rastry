@@ -34,3 +34,4 @@ live in their own dedicated areas when those sections are introduced.
 | [Change 0002: Safe planning and dry-run](./0002-safe-planning-and-dry-run.md)                                     | Implemented |
 | [Change 0003: Complete v0.1 image operations](./0003-complete-v0-1-image-operations.md)                           | Implemented |
 | [Change 0004: Deterministic preflight and batch execution](./0004-deterministic-preflight-and-batch-execution.md) | Implemented |
+| [Change 0005: CLI presets and declarative pipeline execution](./0005-cli-presets-and-declarative-pipelines.md)    | Implemented |
