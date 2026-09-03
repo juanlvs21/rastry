@@ -1,0 +1,90 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: linux
+            runner: ubuntu-latest
+            binary: rastry
+          - os: macos
+            runner: macos-latest
+            binary: rastry
+          - os: windows
+            runner: windows-latest
+            binary: rastry.exe
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+
+      - name: Restore Bun cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            ~/AppData/Local/bun/install/cache
+          key: bun-${{ matrix.os }}-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            bun-${{ matrix.os }}-
+
+      - name: Verify Bun version
+        shell: pwsh
+        run: |
+          $version = (bun --version).Trim()
+          if ($version -ne "1.4.0") {
+            throw "Expected Bun 1.4.0 but found $version."
+          }
+
+      - name: Install frozen dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Run repository checks
+        run: bun run check
+
+      - name: Build compiled CLI
+        run: bun run build:cli
+
+      - name: Smoke-test compiled CLI
+        shell: pwsh
+        run: |
+          $binary = Join-Path "apps/cli/dist" "${{ matrix.binary }}"
+          if (-not (Test-Path -LiteralPath $binary -PathType Leaf)) {
+            throw "Compiled CLI was not found at $binary."
+          }
+
+          $help = (& $binary --help | Out-String)
+          if ($LASTEXITCODE -ne 0 -or $help -notmatch "Rastry") {
+            throw "Compiled CLI did not return its help output."
+          }
+
+      - name: Upload compiled CLI
+        uses: actions/upload-artifact@v4
+        with:
+          name: rastry-cli-${{ matrix.os }}
+          path: apps/cli/dist/${{ matrix.binary }}
+          if-no-files-found: error
+          retention-days: 7

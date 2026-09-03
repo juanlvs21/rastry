@@ -27,6 +27,7 @@
     "dev:desktop:hmr": "bun --filter @rastry/desktop dev:hmr",
     "build:cli": "bun --filter @rastry/cli build",
     "build:desktop": "bun --filter @rastry/desktop build",
+    "changelog": "bun run scripts/changelog.ts",
     "typecheck": "bun --filter './packages/*' typecheck && bun --filter @rastry/cli typecheck && bun --filter @rastry/desktop typecheck",
     "test": "bun test",
     "check": "bun run format:check && bun run lint && bun run typecheck && bun run test"
