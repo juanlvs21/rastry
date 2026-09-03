@@ -4,12 +4,14 @@ import {
   isSupportedOutputFormat,
   type ImageFormat,
   type ExecutionSummary,
+  type PipelineConfig,
   type PipelineOperation,
 } from "@rastry/contracts";
 import { createExecutionPlanFromInputs, RastryError } from "@rastry/core";
 import { createImageEngine } from "@rastry/image-engine";
 
 import { cliPlanningFileSystem } from "./filesystem";
+import { loadPreset } from "./presets";
 
 const VERSION = "0.0.0";
 
@@ -19,6 +21,7 @@ Create a safe, local image transformation plan.
 
 Usage:
   rastry <input...> --to <png|jpeg|webp> [options]
+  rastry run <input...> --preset <name|path> [options]
 
 Options:
   --to <format>        Output format (required)
@@ -26,6 +29,7 @@ Options:
   --max-width <px>     Proportional maximum width
   --max-height <px>    Proportional maximum height
   --output <directory> Output directory (default: ./rastry-output beside input)
+  --preset <name|path> Built-in preset name or local JSON file (use with run)
   --dry-run            Print the plan without writing files (default)
   --execute            Process files and write new outputs safely
   --json               Print machine-readable JSON
@@ -35,7 +39,11 @@ Options:
 Examples:
   rastry photo.png --to webp --quality 82 --dry-run
   rastry hero.png card.jpg --to webp --max-width 1600 --output ./optimized
+  rastry run ./public --preset web
+  rastry run ./public --preset ./presets/marketing.json --execute
 `;
+
+type CliCommand = "shorthand" | "preset";
 
 type CliOptions = {
   inputs: string[];
@@ -44,6 +52,8 @@ type CliOptions = {
   maxWidth?: number;
   maxHeight?: number;
   output?: string;
+  preset?: string;
+  command: CliCommand;
   json: boolean;
   dryRun: boolean;
 };
@@ -65,9 +75,11 @@ function parseInteger(value: string, flag: string): number {
 }
 
 function parseArgs(args: string[]): CliOptions {
-  const options: CliOptions = { inputs: [], json: false, dryRun: true };
+  const command: CliCommand = args[0] === "run" ? "preset" : "shorthand";
+  const startIndex = command === "preset" ? 1 : 0;
+  const options: CliOptions = { inputs: [], json: false, dryRun: true, command };
 
-  for (let index = 0; index < args.length; index += 1) {
+  for (let index = startIndex; index < args.length; index += 1) {
     const argument = args[index]!;
 
     if (!argument.startsWith("--")) {
@@ -104,8 +116,30 @@ function parseArgs(args: string[]): CliOptions {
       options.maxHeight = parseInteger(value, argument);
     } else if (argument === "--output") {
       options.output = value;
+    } else if (argument === "--preset") {
+      if (options.command !== "preset") {
+        throw new RastryError("PRESET_REQUIRES_RUN", "--preset requires the run command.");
+      }
+      options.preset = value;
     } else {
       throw new RastryError("UNKNOWN_OPTION", `Unknown option: ${argument}.`);
+    }
+  }
+
+  if (options.command === "preset") {
+    if (options.preset === undefined) {
+      throw new RastryError("MISSING_PRESET", "--preset is required with the run command.");
+    }
+    if (
+      options.format !== undefined ||
+      options.quality !== undefined ||
+      options.maxWidth !== undefined ||
+      options.maxHeight !== undefined
+    ) {
+      throw new RastryError(
+        "CONFLICTING_OPTIONS",
+        "Preset runs cannot be combined with --to, --quality, --max-width, or --max-height.",
+      );
     }
   }
 
@@ -142,31 +176,38 @@ async function run(args: string[]): Promise<void> {
   }
 
   const options = parseArgs(args);
-  if (options.format === undefined) {
-    throw new RastryError("MISSING_FORMAT", "--to is required for planning.");
-  }
 
-  const operations: PipelineOperation[] = [];
-  if (options.maxWidth !== undefined || options.maxHeight !== undefined) {
+  let pipeline: PipelineConfig;
+  if (options.command === "preset") {
+    pipeline = await loadPreset(options.preset!);
+  } else {
+    if (options.format === undefined) {
+      throw new RastryError("MISSING_FORMAT", "--to is required for planning.");
+    }
+
+    const operations: PipelineOperation[] = [];
+    if (options.maxWidth !== undefined || options.maxHeight !== undefined) {
+      operations.push({
+        type: "resize",
+        ...(options.maxWidth === undefined ? {} : { width: options.maxWidth }),
+        ...(options.maxHeight === undefined ? {} : { height: options.maxHeight }),
+        fit: "contain",
+      });
+    }
     operations.push({
-      type: "resize",
-      ...(options.maxWidth === undefined ? {} : { width: options.maxWidth }),
-      ...(options.maxHeight === undefined ? {} : { height: options.maxHeight }),
-      fit: "contain",
+      type: "convert",
+      format: options.format,
+      ...(options.quality === undefined ? {} : { quality: options.quality }),
     });
+    operations.push({ type: "strip-metadata" });
+    pipeline = { version: 1, operations };
   }
-  operations.push({
-    type: "convert",
-    format: options.format,
-    ...(options.quality === undefined ? {} : { quality: options.quality }),
-  });
-  operations.push({ type: "strip-metadata" });
 
   const plan = await createExecutionPlanFromInputs(
     {
       inputs: options.inputs,
       ...(options.output === undefined ? {} : { outputDirectory: options.output }),
-      pipeline: { version: 1, operations },
+      pipeline,
       dryRun: options.dryRun,
     },
     cliPlanningFileSystem,
@@ -201,7 +242,7 @@ async function run(args: string[]): Promise<void> {
 
 void run(Bun.argv.slice(2)).catch((error: unknown) => {
   if (error instanceof RastryError) {
-    console.error(`rastry: ${error.message}`);
+    console.error(`rastry: ${error.message} [${error.code}]`);
     process.exitCode = 2;
   } else {
     throw error;

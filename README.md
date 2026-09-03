@@ -2,7 +2,7 @@
 
 Rastry is a local-first, open-source image optimization and transformation tool. This repository contains the shared TypeScript core, a Bun CLI, and an Electrobun + React desktop application.
 
-The project is at the foundation stage. The CLI can parse a safe transformation request and execute local PNG, JPEG, and WebP transformations through the `@rastry/image-engine` adapter. Planning remains the default, so source files are never modified unless `--execute` is explicitly provided.
+The project is at the foundation stage. The CLI can parse safe transformation requests, load reusable JSON presets, and execute local PNG, JPEG, and WebP transformations through the `@rastry/image-engine` adapter. Planning remains the default, so source files are never modified unless `--execute` is explicitly provided.
 
 ## Why Rastry exists
 
@@ -23,7 +23,22 @@ bun install
 bun run dev:cli -- --help
 bun run dev:cli -- photo.png --to webp --quality 82 --dry-run
 bun run dev:cli -- assets/test/landscape-mountains.jpg --to webp --max-width 1200 --execute
+bun run dev:cli -- run ./assets/test --preset web --dry-run
+bun run dev:cli -- run ./assets/test --preset ./examples/presets/ecommerce.json --execute
 ```
+
+The CLI includes the `web`, `ecommerce`, and `social` presets. Custom presets
+are readable JSON files using the versioned schema at
+`packages/contracts/schema/pipeline.schema.json`:
+
+```bash
+rastry run ./public --preset web
+rastry run ./public --preset ./presets/marketing.json --output ./optimized --execute
+```
+
+Preset runs support `--output`, `--dry-run`, `--execute`, and `--json`. The
+operation shorthand flags cannot be combined with `--preset`; define those
+operations in the preset itself.
 
 Launch the desktop application with:
 

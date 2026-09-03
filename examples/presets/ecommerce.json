@@ -1,0 +1,10 @@
+{
+  "$schema": "../../packages/contracts/schema/pipeline.schema.json",
+  "version": 1,
+  "name": "ecommerce",
+  "operations": [
+    { "type": "resize", "width": 2000, "height": 2000, "fit": "contain" },
+    { "type": "convert", "format": "webp", "quality": 85 },
+    { "type": "strip-metadata" }
+  ]
+}
