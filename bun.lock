@@ -36,6 +36,7 @@
       "dependencies": {
         "@rastry/contracts": "workspace:*",
         "@rastry/core": "workspace:*",
+        "@rastry/image-engine": "workspace:*",
         "react": "19.2.8",
         "react-dom": "19.2.8",
       },

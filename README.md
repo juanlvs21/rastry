@@ -46,7 +46,16 @@ Launch the desktop application with:
 bun run dev:desktop
 ```
 
-The first desktop run downloads the Electrobun/Hutch toolchain associated with the locked `electrobun` package.
+The desktop workflow keeps filesystem access in the Bun main process. Select
+image files or folders, or drop paths when the platform exposes them, choose an
+output directory, and configure resize, crop, transparent trim, padding,
+conversion, quality, and metadata removal. Every run starts as a dry-run plan;
+review the deterministic output paths and conflicts before selecting
+`Execute confirmed plan`. Originals and existing outputs are never overwritten.
+
+The first desktop run downloads the Electrobun/Hutch toolchain associated with
+the locked `electrobun` package. Image bytes stay local and do not cross the
+typed RPC bridge into the React webview.
 
 ## Repository layout
 
