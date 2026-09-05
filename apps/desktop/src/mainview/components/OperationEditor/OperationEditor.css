@@ -11,7 +11,7 @@
 .rastry-operation-editor__hint {
   align-self: center;
   margin: 0.7rem 0 0;
-  color: #687183;
+  color: var(--subtle);
   font-size: 0.74rem;
   line-height: 1.5;
 }

@@ -2,15 +2,15 @@
   position: relative;
   min-width: 0;
   padding: 1rem;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: var(--surface-soft);
+  border: 0;
   border-radius: 1rem;
   transition:
-    border-color 160ms ease,
+    background 160ms ease,
     transform 160ms ease;
 }
 .rastry-operation-card:hover {
-  border-color: rgba(155, 140, 255, 0.35);
+  background: rgb(var(--color-indigo-rgb) / 0.1);
   transform: translateY(-1px);
 }
 .rastry-operation-card__header {
@@ -27,7 +27,7 @@
   min-width: 0;
 }
 .rastry-operation-card__title strong {
-  color: #f6f7fb;
+  color: var(--ink);
   font-size: 0.9rem;
   font-weight: 700;
 }
@@ -36,8 +36,8 @@
   place-items: center;
   width: 2rem;
   height: 2rem;
-  color: #10150b;
-  background: #c9ff5a;
+  color: var(--color-deep-ink);
+  background: var(--accent);
   border-radius: 0.65rem;
   font-size: 0.7rem;
   font-weight: 850;

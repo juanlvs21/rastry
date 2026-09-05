@@ -23,39 +23,39 @@
   transform: translateY(-1px);
 }
 .rastry-button--primary {
-  color: #10150b;
-  background: linear-gradient(135deg, #e5ffa3, #c9ff5a);
-  border: 1px solid rgba(235, 255, 186, 0.65);
-  box-shadow: 0 8px 26px rgba(201, 255, 90, 0.16);
+  color: var(--color-deep-ink);
+  background: var(--accent);
+  border: 0;
+  box-shadow: 0 8px 26px rgb(var(--color-mandarin-rgb) / 0.16);
 }
 .rastry-button--primary:not(:disabled):hover {
-  background: linear-gradient(135deg, #edffbb, #baff43);
-  box-shadow: 0 11px 34px rgba(201, 255, 90, 0.25);
+  background: color-mix(in srgb, var(--color-mandarin) 84%, var(--color-warm-ivory));
+  box-shadow: 0 11px 34px rgb(var(--color-mandarin-rgb) / 0.25);
 }
 .rastry-button--secondary {
-  color: #f6f7fb;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--ink);
+  background: rgb(var(--color-warm-ivory-rgb) / 0.05);
+  border: 1px solid rgb(var(--color-warm-ivory-rgb) / 0.15);
 }
 .rastry-button--secondary:not(:disabled):hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.26);
+  background: rgb(var(--color-warm-ivory-rgb) / 0.1);
+  border-color: rgb(var(--color-warm-ivory-rgb) / 0.26);
 }
 .rastry-button--ghost {
-  color: #929aaa;
+  color: var(--muted);
   background: transparent;
   border: 1px solid transparent;
 }
 .rastry-button--ghost:not(:disabled):hover {
-  color: #f6f7fb;
-  background: rgba(255, 255, 255, 0.045);
-  border-color: rgba(255, 255, 255, 0.09);
+  color: var(--ink);
+  background: rgb(var(--color-warm-ivory-rgb) / 0.045);
+  border-color: rgb(var(--color-warm-ivory-rgb) / 0.09);
 }
 .rastry-button--danger {
-  color: #ffd2d7;
-  background: rgba(255, 89, 107, 0.1);
-  border: 1px solid rgba(255, 143, 154, 0.28);
+  color: var(--danger-strong);
+  background: rgb(var(--color-mandarin-rgb) / 0.1);
+  border: 1px solid rgb(var(--color-mandarin-rgb) / 0.28);
 }
 .rastry-button--danger:not(:disabled):hover {
-  background: rgba(255, 89, 107, 0.17);
+  background: rgb(var(--color-mandarin-rgb) / 0.17);
 }

@@ -11,7 +11,7 @@
 .rastry-workflow__card-heading h1 {
   max-width: 700px;
   margin: 0;
-  color: #f6f7fb;
+  color: var(--ink);
   font-size: clamp(2rem, 4.5vw, 3.7rem);
   letter-spacing: -0.07em;
   line-height: 0.98;
@@ -19,15 +19,15 @@
 .rastry-workflow__card-heading p:not(.rastry-eyebrow) {
   max-width: 600px;
   margin: 0.8rem 0 0;
-  color: #929aaa;
+  color: var(--muted);
   line-height: 1.55;
 }
 .rastry-workflow__step-count {
   flex: 0 0 auto;
   padding: 0.45rem 0.65rem;
-  color: #c9ff5a;
-  background: rgba(201, 255, 90, 0.08);
-  border: 1px solid rgba(201, 255, 90, 0.2);
+  color: var(--accent);
+  background: rgb(var(--color-mandarin-rgb) / 0.08);
+  border: 0;
   border-radius: 999px;
   font-size: 0.7rem;
   font-weight: 800;
@@ -39,11 +39,9 @@
   align-items: center;
   min-height: 210px;
   padding: 2rem;
-  color: #929aaa;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(155, 140, 255, 0.14), transparent 17rem),
-    rgba(5, 8, 13, 0.3);
-  border: 1px dashed rgba(255, 255, 255, 0.2);
+  color: var(--muted);
+  background: var(--surface-deep);
+  border: 1px dashed rgb(var(--color-warm-ivory-rgb) / 0.2);
   border-radius: 1.1rem;
   transition:
     background 160ms ease,
@@ -52,10 +50,8 @@
 }
 .rastry-dropzone:hover,
 .rastry-dropzone--active {
-  background:
-    radial-gradient(circle at 50% 0%, rgba(201, 255, 90, 0.14), transparent 17rem),
-    rgba(201, 255, 90, 0.055);
-  border-color: rgba(201, 255, 90, 0.65);
+  background: rgb(var(--color-mandarin-rgb) / 0.08);
+  border-color: rgb(var(--color-mandarin-rgb) / 0.65);
   transform: translateY(-2px);
 }
 .rastry-dropzone__icon {
@@ -63,9 +59,9 @@
   place-items: center;
   width: 3.8rem;
   height: 3.8rem;
-  color: #c9ff5a;
-  background: rgba(201, 255, 90, 0.1);
-  border: 1px solid rgba(201, 255, 90, 0.24);
+  color: var(--accent);
+  background: rgb(var(--color-mandarin-rgb) / 0.1);
+  border: 0;
   border-radius: 1.2rem;
   font-size: 1.7rem;
 }
@@ -75,11 +71,11 @@
 }
 .rastry-dropzone strong {
   margin-bottom: 0.45rem;
-  color: #f6f7fb;
+  color: var(--ink);
   font-size: 1rem;
 }
 .rastry-dropzone small {
-  color: #687183;
+  color: var(--subtle);
   font-size: 0.75rem;
 }
 .rastry-import__actions,
@@ -98,13 +94,13 @@
   gap: 0.35rem;
   margin-top: 1.4rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  border-top: 0;
 }
 .rastry-path-list__heading {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #929aaa;
+  color: var(--muted);
   font-size: 0.72rem;
   font-weight: 750;
 }
@@ -118,13 +114,13 @@
   gap: 0.55rem;
   align-items: center;
   padding: 0.55rem 0.65rem;
-  color: #929aaa;
-  background: rgba(255, 255, 255, 0.035);
+  color: var(--muted);
+  background: rgb(var(--color-warm-ivory-rgb) / 0.035);
   border-radius: 0.65rem;
   font-size: 0.78rem;
 }
 .rastry-path-row__marker {
-  color: #c9ff5a;
+  color: var(--accent);
 }
 .rastry-path-row__value {
   overflow: hidden;
@@ -143,9 +139,9 @@
   align-items: center;
   margin: 1.4rem 0 0;
   padding: 1rem;
-  color: #929aaa;
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: var(--muted);
+  background: rgb(var(--color-warm-ivory-rgb) / 0.035);
+  border: 0;
   border-radius: 0.8rem;
 }
 .rastry-empty-state span {
@@ -154,13 +150,13 @@
   place-items: center;
   width: 2rem;
   height: 2rem;
-  color: #c9ff5a;
-  background: rgba(201, 255, 90, 0.1);
+  color: var(--accent);
+  background: rgb(var(--color-mandarin-rgb) / 0.1);
   border-radius: 0.6rem;
 }
 .rastry-empty-state p {
   margin: 0;
-  color: #f6f7fb;
+  color: var(--ink);
   font-size: 0.82rem;
 }
 .rastry-empty-state small {
@@ -174,17 +170,17 @@
   gap: 1rem;
   margin-top: 1.7rem;
   padding-top: 1.1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  border-top: 0;
 }
 .rastry-workflow__footer-hint {
-  color: #687183;
+  color: var(--subtle);
   font-size: 0.72rem;
 }
 .rastry-configure__destination,
 .rastry-configure__pipeline {
   padding: 1.15rem;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgb(var(--color-warm-ivory-rgb) / 0.025);
+  border: 0;
   border-radius: 1rem;
 }
 .rastry-configure__pipeline {
@@ -207,20 +203,20 @@
   place-items: center;
   width: 1.8rem;
   height: 1.8rem;
-  color: #10150b;
-  background: #c9ff5a;
+  color: var(--color-deep-ink);
+  background: var(--accent);
   border-radius: 0.55rem;
   font-size: 0.7rem;
   font-weight: 900;
 }
 .rastry-subsection-heading h2 {
   margin: 0;
-  color: #f6f7fb;
+  color: var(--ink);
   font-size: 0.96rem;
 }
 .rastry-subsection-heading p {
   margin: 0.25rem 0 0;
-  color: #687183;
+  color: var(--subtle);
   font-size: 0.74rem;
 }
 .rastry-input-group {
@@ -238,23 +234,23 @@
   align-items: flex-start;
   margin: 0.9rem 0 0;
   padding: 0.8rem 0.9rem;
-  color: #b7c1ae;
-  background: rgba(201, 255, 90, 0.055);
-  border-left: 2px solid #c9ff5a;
+  color: var(--color-warm-ivory);
+  background: rgb(var(--color-mandarin-rgb) / 0.055);
+  border-left: 0;
   border-radius: 0 0.65rem 0.65rem 0;
   font-size: 0.74rem;
   line-height: 1.5;
 }
 .rastry-safety-copy span {
-  color: #c9ff5a;
+  color: var(--accent);
   font-weight: 900;
 }
 .rastry-workflow__add-select {
   width: auto;
   min-width: 10rem;
-  color: #10150b;
-  background: #c9ff5a;
-  border-color: #c9ff5a;
+  color: var(--color-deep-ink);
+  background: var(--accent);
+  border-color: var(--accent);
   font-weight: 750;
 }
 .rastry-operation-list {
@@ -270,8 +266,8 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: linear-gradient(145deg, rgba(201, 255, 90, 0.08), rgba(155, 140, 255, 0.06));
-  border: 1px solid rgba(201, 255, 90, 0.17);
+  background: var(--surface-soft);
+  border: 0;
   border-radius: 1rem;
 }
 .rastry-process__orb {
@@ -280,62 +276,62 @@
   flex: 0 0 auto;
   width: 3.5rem;
   height: 3.5rem;
-  color: #10150b;
-  background: #c9ff5a;
+  color: var(--color-deep-ink);
+  background: var(--accent);
   border-radius: 1.1rem;
   font-size: 1.4rem;
   font-weight: 900;
 }
 .rastry-process__orb--running {
-  color: #c9ff5a;
-  background: rgba(201, 255, 90, 0.12);
-  border: 1px solid rgba(201, 255, 90, 0.3);
+  color: var(--accent);
+  background: rgb(var(--color-mandarin-rgb) / 0.12);
+  border: 0;
 }
 .rastry-process__hero strong,
 .rastry-process__hero span {
   display: block;
 }
 .rastry-process__hero strong {
-  color: #f6f7fb;
+  color: var(--ink);
   font-size: 0.92rem;
 }
 .rastry-process__hero span {
   margin-top: 0.3rem;
-  color: #929aaa;
+  color: var(--muted);
   font-size: 0.75rem;
 }
 .rastry-progress-panel {
   margin-top: 1rem;
   padding: 0.9rem 1rem;
-  background: rgba(5, 8, 13, 0.34);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgb(var(--color-deep-ink-rgb) / 0.34);
+  border: 0;
   border-radius: 0.8rem;
 }
 .rastry-progress-panel__meta {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  color: #f6f7fb;
+  color: var(--ink);
   font-size: 0.76rem;
 }
 .rastry-progress-bar {
   height: 0.35rem;
   margin: 0.7rem 0 0.5rem;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.09);
+  background: rgb(var(--color-warm-ivory-rgb) / 0.09);
   border-radius: 999px;
 }
 .rastry-progress-bar span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, #c9ff5a, #9b8cff);
+  background: var(--accent);
   border-radius: inherit;
   transition: width 220ms ease;
 }
 .rastry-progress-panel small {
   display: block;
   overflow: hidden;
-  color: #687183;
+  color: var(--subtle);
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 0.7rem;
@@ -343,8 +339,8 @@
 .rastry-plan-panel {
   margin-top: 1rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgb(var(--color-warm-ivory-rgb) / 0.025);
+  border: 0;
   border-radius: 1rem;
 }
 .rastry-plan-panel__heading {
@@ -355,7 +351,7 @@
 }
 .rastry-plan-panel__heading h2 {
   margin: 0;
-  color: #f6f7fb;
+  color: var(--ink);
   font-size: 1rem;
 }
 .rastry-plan-badge--dry-run,
@@ -365,8 +361,8 @@
   align-items: center;
   justify-content: center;
   padding: 0.3rem 0.5rem;
-  color: #10150b;
-  background: #c9ff5a;
+  color: var(--color-deep-ink);
+  background: var(--accent);
   border-radius: 999px;
   font-size: 0.62rem;
   font-weight: 850;
@@ -376,7 +372,7 @@
 .rastry-plan-panel__destination {
   margin: 0.8rem 0;
   overflow: hidden;
-  color: #929aaa;
+  color: var(--muted);
   font-size: 0.75rem;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -385,9 +381,9 @@
 .rastry-workflow__error {
   margin-top: 0.65rem;
   padding: 0.75rem;
-  color: #ecf4be;
-  background: rgba(201, 255, 90, 0.07);
-  border: 1px solid rgba(201, 255, 90, 0.2);
+  color: var(--danger-strong);
+  background: rgb(var(--color-mandarin-rgb) / 0.07);
+  border: 0;
   border-radius: 0.65rem;
   font-size: 0.74rem;
 }
@@ -401,8 +397,8 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.7rem 0;
-  color: #929aaa;
-  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  color: var(--muted);
+  border-top: 0;
   font-size: 0.74rem;
 }
 .rastry-plan-panel__row > div {
@@ -417,29 +413,29 @@
 }
 .rastry-plan-panel__row span {
   margin-top: 0.25rem;
-  color: #687183;
+  color: var(--subtle);
 }
 .rastry-plan-panel__row small {
-  color: #ff8f9a;
+  color: var(--danger-strong);
   text-align: right;
 }
 .rastry-plan-panel__row--conflict {
-  color: #ff8f9a;
+  color: var(--danger-strong);
 }
 .rastry-plan-badge--planned {
-  color: #c9ff5a;
-  background: rgba(201, 255, 90, 0.08);
-  border: 1px solid rgba(201, 255, 90, 0.2);
+  color: var(--accent);
+  background: rgb(var(--color-mandarin-rgb) / 0.08);
+  border: 0;
 }
 .rastry-workflow__error {
-  color: #ffd2d7;
-  background: rgba(255, 89, 107, 0.12);
-  border-color: rgba(255, 143, 154, 0.3);
+  color: var(--danger-strong);
+  background: rgb(var(--color-mandarin-rgb) / 0.12);
+  border-color: transparent;
 }
 .rastry-workflow__error strong {
   display: block;
   margin-bottom: 0.25rem;
-  color: #ff8f9a;
+  color: var(--danger-strong);
   font-size: 0.75rem;
 }
 

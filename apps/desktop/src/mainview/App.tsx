@@ -1,5 +1,7 @@
 import { useEffect, useState, type DragEvent } from "react";
 
+import logoUrl from "./assets/rastry-logo-dark.svg";
+
 import type {
   ExecutionProgress,
   ExecutionSummary,
@@ -302,10 +304,7 @@ export function App() {
     <main className="rastry-app">
       <header className="rastry-app__topbar">
         <a className="rastry-app__brand" href="https://rastry.dev">
-          <span className="rastry-app__brand-mark" aria-hidden="true">
-            R
-          </span>
-          <span>Rastry</span>
+          <img className="rastry-app__brand-logo" src={logoUrl} alt="Rastry" />
         </a>
         <span className="rastry-app__status">
           <i className="rastry-app__status-indicator" /> Local-first · v0.2

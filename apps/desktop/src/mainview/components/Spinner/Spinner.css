@@ -2,8 +2,8 @@
   display: inline-block;
   width: 1.15rem;
   height: 1.15rem;
-  border: 2px solid rgba(201, 255, 90, 0.2);
-  border-top-color: #c9ff5a;
+  border: 2px solid rgb(var(--color-mandarin-rgb) / 0.2);
+  border-top-color: var(--accent);
   border-radius: 50%;
   animation: uiSpin 780ms linear infinite;
 }

@@ -10,12 +10,12 @@
 }
 .rastry-summary__heading h2 {
   margin: 0;
-  color: #f6f7fb;
+  color: var(--ink);
   font-size: 1.04rem;
   letter-spacing: -0.035em;
 }
 .rastry-summary__bytes {
-  color: #929aaa;
+  color: var(--muted);
   font-size: 0.76rem;
 }
 .rastry-summary__stats {
@@ -27,21 +27,21 @@
 .rastry-summary__stats > span {
   min-width: 0;
   padding: 0.85rem;
-  color: #929aaa;
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: var(--muted);
+  background: rgb(var(--color-warm-ivory-rgb) / 0.045);
+  border: 0;
   border-radius: 0.8rem;
   font-size: 0.75rem;
 }
 .rastry-summary__stats strong {
   display: block;
   margin-bottom: 0.2rem;
-  color: #f6f7fb;
+  color: var(--ink);
   font-size: 1.1rem;
 }
 .rastry-summary__results {
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 0;
   border-radius: 0.9rem;
 }
 .rastry-summary__row {
@@ -50,25 +50,25 @@
   gap: 0.7rem;
   align-items: center;
   padding: 0.75rem 0.85rem;
-  background: rgba(255, 255, 255, 0.018);
+  background: rgb(var(--color-warm-ivory-rgb) / 0.018);
   font-size: 0.75rem;
 }
 .rastry-summary__row + .rastry-summary__row {
-  border-top: 1px solid rgba(255, 255, 255, 0.09);
+  border-top: 0;
 }
 .rastry-summary__row small {
   grid-column: 2 / -1;
-  color: #ff8f9a;
+  color: var(--danger-strong);
 }
 .rastry-summary__path {
   min-width: 0;
   overflow: hidden;
-  color: #929aaa;
+  color: var(--muted);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .rastry-summary__arrow {
-  color: #c9ff5a;
+  color: var(--accent);
 }
 .rastry-summary__status {
   display: inline-flex;
@@ -76,9 +76,9 @@
   justify-content: center;
   width: fit-content;
   padding: 0.3rem 0.5rem;
-  color: #929aaa;
-  background: rgba(255, 255, 255, 0.055);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: var(--muted);
+  background: rgb(var(--color-warm-ivory-rgb) / 0.055);
+  border: 0;
   border-radius: 999px;
   font-size: 0.62rem;
   font-weight: 800;
@@ -86,14 +86,14 @@
   text-transform: uppercase;
 }
 .rastry-summary__status--processed {
-  color: #c9ff5a;
-  background: rgba(201, 255, 90, 0.08);
-  border-color: rgba(201, 255, 90, 0.2);
+  color: var(--success);
+  background: rgb(var(--color-forest-rgb) / 0.1);
+  border: 0;
 }
 .rastry-summary__status--failed {
-  color: #ff8f9a;
-  background: rgba(255, 143, 154, 0.08);
-  border-color: rgba(255, 143, 154, 0.22);
+  color: var(--danger-strong);
+  background: rgb(var(--color-mandarin-rgb) / 0.08);
+  border: 0;
 }
 
 @media (max-width: 600px) {

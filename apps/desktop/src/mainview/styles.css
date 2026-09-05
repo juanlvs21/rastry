@@ -9,17 +9,36 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  color: #f6f7fb;
-  background: #0b0e13;
+  color: var(--color-warm-ivory);
+  background: var(--color-deep-ink);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --ink: #f6f7fb;
-  --muted: #929aaa;
-  --subtle: #687183;
-  --accent: #c9ff5a;
-  --accent-ink: #10150b;
-  --violet: #9b8cff;
-  --line: rgba(255, 255, 255, 0.09);
+  --color-deep-ink: #171923;
+  --color-warm-ivory: #f5f1e8;
+  --color-indigo: #4b3f9f;
+  --color-mandarin: #f26b3a;
+  --color-slate: #687080;
+  --color-forest: #27866a;
+  --color-deep-ink-rgb: 23 25 35;
+  --color-warm-ivory-rgb: 245 241 232;
+  --color-indigo-rgb: 75 63 159;
+  --color-mandarin-rgb: 242 107 58;
+  --color-slate-rgb: 104 112 128;
+  --color-forest-rgb: 39 134 106;
+  --ink: var(--color-warm-ivory);
+  --muted: var(--color-slate);
+  --subtle: color-mix(in srgb, var(--color-slate) 72%, var(--color-deep-ink));
+  --accent: var(--color-mandarin);
+  --accent-ink: var(--color-deep-ink);
+  --indigo: var(--color-indigo);
+  --success: var(--color-forest);
+  --danger: var(--color-mandarin);
+  --danger-strong: color-mix(in srgb, var(--color-mandarin) 55%, var(--color-warm-ivory));
+  --line: rgb(var(--color-warm-ivory-rgb) / 0.14);
+  --line-subtle: rgb(var(--color-warm-ivory-rgb) / 0.09);
+  --surface-soft: rgb(var(--color-warm-ivory-rgb) / 0.035);
+  --surface-raised: rgb(var(--color-warm-ivory-rgb) / 0.06);
+  --surface-deep: rgb(var(--color-deep-ink-rgb) / 0.42);
 }
 
 * {
@@ -28,29 +47,16 @@
 html {
   min-width: 320px;
   min-height: 100%;
-  background: #0b0e13;
+  background: var(--color-deep-ink);
 }
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background:
-    radial-gradient(circle at 10% 0%, rgba(155, 140, 255, 0.18), transparent 27rem),
-    radial-gradient(circle at 92% 7%, rgba(201, 255, 90, 0.11), transparent 25rem),
-    linear-gradient(145deg, #0b0e13 0%, #10141c 50%, #0b0e13 100%);
+  background: var(--color-deep-ink);
 }
 body::before {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  content: "";
-  opacity: 0.18;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: linear-gradient(to bottom, black, transparent 82%);
+  display: none;
 }
 button,
 input,
@@ -95,18 +101,23 @@ a {
   font-weight: 750;
   letter-spacing: -0.03em;
 }
+.rastry-app__brand-logo {
+  display: block;
+  width: 9rem;
+  height: auto;
+}
 .rastry-app__brand-mark {
   display: grid;
   place-items: center;
   width: 2.1rem;
   height: 2.1rem;
   color: var(--accent-ink);
-  background: linear-gradient(145deg, #e8ffac, var(--accent));
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: var(--color-indigo);
+  border: 0;
   border-radius: 0.7rem;
   box-shadow:
-    0 0 0 5px rgba(201, 255, 90, 0.07),
-    0 8px 24px rgba(201, 255, 90, 0.16);
+    0 0 0 5px rgb(var(--color-mandarin-rgb) / 0.08),
+    0 8px 24px rgb(var(--color-mandarin-rgb) / 0.2);
   font-size: 0.9rem;
   font-weight: 900;
 }
@@ -115,8 +126,8 @@ a {
   align-items: center;
   padding: 0.48rem 0.72rem;
   color: var(--muted);
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid var(--line);
+  background: var(--surface-soft);
+  border: 0;
   border-radius: 999px;
   font-size: 0.7rem;
   font-weight: 700;
@@ -130,7 +141,7 @@ a {
   margin-right: 0.5rem;
   background: var(--accent);
   border-radius: 50%;
-  box-shadow: 0 0 16px rgba(201, 255, 90, 0.86);
+  box-shadow: 0 0 16px rgb(var(--color-mandarin-rgb) / 0.86);
 }
 
 .rastry-app__intro {
@@ -175,10 +186,10 @@ a {
   width: min(260px, 100%);
   padding: 1rem;
   color: var(--muted);
-  background: linear-gradient(145deg, rgba(201, 255, 90, 0.09), rgba(255, 255, 255, 0.035));
-  border: 1px solid rgba(201, 255, 90, 0.18);
+  background: var(--surface-soft);
+  border: 0;
   border-radius: 1rem;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  box-shadow: none;
   font-size: 0.77rem;
   line-height: 1.45;
 }
@@ -201,8 +212,8 @@ a {
   gap: 0.7rem;
   margin-bottom: 1rem;
   padding: 0.7rem;
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid var(--line);
+  background: var(--surface-soft);
+  border: 0;
   border-radius: 1rem;
 }
 .rastry-stepper__step {
@@ -220,7 +231,8 @@ a {
   flex: 0 0 auto;
   width: 1.75rem;
   height: 1.75rem;
-  border: 1px solid var(--line);
+  background: var(--surface-raised);
+  border: 0;
   border-radius: 0.55rem;
   font-size: 0.66rem;
 }
@@ -237,14 +249,13 @@ a {
 .rastry-stepper__step--active .rastry-stepper__number {
   color: var(--accent-ink);
   background: var(--accent);
-  border-color: var(--accent);
 }
 .rastry-stepper__step--complete {
   color: var(--muted);
 }
 .rastry-stepper__step--complete .rastry-stepper__number {
-  color: var(--accent);
-  border-color: rgba(201, 255, 90, 0.35);
+  color: var(--success);
+  background: rgb(var(--color-forest-rgb) / 0.12);
 }
 
 .rastry-workflow__screen {
@@ -258,8 +269,8 @@ a {
   margin-top: 1rem;
   padding: 0.85rem 1rem;
   color: var(--muted);
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid var(--line);
+  background: var(--surface-soft);
+  border: 0;
   border-radius: 0.8rem;
   font-size: 0.78rem;
 }
@@ -269,9 +280,9 @@ a {
   letter-spacing: 0.06em;
 }
 .rastry-app__feedback--error {
-  color: #ffd2d7;
-  background: rgba(255, 89, 107, 0.12);
-  border-color: rgba(255, 143, 154, 0.3);
+  color: var(--danger-strong);
+  background: rgb(var(--color-mandarin-rgb) / 0.12);
+  border: 0;
 }
 .rastry-app__footer {
   padding: 2.5rem 0 0.25rem;
