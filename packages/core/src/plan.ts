@@ -15,7 +15,6 @@ import { RastryError } from "./errors";
 import { discoverInputs, type PlanningFileSystem } from "./discovery";
 import { pathComparisonKey } from "./paths";
 
-const DEFAULT_OUTPUT_DIRECTORY = "rastry-output";
 const PIPELINE_FIELDS = ["version", "name", "operations"] as const;
 const RESIZE_FIELDS = ["type", "width", "height", "fit", "anchor"] as const;
 const CROP_FIELDS = ["type", "area", "width", "height", "anchor"] as const;
@@ -286,12 +285,16 @@ function outputFormat(pipeline: PipelineConfig, inputExtension: string): ImageFo
   return inputExtension.replace(/^\./, "").toLowerCase() || "png";
 }
 
-function outputName(input: string, pipeline: PipelineConfig): string {
+function outputName(
+  input: string,
+  pipeline: PipelineConfig,
+  useDefaultOutputNaming: boolean,
+): string {
   const extension = extname(input);
   const stem = basename(input, extension);
   const format = outputFormat(pipeline, extension);
   const normalizedExtension = format === "jpeg" ? "jpg" : format;
-  return `${stem}.${normalizedExtension}`;
+  return `${stem}${useDefaultOutputNaming ? "-rastry" : ""}.${normalizedExtension}`;
 }
 
 function assertPipelineCompatibility(pipeline: PipelineConfig, inputs: readonly string[]): void {
@@ -356,8 +359,7 @@ function validatePlanRequest(request: PlanRequest): void {
 
 function resolveOutputDirectory(request: PlanRequest): string {
   const firstInput = resolve(request.inputs[0]!);
-  const requestedOutput =
-    request.outputDirectory ?? join(dirname(firstInput), DEFAULT_OUTPUT_DIRECTORY);
+  const requestedOutput = request.outputDirectory ?? dirname(firstInput);
   return resolve(requestedOutput);
 }
 
@@ -403,11 +405,14 @@ function buildExecutionPlan(
 ): ExecutionPlan {
   const dryRun = request.dryRun ?? true;
   const resolvedOutput = resolveOutputDirectory(request);
+  const useDefaultOutputNaming = request.outputDirectory === undefined;
   const seenOutputs = new Set<string>();
 
   const files = request.inputs.map((input) => {
     const resolvedInput = resolve(input);
-    const output = normalize(join(resolvedOutput, outputName(resolvedInput, request.pipeline)));
+    const output = normalize(
+      join(resolvedOutput, outputName(resolvedInput, request.pipeline, useDefaultOutputNaming)),
+    );
     const inputKey = pathComparisonKey(resolvedInput);
     const outputKey = pathComparisonKey(output);
 

@@ -42,7 +42,7 @@ describe("safe transformation planning CLI", () => {
 
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain("Dry run: 1 file(s)");
-    expect(result.stdout).toContain(`${resolve("rastry-output", "photo.webp")}`);
+    expect(result.stdout).toContain(`${resolve("photo-rastry.webp")}`);
     expect(result.stderr).toContain("Warning: Dry run:");
   });
 
@@ -67,7 +67,7 @@ describe("safe transformation planning CLI", () => {
 
     expect(plan.dryRun).toBe(true);
     expect(plan.files).toHaveLength(1);
-    expect(plan.files[0]?.output).toEndWith(`${resolve("rastry-output", "photo.webp")}`);
+    expect(plan.files[0]?.output).toEndWith(`${resolve("photo-rastry.webp")}`);
     expect(plan.pipeline.operations).toEqual([
       { type: "convert", format: "webp", quality: 82 },
       { type: "strip-metadata" },

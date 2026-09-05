@@ -39,7 +39,7 @@ async function pathExists(path: string): Promise<boolean> {
 }
 
 describe("safe transformation planning", () => {
-  test("builds a deterministic plan with a safe derived output directory", () => {
+  test("builds a deterministic plan beside the input with a safe output name", () => {
     const plan = createExecutionPlan({
       inputs: ["photo.png"],
       pipeline: { version: 1, operations: [{ type: "convert", format: "webp", quality: 82 }] },
@@ -47,8 +47,8 @@ describe("safe transformation planning", () => {
 
     expect(plan).toMatchObject({
       dryRun: true,
-      outputDirectory: resolve("rastry-output"),
-      files: [{ input: resolve("photo.png"), output: resolve("rastry-output", "photo.webp") }],
+      outputDirectory: resolve("."),
+      files: [{ input: resolve("photo.png"), output: resolve("photo-rastry.webp") }],
     });
     expect(plan.warnings).toContain("Dry run: no files were written.");
   });

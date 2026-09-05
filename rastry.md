@@ -106,7 +106,7 @@ rastry run ./public --preset web
 
 ### Dry-run and no overwrites
 
-By default, Rastry never modifies an original. Output is written to a directory specified by the user or to a derived directory such as `./rastry-output`. If a name conflicts, the tool fails with a clear message or uses an explicit suffixing strategy; it never silently replaces a file.
+By default, Rastry never modifies an original. Output is written to a directory specified by the user or, when no directory is provided, beside the input using `{name}-rastry.{format}`. If a name conflicts, the tool fails with a clear message or uses an explicit suffixing strategy; it never silently replaces a file.
 
 - `--dry-run` shows affected files, operations, the estimated output path, and possible conflicts without writing anything.
 

@@ -101,7 +101,7 @@ rastry run ./public --preset web
 
 ### Dry-run y no sobrescritura
 
-Por defecto Rastry nunca modifica un original. La salida se escribe en una carpeta indicada por el usuario o en una carpeta derivada como ./rastry-output. Si un nombre entra en conflicto, la herramienta falla con un mensaje claro o usa una estrategia de sufijo explícita; no reemplaza silenciosamente.
+Por defecto Rastry nunca modifica un original. La salida se escribe en una carpeta indicada por el usuario o, si no se indica, junto al original con el formato `{nombre}-rastry.{formato}`. Si un nombre entra en conflicto, la herramienta falla con un mensaje claro o usa una estrategia de sufijo explícita; no reemplaza silenciosamente.
 
 - --dry-run muestra archivos afectados, operaciones, ruta de salida estimada y posibles conflictos sin escribir nada.
 

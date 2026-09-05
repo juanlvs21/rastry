@@ -28,7 +28,7 @@ Options:
   --quality <1-100>    JPEG/WebP quality
   --max-width <px>     Proportional maximum width
   --max-height <px>    Proportional maximum height
-  --output <directory> Output directory (default: ./rastry-output beside input)
+  --output <directory> Output directory (default: beside input as {name}-rastry.{format})
   --preset <name|path> Built-in preset name or local JSON file (use with run)
   --dry-run            Print the plan without writing files (default)
   --execute            Process files and write new outputs safely
