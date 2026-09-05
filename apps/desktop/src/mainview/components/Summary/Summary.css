@@ -1,0 +1,115 @@
+.rastry-summary {
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+.rastry-summary__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.rastry-summary__heading h2 {
+  margin: 0;
+  color: #f6f7fb;
+  font-size: 1.04rem;
+  letter-spacing: -0.035em;
+}
+.rastry-summary__bytes {
+  color: #929aaa;
+  font-size: 0.76rem;
+}
+.rastry-summary__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+.rastry-summary__stats > span {
+  min-width: 0;
+  padding: 0.85rem;
+  color: #929aaa;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 0.8rem;
+  font-size: 0.75rem;
+}
+.rastry-summary__stats strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  color: #f6f7fb;
+  font-size: 1.1rem;
+}
+.rastry-summary__results {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 0.9rem;
+}
+.rastry-summary__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 0.7rem;
+  align-items: center;
+  padding: 0.75rem 0.85rem;
+  background: rgba(255, 255, 255, 0.018);
+  font-size: 0.75rem;
+}
+.rastry-summary__row + .rastry-summary__row {
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+.rastry-summary__row small {
+  grid-column: 2 / -1;
+  color: #ff8f9a;
+}
+.rastry-summary__path {
+  min-width: 0;
+  overflow: hidden;
+  color: #929aaa;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rastry-summary__arrow {
+  color: #c9ff5a;
+}
+.rastry-summary__status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 0.3rem 0.5rem;
+  color: #929aaa;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.rastry-summary__status--processed {
+  color: #c9ff5a;
+  background: rgba(201, 255, 90, 0.08);
+  border-color: rgba(201, 255, 90, 0.2);
+}
+.rastry-summary__status--failed {
+  color: #ff8f9a;
+  background: rgba(255, 143, 154, 0.08);
+  border-color: rgba(255, 143, 154, 0.22);
+}
+
+@media (max-width: 600px) {
+  .rastry-summary__heading {
+    flex-direction: column;
+  }
+  .rastry-summary__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rastry-summary__row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .rastry-summary__arrow {
+    display: none;
+  }
+  .rastry-summary__row .rastry-summary__path:nth-of-type(3) {
+    grid-column: 2;
+  }
+}

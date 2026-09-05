@@ -1,0 +1,61 @@
+.rastry-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.7rem;
+  gap: 0.45rem;
+  padding: 0.66rem 0.95rem;
+  border-radius: 0.72rem;
+  font-size: 0.78rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+.rastry-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+.rastry-button:not(:disabled):hover {
+  transform: translateY(-1px);
+}
+.rastry-button--primary {
+  color: #10150b;
+  background: linear-gradient(135deg, #e5ffa3, #c9ff5a);
+  border: 1px solid rgba(235, 255, 186, 0.65);
+  box-shadow: 0 8px 26px rgba(201, 255, 90, 0.16);
+}
+.rastry-button--primary:not(:disabled):hover {
+  background: linear-gradient(135deg, #edffbb, #baff43);
+  box-shadow: 0 11px 34px rgba(201, 255, 90, 0.25);
+}
+.rastry-button--secondary {
+  color: #f6f7fb;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.rastry-button--secondary:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+.rastry-button--ghost {
+  color: #929aaa;
+  background: transparent;
+  border: 1px solid transparent;
+}
+.rastry-button--ghost:not(:disabled):hover {
+  color: #f6f7fb;
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(255, 255, 255, 0.09);
+}
+.rastry-button--danger {
+  color: #ffd2d7;
+  background: rgba(255, 89, 107, 0.1);
+  border: 1px solid rgba(255, 143, 154, 0.28);
+}
+.rastry-button--danger:not(:disabled):hover {
+  background: rgba(255, 89, 107, 0.17);
+}

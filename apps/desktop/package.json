@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "electrobun prepare && vite build && electrobun dev --watch",
-    "dev:hmr": "electrobun prepare && concurrently --kill-others-on-fail \"vite --port 5173\" \"electrobun dev\"",
+    "dev:hmr": "electrobun prepare && vite build && concurrently --kill-others-on-fail \"vite --port 5173\" \"electrobun dev\"",
     "build": "electrobun prepare && vite build && electrobun build --env=stable",
     "build:view": "electrobun prepare && vite build",
     "typecheck": "tsc --noEmit"

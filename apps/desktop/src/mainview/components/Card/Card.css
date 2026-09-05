@@ -1,0 +1,11 @@
+.rastry-card {
+  min-width: 0;
+  background: linear-gradient(145deg, rgba(30, 36, 48, 0.86), rgba(17, 21, 29, 0.82));
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 1.35rem;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}

@@ -1,0 +1,63 @@
+.rastry-operation-card {
+  position: relative;
+  min-width: 0;
+  padding: 1rem;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.018));
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 1rem;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+.rastry-operation-card:hover {
+  border-color: rgba(155, 140, 255, 0.35);
+  transform: translateY(-1px);
+}
+.rastry-operation-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+.rastry-operation-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-width: 0;
+}
+.rastry-operation-card__title strong {
+  color: #f6f7fb;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.rastry-operation-card__index {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  color: #10150b;
+  background: #c9ff5a;
+  border-radius: 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 850;
+}
+.rastry-operation-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.rastry-operation-card__actions .rastry-button {
+  min-height: 2rem;
+  padding: 0.4rem 0.55rem;
+}
+@media (max-width: 600px) {
+  .rastry-operation-card__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .rastry-operation-card__actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

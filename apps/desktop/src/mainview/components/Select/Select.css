@@ -1,0 +1,43 @@
+.rastry-select {
+  display: grid;
+  min-width: 0;
+  gap: 0.45rem;
+}
+.rastry-select__control {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.7rem 0.8rem;
+  color: #f6f7fb;
+  background: rgba(5, 8, 13, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 0.7rem;
+  outline: none;
+  color-scheme: dark;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+.rastry-select__control:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+.rastry-select__control:focus {
+  background: rgba(5, 8, 13, 0.56);
+  border-color: rgba(201, 255, 90, 0.62);
+  box-shadow: 0 0 0 3px rgba(201, 255, 90, 0.1);
+}
+.rastry-select .rastry-select__label,
+.rastry-select .rastry-select__hint {
+  color: #929aaa;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.rastry-select .rastry-select__hint {
+  color: #687183;
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+}
