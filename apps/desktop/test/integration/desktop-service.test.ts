@@ -252,6 +252,9 @@ describe("desktop main-process service", () => {
         async selectInputs() {
           return ["selected.png"];
         },
+        async selectInputFolder() {
+          return ["selected-folder"];
+        },
         async selectOutputDirectory() {
           return ["selected-output", "ignored-second-path"];
         },
@@ -262,6 +265,10 @@ describe("desktop main-process service", () => {
     expect(await handlers.selectInputs({})).toEqual({
       ok: true,
       value: { paths: [resolve("selected.png")], cancelled: false },
+    });
+    expect(await handlers.selectInputFolder({})).toEqual({
+      ok: true,
+      value: { paths: [resolve("selected-folder")], cancelled: false },
     });
     expect(await handlers.selectOutputDirectory({})).toEqual({
       ok: true,

@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite build && electrobun dev --watch",
+    "dev": "electrobun prepare && vite build && electrobun dev --watch",
     "dev:hmr": "electrobun prepare && concurrently --kill-others-on-fail \"vite --port 5173\" \"electrobun dev\"",
-    "build": "vite build && electrobun build --env=stable",
-    "build:view": "vite build",
+    "build": "electrobun prepare && vite build && electrobun build --env=stable",
+    "build:view": "electrobun prepare && vite build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

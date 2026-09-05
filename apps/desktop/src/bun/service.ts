@@ -28,6 +28,7 @@ import type {
 
 export type DesktopDialog = {
   selectInputs(): Promise<readonly string[]>;
+  selectInputFolder(): Promise<readonly string[]>;
   selectOutputDirectory(): Promise<readonly string[]>;
 };
 
@@ -200,6 +201,7 @@ export class DesktopService {
   createRequestHandlers(): DesktopRequestHandlers {
     return {
       selectInputs: (params) => this.selectInputs(params),
+      selectInputFolder: (params) => this.selectInputFolder(params),
       selectOutputDirectory: (params) => this.selectOutputDirectory(params),
       preview: (params) => this.preview(params),
       execute: (params) => this.execute(params),
@@ -208,12 +210,28 @@ export class DesktopService {
   }
 
   private async selectInputs(params: unknown): Promise<DesktopRpcResult<DesktopSelection>> {
+    return this.selectDialogPaths(params, "Select inputs request", (dialog) =>
+      dialog.selectInputs(),
+    );
+  }
+
+  private async selectInputFolder(params: unknown): Promise<DesktopRpcResult<DesktopSelection>> {
+    return this.selectDialogPaths(params, "Select input folder request", (dialog) =>
+      dialog.selectInputFolder(),
+    );
+  }
+
+  private async selectDialogPaths(
+    params: unknown,
+    label: string,
+    select: (dialog: DesktopDialog) => Promise<readonly string[]>,
+  ): Promise<DesktopRpcResult<DesktopSelection>> {
     try {
-      readObject(params, "Select inputs request");
+      readObject(params, label);
       if (this.dialog === undefined) {
         throw new RastryError("DIALOG_UNAVAILABLE", "Input selection is unavailable.");
       }
-      const paths = normalizeDialogPaths(await this.dialog.selectInputs());
+      const paths = normalizeDialogPaths(await select(this.dialog));
       return succeed({ paths, cancelled: paths.length === 0 });
     } catch (error) {
       return fail(toError(error));

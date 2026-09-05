@@ -224,6 +224,12 @@ lifecycle complexity without improving the local-first workflow.
 
 - A fresh desktop launch renders the interactive workflow and connects the
   webview to the Bun main process through the typed RPC contract.
+- The Vite webview build resolves `electrobun/view` from Hutch's projected
+  devkit, and desktop dev/build scripts prepare that devkit before bundling;
+  this keeps the npm bootstrap stub out of the runtime bundle.
+- The image file picker uses the all-files view so PNG, JPG, JPEG, and WebP
+  can be selected together; core validation still rejects unsupported
+  explicit file paths before planning.
 - File and directory selection returns normalized paths while React has no
   direct filesystem API or native object dependency.
 - Previewing a representative batch returns a deterministic plan and leaves

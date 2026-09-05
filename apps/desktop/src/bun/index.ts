@@ -27,8 +27,17 @@ const service = new DesktopService({
   dialog: {
     selectInputs() {
       return Utils.openFileDialog({
-        allowedFileTypes: "png,jpg,jpeg,webp",
+        // Electrobun exposes comma-separated extensions as separate Windows filters.
+        // Use the all-files view so supported image formats can be selected together.
+        allowedFileTypes: "*",
         canChooseFiles: true,
+        canChooseDirectory: false,
+        allowsMultipleSelection: true,
+      });
+    },
+    selectInputFolder() {
+      return Utils.openFileDialog({
+        canChooseFiles: false,
         canChooseDirectory: true,
         allowsMultipleSelection: true,
       });

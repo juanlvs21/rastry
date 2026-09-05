@@ -34,6 +34,10 @@ export type DesktopRpcSchema = {
         params: Record<string, never>;
         response: DesktopRpcResult<DesktopSelection>;
       };
+      selectInputFolder: {
+        params: Record<string, never>;
+        response: DesktopRpcResult<DesktopSelection>;
+      };
       selectOutputDirectory: {
         params: Record<string, never>;
         response: DesktopRpcResult<DesktopSelection>;

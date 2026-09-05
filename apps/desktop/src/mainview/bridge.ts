@@ -3,6 +3,8 @@ import { Electroview } from "electrobun/view";
 import type { DesktopRpcSchema } from "../rpc";
 
 export const desktopRpc = Electroview.defineRPC<DesktopRpcSchema>({
+  // Native file dialogs can remain open while the user browses folders.
+  maxRequestTime: Infinity,
   handlers: {
     requests: {},
     messages: {},

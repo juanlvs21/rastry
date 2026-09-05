@@ -597,6 +597,24 @@ export function App() {
     }
   }
 
+  async function chooseInputFolder() {
+    clearFeedback();
+    try {
+      const response = await desktopRpc.request.selectInputFolder({});
+      if (!response.ok) {
+        setError(response.error);
+        return;
+      }
+      if (response.value.cancelled) {
+        setMessage("Folder selection cancelled.");
+        return;
+      }
+      setInputs((current) => [...new Set([...current, ...response.value.paths])]);
+      setStatus("idle");
+    } catch (caught) {
+      setError(rpcFailure(caught));
+    }
+  }
   async function chooseOutputDirectory() {
     clearFeedback();
     try {
@@ -810,7 +828,15 @@ export function App() {
             onClick={() => void chooseInputs()}
             disabled={!canEdit}
           >
-            Select files or folders
+            Select image files
+          </button>
+          <button
+            type="button"
+            className="quietButton fullButton"
+            onClick={() => void chooseInputFolder()}
+            disabled={!canEdit}
+          >
+            Select a folder
           </button>
           {inputs.length > 0 ? (
             <div className="pathList" aria-label="Selected inputs">
