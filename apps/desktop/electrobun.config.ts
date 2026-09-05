@@ -14,11 +14,12 @@ export default {
     copy: {
       "dist/index.html": "views/mainview/index.html",
       "dist/assets": "views/mainview/assets",
+      "assets/rastry-icon.png": "assets/rastry-icon.png",
     },
     watchIgnore: ["dist/**"],
     mac: { bundleCEF: false },
-    linux: { bundleCEF: false },
-    win: { bundleCEF: false },
+    linux: { bundleCEF: false, icon: "assets/rastry-icon.png" },
+    win: { bundleCEF: false, icon: "assets/rastry-icon.png" },
   },
   runtime: {
     exitOnLastWindowClosed: true,

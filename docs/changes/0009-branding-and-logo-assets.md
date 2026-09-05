@@ -12,4 +12,6 @@ Adopt the Rastry brand palette across the desktop webview: deep ink `#171923`, w
 - The generated PNG references remain available beside the SVG assets for future export work; the app uses the SVG variants for crisp scaling and reliable transparency.
 - CSS tokens and component states now use the new palette while preserving distinct error and success semantics.
 - A local `vite-env.d.ts` declaration keeps SVG and CSS imports type-safe in the desktop webview.
-- The light lockup and standalone mark are also available at repository root for README hero usage.
+- The README hero now uses the complete transparent `rastry-logo.png` lockup at repository root.
+- SVG wordmarks declare `Nunito Variable` first so they match the desktop webview typography.
+- Electrobun Windows and Linux packaging use the transparent `apps/desktop/assets/rastry-icon.png` mark as the native app icon.

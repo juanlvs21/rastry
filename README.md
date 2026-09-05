@@ -1,7 +1,7 @@
 # Rastry
 
 <p align="center">
-  <img src="./rastry-logo.svg" alt="Rastry" width="560" />
+  <img src="./rastry-logo.png" alt="Rastry" width="560" />
 </p>
 
 Rastry is a local-first, open-source image optimization and transformation tool. This repository contains the shared TypeScript core, a Bun CLI, and an Electrobun + React desktop application.

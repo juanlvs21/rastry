@@ -19,5 +19,5 @@
     <circle cx="148" cy="148" r="21" fill="#27866A"/>
     <path d="m137 148 7 7 15-17" stroke="#F5F1E8" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"/>
   </g>
-  <text x="220" y="124" fill="#F5F1E8" font-family="Nunito, Segoe UI, sans-serif" font-size="76" font-weight="800" letter-spacing="-4">Rastry</text>
+  <text x="220" y="124" fill="#F5F1E8" font-family="Nunito Variable, Nunito, Segoe UI, sans-serif" font-size="76" font-weight="800" letter-spacing="-4">Rastry</text>
 </svg>
