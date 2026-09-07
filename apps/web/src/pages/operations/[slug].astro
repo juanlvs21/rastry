@@ -1,0 +1,52 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { assertUniqueSlugs, canonicalUrl, repositoryUrl } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("operations");
+  assertUniqueSlugs(entries, "operations");
+  return entries.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<"operations">;
+}
+
+const { entry } = Astro.props as Props;
+const { Content } = await render(entry);
+const sourceUrl = repositoryUrl + "/blob/main/" + entry.data.sourcePath;
+---
+<SiteLayout
+  title={entry.data.title + " · Rastry"}
+  description={entry.data.description}
+  canonical={canonicalUrl("/operations/" + entry.data.slug + "/")}
+  breadcrumbs={[
+    { name: "Rastry", path: "/" },
+    { name: "Operations", path: "/operations/" },
+    { name: entry.data.title, path: "/operations/" + entry.data.slug + "/" },
+  ]}
+>
+  <div class="article-shell">
+    <header>
+      <p class="kicker">Operation · {entry.data.operation}</p>
+      <h1>{entry.data.title}</h1>
+      <p class="article-shell__summary">{entry.data.description}</p>
+      <div class="meta-row">
+        <span class="tag">Pipeline v1</span>
+        <a class="tag tag--warm" href={sourceUrl}>View source ↗</a>
+        <a class="tag tag--green" href={entry.data.docsPath}>Read the docs →</a>
+      </div>
+    </header>
+    <article class="article">
+      <Content />
+      <h2>Related reading</h2>
+      <ul>
+        {entry.data.related.map((link) => <li><a href={link}>{link}</a></li>)}
+      </ul>
+    </article>
+  </div>
+</SiteLayout>

@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { assertUniqueSlugs, repositoryUrl } from "../../lib/content";
+
+const entries = await getCollection("presets");
+assertUniqueSlugs(entries, "presets");
+const title = "Shipped presets · Rastry";
+const description = "The web, ecommerce, and social presets shipped with Rastry, including their real JSON configuration.";
+---
+<SiteLayout title={title} description={description} breadcrumbs={[{ name: "Rastry", path: "/" }, { name: "Presets", path: "/presets/" }]}>
+  <div class="site-shell">
+    <header class="page-hero">
+      <p class="kicker">Reusable recipes</p>
+      <h1>Presets you can read before you run.</h1>
+      <p>Every shipped preset is a local, versioned pipeline. Start with one, inspect its operations, then copy the JSON when you need a project-specific recipe.</p>
+    </header>
+    <section class="catalog-grid" aria-label="Shipped presets">
+      {entries.map((entry) => (
+        <a class="catalog-card link-card" href={"/presets/" + entry.data.slug + "/"}>
+          <span class="tag">{entry.data.preset}</span>
+          <h2>{entry.data.title}</h2>
+          <p>{entry.data.description}</p>
+          <span class="catalog-card__link">Read preset →</span>
+        </a>
+      ))}
+    </section>
+    <p class="article">The canonical JSON files are kept in <a href={repositoryUrl + "/tree/main/examples/presets"}>examples/presets</a>.</p>
+  </div>
+</SiteLayout>

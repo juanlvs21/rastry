@@ -1,0 +1,44 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { assertUniqueSlugs, canonicalUrl } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("guides");
+  assertUniqueSlugs(entries, "guides");
+  return entries.map((entry) => ({
+    params: { slug: entry.data.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<"guides">;
+}
+
+const { entry } = Astro.props as Props;
+const { Content } = await render(entry);
+---
+<SiteLayout
+  title={entry.data.title + " · Rastry"}
+  description={entry.data.description}
+  canonical={canonicalUrl("/guides/" + entry.data.slug + "/")}
+  breadcrumbs={[
+    { name: "Rastry", path: "/" },
+    { name: "Guides", path: "/guides/" },
+    { name: entry.data.title, path: "/guides/" + entry.data.slug + "/" },
+  ]}
+>
+  <div class="article-shell">
+    <header>
+      <p class="kicker">Guide · {entry.data.audience}</p>
+      <h1>{entry.data.title}</h1>
+      <p class="article-shell__summary">{entry.data.description}</p>
+    </header>
+    <article class="article">
+      <Content />
+      <h2>More from Rastry</h2>
+      <p><a href={entry.data.docsPath}>Open the related documentation →</a></p>
+    </article>
+  </div>
+</SiteLayout>

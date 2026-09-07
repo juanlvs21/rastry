@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img" aria-labelledby="title">
+  <title id="title">Rastry</title>
+  <rect width="184" height="184" rx="38" fill="#171923"/>
+  <rect x="42" y="48" width="79" height="82" rx="16" fill="#F5F1E8"/>
+  <path d="m51 113 18-20c3-4 8-4 11 0l8 9 8-10c3-4 8-4 11 0l12 15v20H51v-14Z" fill="#171923"/>
+  <circle cx="107" cy="67" r="11" fill="#F26B3A"/>
+  <circle cx="143" cy="143" r="22" fill="#27866A"/>
+  <path d="m132 143 7 7 16-18" fill="none" stroke="#F5F1E8" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"/>
+</svg>

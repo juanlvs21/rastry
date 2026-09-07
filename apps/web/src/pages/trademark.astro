@@ -1,0 +1,24 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { repositoryUrl } from "../lib/content";
+---
+<SiteLayout title="Trademark · Rastry" description="Guidance for using the Rastry name and brand assets." breadcrumbs={[{ name: "Rastry", path: "/" }, { name: "Trademark", path: "/trademark/" }]}>
+  <div class="article-shell">
+    <header><p class="kicker">Project</p><h1>Use the name with care.</h1><p class="article-shell__summary">Rastry is an open-source project, but the name and visual identity should not be used to imply an official endorsement or confuse a modified distribution with the project.</p></header>
+    <article class="article">
+      <h2>Permitted uses</h2>
+      <ul>
+        <li>Refer to Rastry to describe the unmodified project or a compatible integration.</li>
+        <li>Link to the official repository or documentation when discussing the project.</li>
+        <li>Describe forks or modified builds accurately and distinguish them from official releases.</li>
+      </ul>
+      <h2>Avoid</h2>
+      <ul>
+        <li>Using the Rastry logo for a product, service, or download that is not the project.</li>
+        <li>Implying that the project sponsors, certifies, or endorses unrelated software.</li>
+        <li>Registering confusingly similar domains, package names, or social accounts.</li>
+      </ul>
+      <p>The repository's brand files and project context are available in <a href={repositoryUrl + "/tree/main"}>the source tree ↗</a>. Questions about a specific use should be raised with the maintainers before publication.</p>
+    </article>
+  </div>
+</SiteLayout>

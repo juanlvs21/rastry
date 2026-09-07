@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { assertUniqueSlugs } from "../../lib/content";
+
+const entries = await getCollection("guides");
+assertUniqueSlugs(entries, "guides");
+const title = "Image workflow guides · Rastry";
+const description = "Practical, local-first guides for web image optimization, PNG to WebP conversion, and batch resizing.";
+---
+<SiteLayout title={title} description={description} breadcrumbs={[{ name: "Rastry", path: "/" }, { name: "Guides", path: "/guides/" }]}>
+  <div class="site-shell">
+    <header class="page-hero">
+      <p class="kicker">Practical guides</p>
+      <h1>Turn a recurring image task into a repeatable one.</h1>
+      <p>Short, product-specific workflows using the operations and presets Rastry ships today. Each guide starts with a real input folder and ends with a safe, inspectable output.</p>
+    </header>
+    <section class="catalog-grid" aria-label="Guides">
+      {entries.map((entry) => (
+        <a class="catalog-card link-card" href={"/guides/" + entry.data.slug + "/"}>
+          <span class="tag tag--warm">{entry.data.audience}</span>
+          <h2>{entry.data.title}</h2>
+          <p>{entry.data.description}</p>
+          <span class="catalog-card__link">Read guide →</span>
+        </a>
+      ))}
+    </section>
+  </div>
+</SiteLayout>

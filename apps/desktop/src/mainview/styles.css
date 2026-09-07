@@ -1,6 +1,7 @@
 @import "@fontsource-variable/nunito/wght.css";
 
 :root {
+  color-scheme: dark;
   font-family:
     "Nunito Variable",
     ui-sans-serif,
@@ -18,13 +19,13 @@
   --color-indigo: #4b3f9f;
   --color-mandarin: #f26b3a;
   --color-slate: #687080;
-  --color-forest: #27866a;
+  --color-forest: #4dbf91;
   --color-deep-ink-rgb: 23 25 35;
   --color-warm-ivory-rgb: 245 241 232;
   --color-indigo-rgb: 75 63 159;
   --color-mandarin-rgb: 242 107 58;
   --color-slate-rgb: 104 112 128;
-  --color-forest-rgb: 39 134 106;
+  --color-forest-rgb: 77 191 145;
   --ink: var(--color-warm-ivory);
   --muted: var(--color-slate);
   --subtle: color-mix(in srgb, var(--color-slate) 72%, var(--color-deep-ink));

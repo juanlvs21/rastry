@@ -1,0 +1,96 @@
+---
+import "../styles/global.css";
+
+import { breadcrumbSchema, canonicalUrl, pageSchema, repositoryUrl } from "../lib/content";
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  noindex?: boolean;
+  schema?: Record<string, unknown> | Record<string, unknown>[];
+  breadcrumbs?: Array<{ name: string; path: string }>;
+}
+
+const {
+  title,
+  description,
+  canonical = canonicalUrl(Astro.url.pathname),
+  noindex = false,
+  schema,
+  breadcrumbs = [{ name: "Rastry", path: "/" }],
+} = Astro.props;
+
+const schemas = [
+  pageSchema(title, description, Astro.url.pathname),
+  ...(breadcrumbs.length > 1 ? [breadcrumbSchema(breadcrumbs)] : []),
+  ...(schema === undefined ? [] : Array.isArray(schema) ? schema : [schema]),
+];
+---
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Rastry releases" href="/feed.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Rastry" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : null}
+    {
+      schemas.map((item) => (
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(item)} />
+      ))
+    }
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+      <div class="site-shell site-header__inner">
+        <a class="site-brand" href="/" aria-label="Rastry home">
+          <img src="/brand/rastry-mark.svg" width="36" height="36" alt="" />
+          <span>Rastry</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="/docs/">Docs</a>
+          <a href="/guides/">Guides</a>
+          <a href="/releases/">Changelog</a>
+          <a href={repositoryUrl}>GitHub <span aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
+    </header>
+    <main id="main-content">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="site-shell site-footer__inner">
+        <div>
+          <a class="site-brand site-brand--footer" href="/" aria-label="Rastry home">
+            <img src="/brand/rastry-mark.svg" width="28" height="28" alt="" />
+            <span>Rastry</span>
+          </a>
+          <p>Local-first image workflows for people who care where files go.</p>
+        </div>
+        <nav aria-label="Footer navigation">
+          <a href="/docs/install/">Install</a>
+          <a href="/privacy/">Privacy</a>
+          <a href="/license/">License</a>
+          <a href="/trademark/">Trademark</a>
+          <a href="/feed.xml">RSS</a>
+        </nav>
+        <p class="site-footer__fineprint">Apache-2.0 · No uploads · No telemetry by default</p>
+      </div>
+    </footer>
+  </body>
+</html>

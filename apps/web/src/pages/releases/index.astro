@@ -1,0 +1,38 @@
+---
+import { getCollection, render } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { canonicalUrl } from "../../lib/content";
+
+const entries = (await getCollection("releases")).toSorted((a, b) => b.data.date.localeCompare(a.data.date));
+const rendered = await Promise.all(
+  entries.map(async (entry) => ({ entry, Content: (await render(entry)).Content })),
+);
+const title = "Changelog · Rastry";
+const description = "Rastry releases, compatibility notes, and the local changelog source.";
+const releaseSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: title,
+  description,
+  url: canonicalUrl("/releases/"),
+};
+---
+<SiteLayout title={title} description={description} schema={releaseSchema} breadcrumbs={[{ name: "Rastry", path: "/" }, { name: "Changelog", path: "/releases/" }]}>
+  <div class="article-shell">
+    <header>
+      <p class="kicker">Release feed</p>
+      <h1>What changed, from the repository.</h1>
+      <p class="article-shell__summary">This page is generated from local Markdown entries committed with the project. It does not call a release API or need credentials at build time.</p>
+      <div class="meta-row"><a class="tag tag--green" href="/feed.xml">Subscribe to RSS →</a><a class="tag" href="https://github.com/juanldev/rastry/blob/main/CHANGELOG.md">Read CHANGELOG.md ↗</a></div>
+    </header>
+    <div class="article">
+      {rendered.map(({ entry, Content }) => (
+        <section id={"release-" + entry.data.version.replaceAll(".", "-")} aria-labelledby={"heading-" + entry.data.version.replaceAll(".", "-")}>
+          <h2 id={"heading-" + entry.data.version.replaceAll(".", "-")}>{entry.data.version} · {entry.data.title}</h2>
+          <p><time datetime={entry.data.date}>{entry.data.date}</time></p>
+          <Content />
+        </section>
+      ))}
+    </div>
+  </div>
+</SiteLayout>

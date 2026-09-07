@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { assertUniqueSlugs, repositoryUrl } from "../../lib/content";
+
+const entries = await getCollection("operations");
+assertUniqueSlugs(entries, "operations");
+const title = "Image operations · Rastry";
+const description = "The six currently supported Rastry pipeline operations, with validated examples and source links.";
+---
+<SiteLayout title={title} description={description} breadcrumbs={[{ name: "Rastry", path: "/" }, { name: "Operations", path: "/operations/" }]}>
+  <div class="site-shell">
+    <header class="page-hero">
+      <p class="kicker">Reference</p>
+      <h1>Operations with a clear contract.</h1>
+      <p>Each page describes one operation that is implemented in the shared pipeline contract. Examples are written for the current schema version, not a future feature list.</p>
+    </header>
+    <section class="catalog-grid" aria-label="Supported operations">
+      {entries.map((entry) => (
+        <a class="catalog-card link-card" href={"/operations/" + entry.data.slug + "/"}>
+          <span class="tag">{entry.data.operation}</span>
+          <h2>{entry.data.title}</h2>
+          <p>{entry.data.description}</p>
+          <span class="catalog-card__link">Read operation →</span>
+        </a>
+      ))}
+    </section>
+    <p class="article">The operation union and validation rules live in <a href={repositoryUrl + "/blob/main/packages/contracts/src/index.ts"}>packages/contracts/src/index.ts</a> and <a href={repositoryUrl + "/blob/main/packages/core/src/plan.ts"}>packages/core/src/plan.ts</a>.</p>
+  </div>
+</SiteLayout>

@@ -1,0 +1,8 @@
+<script is:inline>
+  document.documentElement.dataset.theme = "dark";
+  try {
+    localStorage.setItem("starlight-theme", "dark");
+  } catch {
+    // Storage can be unavailable in private or restricted browser contexts.
+  }
+</script>

@@ -1,0 +1,36 @@
+:root,
+:root[data-theme="light"],
+:root[data-theme="dark"] {
+  --sl-color-accent-low: #30296b;
+  --sl-color-accent: #a69cf1;
+  --sl-color-accent-high: #e5e1ff;
+  --sl-color-white: #f5f1e8;
+  --sl-color-gray-1: #e0e2e8;
+  --sl-color-gray-2: #c5c9d4;
+  --sl-color-gray-3: #aeb3c0;
+  --sl-color-gray-4: #687080;
+  --sl-color-gray-5: #343746;
+  --sl-color-gray-6: #20232f;
+  --sl-color-gray-7: #1c1f2a;
+  --sl-color-black: #171923;
+  --sl-color-text: #c5c9d4;
+  --sl-color-text-accent: #e5e1ff;
+  --sl-color-text-invert: #30296b;
+  --sl-color-bg: #171923;
+  --sl-color-bg-nav: #171923;
+  --sl-color-bg-sidebar: #20232f;
+  --sl-color-bg-inline-code: #343746;
+  --sl-color-bg-accent: #a69cf1;
+  --sl-color-hairline-light: #343746;
+  --sl-color-hairline: #282b38;
+  --sl-color-hairline-shade: #171923;
+  --sl-color-backdrop-overlay: rgb(23 25 35 / 0.8);
+  --sl-font: "Nunito Variable", Nunito, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: #171923;
+  color-scheme: dark;
+}

@@ -1,0 +1,286 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { repositoryUrl, siteUrl } from "../lib/content";
+
+const title = "Rastry · Local-first image workflows";
+const description =
+  "Optimize, transform, and batch-process PNG, JPEG, and WebP images locally with a safe CLI and desktop workflow.";
+const softwareSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Rastry",
+  applicationCategory: "MultimediaApplication",
+  operatingSystem: "Windows, macOS, Linux",
+  license: "https://www.apache.org/licenses/LICENSE-2.0",
+  url: siteUrl,
+  description,
+  isAccessibleForFree: true,
+  codeRepository: repositoryUrl,
+};
+---
+<SiteLayout title={title} description={description} schema={softwareSchema}>
+  <section class="hero">
+    <div class="site-shell hero__grid">
+      <div>
+        <p class="eyebrow">Local-first image workflows</p>
+        <h1>Make every image feel intentional.</h1>
+        <p class="lede">
+          Optimize, transform, and organize image batches with a calm desktop workflow or a
+          predictable command line. Your files stay on your machine.
+        </p>
+        <div class="button-row">
+          <a class="button" href="/docs/quickstart/">Start with the quickstart <span aria-hidden="true">→</span></a>
+          <a class="button button--quiet" href={repositoryUrl}>View source <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="hero-card" aria-label="Example Rastry pipeline">
+        <div class="terminal" data-cli-demo>
+          <div class="terminal__dots" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="terminal__screen" aria-hidden="true">
+            <div class="terminal__command-line">
+              <span class="muted">$</span>
+              <span class="terminal__command" data-cli-command>rastry run ./public --preset web</span><span
+                class="terminal__caret"
+                data-cli-caret
+              ></span><span class="terminal__enter" data-cli-enter>↵</span>
+            </div>
+            <div class="terminal__output" data-cli-output>
+              <div class="muted">Planning 4 files…</div>
+              <br />
+              <div>✓ hero.png <span class="muted">→ hero-rastry.webp</span></div>
+              <div>✓ card.jpg <span class="muted">→ card-rastry.webp</span></div>
+              <div>✓ logo.png <span class="muted">→ logo-rastry.webp</span></div>
+              <br />
+              <div><span class="accent">Dry run complete.</span></div>
+              <div class="muted">No files changed.</div>
+            </div>
+          </div>
+          <p class="visually-hidden">
+            Example command: rastry run ./public --preset web. The dry run plans four files and
+            completes without changing them.
+          </p>
+        </div>
+        <div class="trust-note">
+          <span aria-hidden="true">◎</span>
+          <span><strong>Private by default.</strong> No account, upload, or telemetry is required to process an image.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper" aria-labelledby="why-title">
+    <div class="site-shell">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">A smaller, safer loop</p>
+          <h2 id="why-title">The useful parts stay close to your files.</h2>
+        </div>
+        <p>Rastry is built for developers, designers, and small teams who want repeatable image work without handing assets to a service.</p>
+      </div>
+      <div class="card-grid">
+        <article class="card card--indigo">
+          <h3>Local by design</h3>
+          <p>Processing happens in the Bun runtime on your device. Images never cross a web API or an account boundary.</p>
+        </article>
+        <article class="card card--accent">
+          <h3>Repeatable by default</h3>
+          <p>Express a workflow as a versioned pipeline or a readable preset, then use the same rules from CLI or desktop.</p>
+        </article>
+        <article class="card card--forest">
+          <h3>Safe before fast</h3>
+          <p>Every run starts with a plan. Outputs get a derived name, originals are protected, and conflicts are visible before writing.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="capabilities-title">
+    <div class="site-shell">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">Current foundation</p>
+          <h2 id="capabilities-title">Small surface. Real operations.</h2>
+        </div>
+        <p>Rastry currently handles the formats and transformations that make up the everyday web-asset loop.</p>
+      </div>
+      <div class="card-grid">
+        <a class="card link-card" href="/formats/">
+          <h3>PNG · JPEG · WebP</h3>
+          <p>Read the tradeoffs and use each format deliberately.</p>
+          <span class="catalog-card__link">Explore formats →</span>
+        </a>
+        <a class="card link-card" href="/operations/">
+          <h3>Resize · crop · trim</h3>
+          <p>Shape dimensions, remove transparent borders, and prepare assets for their destination.</p>
+          <span class="catalog-card__link">Explore operations →</span>
+        </a>
+        <a class="card link-card" href="/presets/">
+          <h3>Web · ecommerce · social</h3>
+          <p>Start with shipped recipes that map to real delivery contexts.</p>
+          <span class="catalog-card__link">Explore presets →</span>
+        </a>
+      </div>
+      <ul class="tag-list" aria-label="Supported operations">
+        <li><a href="/operations/resize/">Resize</a></li>
+        <li><a class="tag--warm" href="/operations/crop/">Crop</a></li>
+        <li><a class="tag--green" href="/operations/trim/">Transparent trim</a></li>
+        <li><a href="/operations/padding/">Padding</a></li>
+        <li><a class="tag--warm" href="/operations/convert/">Convert + quality</a></li>
+        <li><a class="tag--green" href="/operations/strip-metadata/">Strip metadata</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--paper" aria-labelledby="workflows-title">
+    <div class="site-shell">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">Choose your entry point</p>
+          <h2 id="workflows-title">One engine, two ways to work.</h2>
+        </div>
+        <p>The CLI and Desktop v0.2 use the same pipeline contract and safety rules. Choose the surface that fits the task.</p>
+      </div>
+      <div class="workflow-grid">
+        <article class="workflow">
+          <h3>CLI for scripts and agents</h3>
+          <p>Plan a one-off conversion, run a preset over a folder, or capture a JSON summary for automation.</p>
+          <pre><code>rastry photo.png --to webp --quality 82 --dry-run</code></pre>
+          <div class="button-row"><a class="button button--quiet" href="/docs/cli/">Read CLI reference →</a></div>
+        </article>
+        <article class="workflow">
+          <h3>Desktop for visual tasks</h3>
+          <p>Select files or folders, configure operations, review the plan, then execute only after the output paths look right.</p>
+          <pre><code>Select → Configure → Preview → Execute</code></pre>
+          <div class="button-row"><a class="button button--quiet" href="/docs/desktop/">See Desktop workflow →</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="safety-title">
+    <div class="site-shell safety">
+      <div>
+        <p class="kicker">Trust is a feature</p>
+        <h2 id="safety-title">Nothing happens silently.</h2>
+        <p class="lede">Rastry favors a visible, deterministic plan over a surprising shortcut.</p>
+        <div class="button-row"><a class="button" href="/docs/safety/">Read the safety model →</a></div>
+      </div>
+      <ul class="safety__list">
+        <li><span><strong>Dry-run first.</strong> See files, operations, output paths, and conflicts without writing.</span></li>
+        <li><span><strong>Originals stay intact.</strong> Outputs go to a chosen directory or use the <code>-rastry</code> suffix.</span></li>
+        <li><span><strong>Batch failures are isolated.</strong> One bad input does not hide the rest of the summary.</span></li>
+        <li><span><strong>Telemetry is off.</strong> The product does not add analytics or uploads by default.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--paper" aria-labelledby="roadmap-title">
+    <div class="site-shell">
+      <div class="section-heading">
+        <div>
+          <p class="kicker">Maturity, made visible</p>
+          <h2 id="roadmap-title">Built in small, useful steps.</h2>
+        </div>
+        <p>Rastry is foundation-stage software. The roadmap is a promise about sequence, not a claim that every item is shipped.</p>
+      </div>
+      <div class="roadmap">
+        <div class="roadmap__item roadmap__item--current"><strong>v0.1 · Foundations</strong><p>Core, Bun.Image adapter, safe CLI, formats, operations, batches, and dry-run.</p></div>
+        <div class="roadmap__item roadmap__item--current"><strong>v0.2 · Desktop</strong><p>Electrobun + React workflow with typed RPC, plan preview, progress, and summary.</p></div>
+        <div class="roadmap__item"><strong>v0.3 · Reuse</strong><p>Local presets, import/export, execution history, and recipe documentation.</p></div>
+        <div class="roadmap__item"><strong>v0.4 · Integration</strong><p>Explicit watch mode, installers, updates, and performance work.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="contribute-title">
+    <div class="site-shell">
+      <div class="card card--accent">
+        <p class="kicker">Open source, local first</p>
+        <h2 id="contribute-title">Help make the boring parts dependable.</h2>
+        <p>Read the contribution guide, try a real web-asset workflow, and report what felt unclear. The project is deliberately early enough for useful feedback to change the shape.</p>
+        <div class="button-row">
+          <a class="button" href="/docs/contribution/">Contribute to Rastry →</a>
+          <a class="button button--quiet" href={repositoryUrl}>Open GitHub ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</SiteLayout>
+
+<script is:inline>
+  (() => {
+    const terminal = document.querySelector("[data-cli-demo]");
+    const command = terminal?.querySelector("[data-cli-command]");
+    const output = terminal?.querySelector("[data-cli-output]");
+    const caret = terminal?.querySelector("[data-cli-caret]");
+    const enter = terminal?.querySelector("[data-cli-enter]");
+
+    if (
+      !(terminal instanceof HTMLElement) ||
+      !(command instanceof HTMLElement) ||
+      !(output instanceof HTMLElement) ||
+      !(caret instanceof HTMLElement) ||
+      !(enter instanceof HTMLElement)
+    ) {
+      return;
+    }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
+
+    const fullCommand = command.textContent ?? "";
+    let playing = false;
+
+    const play = () => {
+      if (playing) return;
+      playing = true;
+      command.textContent = "";
+      output.hidden = true;
+      caret.classList.remove("terminal__caret--entered");
+      enter.classList.remove("terminal__enter--visible");
+
+      let index = 0;
+      const typeNext = () => {
+        if (index < fullCommand.length) {
+          command.textContent += fullCommand[index];
+          index += 1;
+          window.setTimeout(typeNext, 38);
+          return;
+        }
+
+        window.setTimeout(() => {
+          caret.classList.add("terminal__caret--entered");
+          enter.classList.add("terminal__enter--visible");
+          window.setTimeout(() => {
+            output.hidden = false;
+            enter.classList.remove("terminal__enter--visible");
+            window.setTimeout(() => {
+              output.hidden = true;
+              command.textContent = "";
+              playing = false;
+              play();
+            }, 2600);
+          }, 260);
+        }, 420);
+      };
+
+      window.setTimeout(typeNext, 550);
+    };
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            observer.disconnect();
+            play();
+          }
+        },
+        { threshold: 0.4 },
+      );
+      observer.observe(terminal);
+    } else {
+      play();
+    }
+  })();
+</script>

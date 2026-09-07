@@ -1,0 +1,30 @@
+---
+import { getCollection } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { assertUniqueSlugs, repositoryUrl } from "../../lib/content";
+
+const entries = await getCollection("formats");
+assertUniqueSlugs(entries, "formats");
+const title = "Image formats · Rastry";
+const description = "PNG, JPEG, and WebP are the supported Rastry input and output formats.";
+---
+<SiteLayout title={title} description={description} breadcrumbs={[{ name: "Rastry", path: "/" }, { name: "Formats", path: "/formats/" }]}>
+  <div class="site-shell">
+    <header class="page-hero">
+      <p class="kicker">Reference</p>
+      <h1>Use the format that fits the job.</h1>
+      <p>Rastry supports the same three formats for input and output today. These notes explain what each one is good at and show the exact conversion shape.</p>
+    </header>
+    <section class="catalog-grid" aria-label="Supported formats">
+      {entries.map((entry) => (
+        <a class="catalog-card link-card" href={"/formats/" + entry.data.slug + "/"}>
+          <span class="tag">{entry.data.format.toUpperCase()}</span>
+          <h2>{entry.data.title}</h2>
+          <p>{entry.data.description}</p>
+          <span class="catalog-card__link">Read format guide →</span>
+        </a>
+      ))}
+    </section>
+    <p class="article">Supported format guards are defined in <a href={repositoryUrl + "/blob/main/packages/contracts/src/index.ts"}>the shared contracts package</a>.</p>
+  </div>
+</SiteLayout>

@@ -1,0 +1,10 @@
+---
+import DefaultHead from '@astrojs/starlight/components/Head.astro';
+
+const { starlightRoute } = Astro.locals;
+const { title, description } = starlightRoute.entry.data;
+---
+
+<DefaultHead />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />

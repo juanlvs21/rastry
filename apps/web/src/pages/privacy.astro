@@ -1,0 +1,20 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { repositoryUrl } from "../lib/content";
+---
+<SiteLayout title="Local-first privacy · Rastry" description="Rastry processes images locally, without accounts, uploads, or telemetry enabled by default." breadcrumbs={[{ name: "Rastry", path: "/" }, { name: "Privacy", path: "/privacy/" }]}>
+  <div class="article-shell">
+    <header><p class="kicker">Trust</p><h1>Files stay where the work happens.</h1><p class="article-shell__summary">Rastry is designed as a local-first tool. This is a plain-language description of the current product behavior, not a promise about unshipped services.</p></header>
+    <article class="article">
+      <h2>No image uploads</h2>
+      <p>The CLI and Desktop workflow process image bytes on the user's machine. The public website is documentation only; it has no image upload or browser editor.</p>
+      <h2>No account required</h2>
+      <p>Current workflows do not require sign-in, cloud storage, or a remote image-processing account.</p>
+      <h2>Telemetry is off by default</h2>
+      <p>The repository does not enable analytics or telemetry by default. Any future opt-in measurement must be explicit, documented, and privacy-preserving.</p>
+      <h2>What the site does</h2>
+      <p>This static site serves HTML, CSS, fonts, SVG brand assets, and a local release feed. It does not send submitted image files anywhere because it does not accept them.</p>
+      <p>For implementation details, see the <a href={repositoryUrl + "/blob/main/rastry.md"}>product definition ↗</a> and <a href="/docs/safety/">safety documentation →</a>.</p>
+    </article>
+  </div>
+</SiteLayout>

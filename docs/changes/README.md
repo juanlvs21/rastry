@@ -37,3 +37,8 @@ live in their own dedicated areas when those sections are introduced.
 | [Change 0005: CLI presets and declarative pipeline execution](./0005-cli-presets-and-declarative-pipelines.md)        | Implemented |
 | [Change 0006: Release quality and cross-platform validation](./0006-release-quality-and-cross-platform-validation.md) | Implemented |
 | [Change 0007: Desktop v0.2 over typed RPC](./0007-desktop-v0-2-typed-rpc.md)                                          | Implemented |
+| [Change 0008: Nunito typography](./0008-nunito-typography.md)                                                         | Implemented |
+| [Change 0009: Rastry brand palette and desktop logo assets](./0009-branding-and-logo-assets.md)                       | Implemented |
+| [Change 0010: Official web and public documentation](./0010-official-web-and-public-documentation.md)                 | Implemented |
+| [Change 0011: Shared dark visual language](./0011-shared-dark-visual-language.md)                                     | Implemented |
+| [Change 0012: Documentation contrast and CLI demo animation](./0012-documentation-contrast-and-cli-animation.md)      | Implemented |
