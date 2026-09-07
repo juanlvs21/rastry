@@ -16,11 +16,41 @@ The rise of AI-assisted software development also shaped the project. The CLI ma
 
 ## Requirements
 
-- [Bun](https://bun.sh/) 1.4.0 or newer.
+Release binaries do not require Bun. Bun 1.4.0 or newer is only required when
+developing Rastry from source.
+
 - Windows 11, macOS 14+, or Ubuntu 24.04+ for the current Electrobun toolchain.
 - WebView2 on Windows (normally installed with the operating system).
 
-## Start here
+## Install a release
+
+Download the latest [Rastry release](https://github.com/juanlvs21/rastry/releases/latest).
+The release contains standalone CLI binaries and Desktop installers for Windows,
+macOS, and Linux.
+
+### CLI
+
+- Windows: download rastry-windows-x64-cli.zip, extract rastry.exe, and add
+  its directory to PATH.
+- macOS: download rastry-macos-cli.tar.gz, extract it, make it executable,
+  and place it on PATH.
+- Linux: download rastry-linux-x64-cli.tar.gz, extract it, make it
+  executable, and place it on PATH.
+
+After installation, use the binary directly:
+
+    rastry --help
+    rastry photo.png --to webp --quality 82 --dry-run
+    rastry run ./public --preset web --execute
+
+### Desktop
+
+- Windows: run rastry-windows-x64-desktop-setup.exe.
+- macOS: open rastry-macos-desktop.dmg and move Rastry to Applications.
+- Linux: install rastry-linux-x64-desktop.deb with your package manager, for
+  example sudo apt install ./rastry-linux-x64-desktop.deb.
+
+## Develop from source
 
 ```bash
 bun install
@@ -78,7 +108,7 @@ examples/presets/   Versioned example configurations
 
 Read [rastry.md](./rastry.md) for the product definition and [CONTRIBUTING.md](./CONTRIBUTING.md) before proposing changes.
 
-## Common commands
+## Development commands
 
 | Command                     | Purpose                                          |
 | --------------------------- | ------------------------------------------------ |

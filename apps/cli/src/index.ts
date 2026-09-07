@@ -13,7 +13,9 @@ import { createImageEngine } from "@rastry/image-engine";
 import { cliPlanningFileSystem } from "./filesystem";
 import { loadPreset } from "./presets";
 
-const VERSION = "0.0.0";
+declare const BUILD_VERSION: string;
+
+const VERSION = typeof BUILD_VERSION === "string" ? BUILD_VERSION : "0.0.0";
 
 const help = `Rastry ${VERSION}
 

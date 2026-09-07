@@ -1,45 +1,51 @@
 ---
 title: Installation
-description: Install and run the Rastry CLI, Desktop app, and web documentation locally with Bun.
+description: Install Rastry CLI and Desktop from standalone release binaries.
 slug: docs/install
 ---
 
-Rastry currently uses Bun 1.4.0 or newer. The repository supports Windows 11, macOS 14+, and Ubuntu 24.04+ for the current Electrobun toolchain. WebView2 is normally present on Windows.
+Download the latest [Rastry release](https://github.com/juanlvs21/rastry/releases/latest).
+Each release contains standalone binaries, so Bun is not required on the user's
+machine.
 
-## Install the repository
+## Install the CLI
 
-Clone the repository, then install the workspace dependencies:
+Choose the archive for your operating system:
 
-```bash
-bun install
-```
+- Windows: rastry-windows-x64-cli.zip
+- macOS: rastry-macos-cli.tar.gz
+- Linux: rastry-linux-x64-cli.tar.gz
 
-Run the CLI from source:
+Extract the archive, place the rastry binary on PATH, and verify it:
 
-```bash
-bun run dev:cli -- --help
-```
+    rastry --version
+    rastry --help
 
-Start the Desktop app:
+## Install the Desktop app
 
-```bash
-bun run dev:desktop
-```
+- Windows: run rastry-windows-x64-desktop-setup.exe.
+- macOS: open rastry-macos-desktop.dmg and drag Rastry to Applications.
+- Linux: install rastry-linux-x64-desktop.deb with sudo apt install
+  ./rastry-linux-x64-desktop.deb.
 
-The first Desktop run prepares the locked Electrobun and Hutch toolchain. Image processing remains local to the Bun main process.
+The CLI and Desktop app process images locally. No account, server, or Bun
+runtime is required for released binaries.
 
-## Run the documentation site
+## Develop the documentation site
 
-The site is an independent static package. From the repository root:
+The site is an independent static package for contributors. From the repository
+root:
 
-```bash
-bun --filter @rastry/web dev
-bun --filter @rastry/web typecheck
-bun --filter @rastry/web build
-```
+    bun --filter @rastry/web dev
+    bun --filter @rastry/web typecheck
+    bun --filter @rastry/web build
 
-The production output is apps/web/dist/. It contains static HTML and assets and does not need the CLI, Desktop runtime, an API, or image-processing services.
+The production output is apps/web/dist/. It contains static HTML and assets and
+does not need the CLI, Desktop runtime, an API, or image-processing services.
 
 ## Deployment handoff
 
-Vercel can use apps/web as the project root with the checked-in vercel.json: install with Bun, run bun run build, and serve dist/. DNS, credentials, and custom-domain activation for rastry.juanl.dev are intentionally separate follow-up work.
+Vercel can use apps/web as the project root with the checked-in vercel.json:
+install with Bun, run bun run build, and serve dist/. DNS, credentials, and
+custom-domain activation for rastry.juanl.dev are intentionally separate
+follow-up work.

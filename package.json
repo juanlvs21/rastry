@@ -32,6 +32,7 @@
     "preview:web": "bun --filter @rastry/web preview",
     "typecheck:web": "bun --filter @rastry/web typecheck",
     "changelog": "bun run scripts/changelog.ts",
+    "release:changelog": "bun run scripts/release.ts",
     "typecheck": "bun --filter './packages/*' typecheck && bun --filter @rastry/cli typecheck && bun --filter @rastry/desktop typecheck && bun --filter @rastry/web typecheck && tsc -p scripts/tsconfig.json --noEmit",
     "test": "bun test",
     "check": "bun run format:check && bun run lint && bun run typecheck && bun run test"

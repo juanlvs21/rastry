@@ -1,10 +1,12 @@
 import type { ElectrobunConfig } from "electrobun";
 
+const version = process.env.RASTRY_VERSION ?? "0.0.0";
+
 export default {
   app: {
     name: "Rastry",
     identifier: "dev.rastry.desktop",
-    version: "0.0.0",
+    version,
   },
   build: {
     mainProcess: "bun",

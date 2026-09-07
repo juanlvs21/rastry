@@ -8,7 +8,7 @@ Rastry is a local-first tool for optimizing, transforming, and organizing image 
 
 ## Start here
 
-- [Install Rastry](/docs/install/) with the repository's Bun toolchain.
+- [Install Rastry](/docs/install/) from a standalone CLI binary or Desktop installer.
 - Follow the [quickstart](/docs/quickstart/) for a single image and a preset batch.
 - Choose the [CLI reference](/docs/cli/) for scripts, CI, and agents.
 - Choose the [Desktop workflow](/docs/desktop/) for selecting files and reviewing a plan visually.
