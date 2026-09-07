@@ -3,7 +3,7 @@
 > Herramienta local y open source para optimizar y transformar imágenes.
 
 **Documento maestro de producto**  
-Dominio: **rastry.dev** · Licencia: **Apache-2.0** · Estado: **Definición de producto**
+Dominio: **rastry.juanl.dev** · Licencia: **Apache-2.0** · Estado: **Definición de producto**
 
 ## Resumen ejecutivo
 
@@ -19,7 +19,7 @@ La primera versión prioriza una experiencia segura y útil para desarrolladores
 | Arquitectura    | Un motor TypeScript sobre Bun.Image; CLI y desktop invocan las mismas reglas de dominio.       |
 | Seguridad       | No se sobrescriben originales por defecto. Las salidas van a una carpeta explícita o derivada. |
 | Alcance inicial | No incluir background removal, OCR, AVIF ni capturas de pantalla en v0.1.                      |
-| Distribución    | Repositorio monorepo, releases instalables y documentación oficial en rastry.dev.              |
+| Distribución    | Repositorio monorepo, releases instalables y documentación oficial en rastry.juanl.dev.        |
 
 ## 1. Visión, usuario y propuesta de valor
 
@@ -122,7 +122,7 @@ La regla arquitectónica es simple: la interfaz no transforma imágenes y la CLI
 | CLI · Bun                    | Parseo de argumentos, carga de presets, presentación de resultados, códigos de salida y compilación en binario autónomo.    |
 | Desktop · Electrobun + React | Interfaz React en WebView; proceso principal con Bun; ventanas, diálogos, menús y RPC tipado para invocar el motor.         |
 | Configuración                | Esquema compartido de pipelines/presets; serialización local, validación por versión y migraciones futuras.                 |
-| Web                          | Landing, documentación y blog estáticos, independientes del binario y publicados en rastry.dev.                             |
+| Web                          | Landing, documentación y blog estáticos, independientes del binario y publicados en rastry.juanl.dev.                       |
 
 ### Principios de implementación
 
@@ -226,7 +226,7 @@ Watch mode se reserva para v0.4 porque requiere un diseño cuidadoso: carpetas o
 
 1. Calidad de release: añadir CI para pruebas, lint, builds de la CLI, pruebas de compatibilidad de formatos y generación de changelog.
 
-1. Web desde el inicio: construir la landing, Starlight, referencia CLI y las primeras guías SEO; publicar en rastry.dev antes o junto al alpha.
+1. Web desde el inicio: construir la landing, Starlight, referencia CLI y las primeras guías SEO; publicar en rastry.juanl.dev antes o junto al alpha.
 
 1. Alpha cerrada: validar con flujos reales de assets web; recoger problemas de seguridad, nomenclatura, rendimiento y ergonomía.
 
@@ -264,7 +264,7 @@ La funcionalidad central seguirá siendo abierta: CLI, desktop, conversión, com
 
 ## 11. Por qué Rastry
 
-Rastry nace de raster: el tipo de imagen que la herramienta procesa. El nombre conserva esa asociación técnica sin sentirse rígido, es corto, memorable y pronunciable en español e inglés. La terminación “-y” le da una identidad de producto más cálida y distintiva, mientras que rastry.dev comunica con claridad su lugar: una herramienta para personas que construyen, optimizan y automatizan. Además, el dominio rastry.dev está disponible en la decisión actual, lo que permite alinear nombre, proyecto y documentación bajo una sola marca.
+Rastry nace de raster: el tipo de imagen que la herramienta procesa. El nombre conserva esa asociación técnica sin sentirse rígido, es corto, memorable y pronunciable en español e inglés. La terminación “-y” le da una identidad de producto más cálida y distintiva, mientras que rastry.juanl.dev funciona por ahora como el hogar temporal de una herramienta para personas que construyen, optimizan y automatizan. Más adelante el proyecto podrá migrar al dominio público definitivo sin cambiar su identidad.
 
 ## 12. Decisiones a mantener explícitas
 

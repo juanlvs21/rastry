@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://rastry.dev/schemas/pipeline-v1.json",
+  "$id": "https://rastry.juanl.dev/schemas/pipeline-v1.json",
   "title": "Rastry pipeline",
   "type": "object",
   "additionalProperties": false,

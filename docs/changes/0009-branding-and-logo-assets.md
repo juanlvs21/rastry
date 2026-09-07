@@ -1,5 +1,9 @@
 # Change 0009: Rastry brand palette and desktop logo assets
 
+- Status: Implemented
+- Date: 2026-09-05
+- Related records: [Change 0007](./0007-desktop-v0-2-typed-rpc.md), [Change 0008](./0008-nunito-typography.md)
+
 ## Decision
 
 Adopt the Rastry brand palette across the desktop webview: deep ink `#171923`, warm ivory `#F5F1E8`, indigo `#4B3F9F`, mandarin `#F26B3A`, slate `#687080`, and forest `#27866A` for success states. Use transparent SVG logo assets derived from the approved image-transformation mark as the production desktop brand resources.

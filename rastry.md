@@ -4,7 +4,7 @@
 
 **Product master document**
 
-Domain: **rastry.dev** · License: **Apache-2.0** · Status: **Product definition**
+Domain: **rastry.juanl.dev** · License: **Apache-2.0** · Status: **Product definition**
 
 The Spanish translation is available in [rastry-es.md](./rastry-es.md).
 
@@ -22,7 +22,7 @@ The first version prioritizes a safe and useful experience for developers, desig
 | Architecture  | A TypeScript engine built on Bun.Image; the CLI and desktop app invoke the same domain rules. |
 | Safety        | Originals are never overwritten by default. Outputs go to an explicit or derived directory.   |
 | Initial scope | Do not include background removal, OCR, AVIF, or screenshot capture in v0.1.                  |
-| Distribution  | Monorepo, installable releases, and official documentation at rastry.dev.                     |
+| Distribution  | Monorepo, installable releases, and official documentation at rastry.juanl.dev.               |
 
 ## 1. Vision, users, and value proposition
 
@@ -127,7 +127,7 @@ The architectural rule is simple: neither the interface nor the CLI transforms i
 | CLI · Bun                    | Argument parsing, preset loading, result presentation, exit codes, and standalone binary compilation.           |
 | Desktop · Electrobun + React | React interface in a WebView; Bun main process; windows, dialogs, menus, and typed RPC for invoking the engine. |
 | Configuration                | Shared pipeline/preset schema; local serialization, version validation, and future migrations.                  |
-| Web                          | Static landing page, documentation, and blog, independent of the binary and published at rastry.dev.            |
+| Web                          | Static landing page, documentation, and blog, independent of the binary and published at rastry.juanl.dev.      |
 
 ### Implementation principles
 
@@ -231,7 +231,7 @@ Watch mode is reserved for v0.4 because it requires careful design: watched fold
 
 4. Release quality: add CI for tests and linting, CLI builds, format compatibility tests, and changelog generation.
 
-5. Web from the beginning: build the landing page, Starlight documentation, CLI reference, and first SEO guides; publish at rastry.dev before or alongside the alpha.
+5. Web from the beginning: build the landing page, Starlight documentation, CLI reference, and first SEO guides; publish at rastry.juanl.dev before or alongside the alpha.
 
 6. Closed alpha: validate with real web-asset workflows; collect issues involving safety, naming, performance, and ergonomics.
 
@@ -269,7 +269,7 @@ Core functionality will remain open: CLI, desktop app, conversion, compression, 
 
 ## 11. Why Rastry
 
-Rastry comes from raster, the type of image the tool processes. The name keeps that technical association without feeling rigid; it is short, memorable, and pronounceable in both Spanish and English. The “-y” ending gives it a warmer, more distinctive product identity, while rastry.dev clearly communicates its place: a tool for people who build, optimize, and automate. The rastry.dev domain is also available under the current decision, allowing the name, project, and documentation to align under one brand.
+Rastry comes from raster, the type of image the tool processes. The name keeps that technical association without feeling rigid; it is short, memorable, and pronounceable in both Spanish and English. The “-y” ending gives it a warmer, more distinctive product identity, while rastry.juanl.dev currently serves as the temporary home for a tool that helps people build, optimize, and automate. The project can move to its final public domain later without changing its product identity.
 
 ## 12. Decisions to keep explicit
 

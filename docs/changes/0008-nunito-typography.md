@@ -1,5 +1,9 @@
 # Change 0008: Nunito typography
 
+- Status: Implemented
+- Date: 2026-09-05
+- Related records: [Change 0007](./0007-desktop-v0-2-typed-rpc.md)
+
 ## Decision
 
 Use Fontsource's variable Nunito font as the desktop application's global UI

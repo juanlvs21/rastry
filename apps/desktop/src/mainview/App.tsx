@@ -303,7 +303,7 @@ export function App() {
   return (
     <main className="rastry-app">
       <header className="rastry-app__topbar">
-        <a className="rastry-app__brand" href="https://rastry.dev">
+        <a className="rastry-app__brand" href="https://rastry.juanl.dev">
           <img className="rastry-app__brand-logo" src={logoUrl} alt="Rastry" />
         </a>
         <span className="rastry-app__status">
