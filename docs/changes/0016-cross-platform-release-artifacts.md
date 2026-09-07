@@ -17,9 +17,9 @@ builds standalone CLI binaries and Desktop installers on Linux, macOS, and
 Windows, creates a Debian package for Linux Desktop, and publishes the outputs
 to a GitHub Release.
 
-The public documentation now directs end users to release binaries. Changelog
-and web release entries can be prepared deterministically with the
-release:changelog script before creating a tag.
+The public documentation now directs end users to release binaries. The release
+workflow prepares CHANGELOG.md, the web release entry, and package.json from
+the tagged commit before publishing the GitHub Release.
 
 ## Scope
 

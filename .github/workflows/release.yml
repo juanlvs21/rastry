@@ -13,6 +13,53 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  prepare:
+    name: Prepare release metadata
+    runs-on: ubuntu-24.04
+    env:
+      TAG_NAME: ${{ github.ref_name }}
+      DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - name: Check out default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+
+      - name: Generate and commit release metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(printf '%s' "$TAG_NAME" | sed 's/^v//')"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "The tag must use the vMAJOR.MINOR.PATCH format." >&2
+            exit 1
+          fi
+
+          git fetch origin --tags
+          release_date="$(git show -s --format=%cs "$TAG_NAME")"
+          previous_tag="$(git tag --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | grep -Fvx "$TAG_NAME" | head -n 1 || true)"
+          if [[ -n "$previous_tag" ]]; then
+            bun run release:changelog -- "$version" --from "$previous_tag" --to "$TAG_NAME" --date "$release_date" --write
+          else
+            bun run release:changelog -- "$version" --to "$TAG_NAME" --date "$release_date" --write
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md package.json "apps/web/src/content/releases/$version.md"
+          if git diff --cached --quiet; then
+            echo "Release metadata is already current."
+          else
+            git commit -m "chore(docs): prepare release $version"
+            git push origin "HEAD:$DEFAULT_BRANCH"
+          fi
+
   checks:
     name: Verify release
     runs-on: ubuntu-24.04
@@ -36,7 +83,7 @@ jobs:
 
   build:
     name: Build ${{ matrix.name }}
-    needs: checks
+    needs: [checks, prepare]
     strategy:
       fail-fast: false
       matrix:
@@ -186,7 +233,7 @@ jobs:
 
   publish:
     name: Publish GitHub release
-    needs: build
+    needs: [build, prepare]
     runs-on: ubuntu-24.04
     steps:
       - name: Check out tagged source
@@ -202,16 +249,27 @@ jobs:
           path: release-assets
           merge-multiple: true
 
-      - name: Create or update GitHub release
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.0
+
+      - name: Generate release notes
         env:
-          GH_TOKEN: ${{ github.token }}
           TAG_NAME: ${{ github.ref_name }}
         shell: bash
         run: |
           set -euo pipefail
-          version="${TAG_NAME#v}"
-          cat > release-notes.md <<EOF
-          # Rastry $version
+          version="$(printf '%s' "$TAG_NAME" | sed 's/^v//')"
+          release_date="$(git show -s --format=%cs "$TAG_NAME")"
+          previous_tag="$(git tag --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | grep -Fvx "$TAG_NAME" | head -n 1 || true)"
+          printf '# Rastry %s\n\n' "$version" > release-notes.md
+          if [[ -n "$previous_tag" ]]; then
+            bun run release:changelog -- "$version" --from "$previous_tag" --to "$TAG_NAME" --date "$release_date" --notes >> release-notes.md
+          else
+            bun run release:changelog -- "$version" --to "$TAG_NAME" --date "$release_date" --notes >> release-notes.md
+          fi
+          cat >> release-notes.md <<EOF
 
           ## Downloads
 
@@ -227,7 +285,17 @@ jobs:
           After installing the CLI binary, run rastry --help or rastry --version.
           EOF
 
+      - name: Create or update GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(printf '%s' "$TAG_NAME" | sed 's/^v//')"
+
           if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release edit "$TAG_NAME" --title "Rastry $version" --notes-file release-notes.md
             gh release upload "$TAG_NAME" release-assets/* --clobber
           else
             gh release create "$TAG_NAME" release-assets/* --verify-tag --title "Rastry $version" --notes-file release-notes.md

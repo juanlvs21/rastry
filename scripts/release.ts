@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 
 const repositoryRoot = resolve(import.meta.dir, "..");
 const webReleasesDirectory = resolve(repositoryRoot, "apps/web/src/content/releases");
+const packageJsonPath = resolve(repositoryRoot, "package.json");
 const recordSeparator = "\u001e";
 const fieldSeparator = "\u001f";
 const categoryOrder = [
@@ -17,7 +18,14 @@ const categoryOrder = [
 ] as const;
 
 type Category = (typeof categoryOrder)[number];
-type ReleaseOptions = { version: string; from?: string; to: string; date: string; write: boolean };
+type ReleaseOptions = {
+  version: string;
+  from?: string;
+  to: string;
+  date: string;
+  notes: boolean;
+  write: boolean;
+};
 type ConventionalCommit = {
   hash: string;
   type: string;
@@ -68,6 +76,7 @@ function parseOptions(args: readonly string[]): ReleaseOptions {
     version: parseVersion(rawVersion),
     to: "HEAD",
     date: new Date().toISOString().slice(0, 10),
+    notes: false,
     write: false,
   };
 
@@ -75,6 +84,10 @@ function parseOptions(args: readonly string[]): ReleaseOptions {
     const argument = args[index]!;
     if (argument === "--write") {
       options.write = true;
+      continue;
+    }
+    if (argument === "--notes") {
+      options.notes = true;
       continue;
     }
     if (argument === "--from") {
@@ -129,6 +142,7 @@ function readCommits(options: ReleaseOptions): ConventionalCommit[] {
     const hash = fields[0];
     const subject = fields[1];
     if (hash === undefined || subject === undefined || subject.length === 0) continue;
+    if (/^chore\((?:docs|release)\): prepare release \d+\.\d+\.\d+$/.test(subject)) continue;
     const match = subject.match(/^([a-z]+)(?:\(([^()\r\n]+)\))?(!)?: (.+)$/);
     if (match === null) continue;
     commits.push({
@@ -217,6 +231,16 @@ function updateChangelog(
   );
 }
 
+function updatePackageVersion(existing: string, version: string): string {
+  const parsed: unknown = JSON.parse(existing);
+  if (typeof parsed !== "object" || parsed === null || Array.isArray(parsed)) {
+    throw new Error("package.json must contain a JSON object.");
+  }
+  const packageJson = parsed as Record<string, unknown>;
+  packageJson.version = version;
+  return JSON.stringify(packageJson, null, 2) + "\n";
+}
+
 function renderWebEntry(
   version: string,
   date: string,
@@ -267,20 +291,29 @@ async function main(): Promise<void> {
   const webReleasePath = resolve(webReleasesDirectory, options.version + ".md");
   const webEntry = renderWebEntry(options.version, options.date, commits);
 
+  if (options.write) {
+    const packageJson = await readFile(packageJsonPath, "utf8");
+    await writeFile(resolve(repositoryRoot, "CHANGELOG.md"), updatedChangelog, "utf8");
+    await writeFile(packageJsonPath, updatePackageVersion(packageJson, options.version), "utf8");
+    await writeFile(webReleasePath, webEntry, "utf8");
+    process.stderr.write(
+      "Prepared release " +
+        options.version +
+        " in CHANGELOG.md, package.json, and " +
+        webReleasePath +
+        "\n",
+    );
+  }
+
+  if (options.notes) {
+    process.stdout.write(renderReleaseSection(options.version, options.date, commits) + "\n");
+    return;
+  }
+
   if (!options.write) {
     process.stdout.write(updatedChangelog);
     return;
   }
-
-  await writeFile(resolve(repositoryRoot, "CHANGELOG.md"), updatedChangelog, "utf8");
-  try {
-    await readFile(webReleasePath, "utf8");
-  } catch {
-    await writeFile(webReleasePath, webEntry, "utf8");
-  }
-  process.stderr.write(
-    "Prepared release " + options.version + " in CHANGELOG.md and " + webReleasePath + "\n",
-  );
 }
 
 void main().catch((error: unknown) => {
