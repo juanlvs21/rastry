@@ -127,8 +127,14 @@ jobs:
           & apps/cli/dist/rastry.exe --version
           Compress-Archive -Path apps/cli/dist/rastry.exe -DestinationPath release-assets/rastry-windows-x64-cli.zip -Force
 
-      - name: Build desktop application
+      - name: Build desktop application on Unix
+        if: runner.os != 'Windows'
         shell: bash
+        run: bun run build:desktop
+
+      - name: Build desktop application on Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
         run: bun run build:desktop
 
       - name: Package Windows desktop installer
