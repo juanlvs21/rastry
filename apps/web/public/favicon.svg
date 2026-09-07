@@ -1,9 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 184" role="img" aria-labelledby="title">
-  <title id="title">Rastry</title>
-  <rect width="184" height="184" rx="38" fill="#171923"/>
-  <rect x="42" y="48" width="79" height="82" rx="16" fill="#F5F1E8"/>
-  <path d="m51 113 18-20c3-4 8-4 11 0l8 9 8-10c3-4 8-4 11 0l12 15v20H51v-14Z" fill="#171923"/>
-  <circle cx="107" cy="67" r="11" fill="#F26B3A"/>
-  <circle cx="143" cy="143" r="22" fill="#27866A"/>
-  <path d="m132 143 7 7 16-18" fill="none" stroke="#F5F1E8" stroke-linecap="round" stroke-linejoin="round" stroke-width="6"/>
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+	<defs>
+		<image width="184" height="184" id="img1" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODQgMTg0IiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idGl0bGUgZGVzYyI+CiAgPHRpdGxlIGlkPSJ0aXRsZSI+UmFzdHJ5IG1hcms8L3RpdGxlPgogIDxkZXNjIGlkPSJkZXNjIj5BIHRyYW5zZm9ybWVkIGltYWdlIHRpbGUgd2l0aCBhbiBvcmFuZ2Ugb3V0cHV0IGFycm93IGFuZCBncmVlbiBjb21wbGV0aW9uIGNoZWNrLjwvZGVzYz4KICA8ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPgogICAgPHJlY3QgeD0iMTIiIHk9IjYyIiB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHJ4PSI0IiBmaWxsPSIjNEIzRjlGIi8+CiAgICA8cmVjdCB4PSI0IiB5PSI4OCIgd2lkdGg9IjIyIiBoZWlnaHQ9IjIyIiByeD0iNCIgZmlsbD0iIzRCM0Y5RiIvPgogICAgPHJlY3QgeD0iMjAiIHk9IjExNiIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiByeD0iNCIgZmlsbD0iI0YyNkIzQSIvPgogICAgPHJlY3QgeD0iNDQiIHk9IjEzNiIgd2lkdGg9IjE2IiBoZWlnaHQ9IjE2IiByeD0iNCIgZmlsbD0iIzRCM0Y5RiIvPgogICAgPHJlY3QgeD0iMjYiIHk9IjM0IiB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHJ4PSI0IiBmaWxsPSIjNEIzRjlGIi8+CiAgICA8cmVjdCB4PSI0OCIgeT0iNTgiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgcng9IjQiIGZpbGw9IiNGMjZCM0EiLz4KCiAgICA8cGF0aCBkPSJNNjEgMjBoNTNjMTcgMCAzMCAxMyAzMCAzMHYzMWwtMjktMjktNTQtMS0yNi0yNmM3LTMgMTYtNSAyNi01WiIgZmlsbD0iIzRCM0Y5RiIvPgogICAgPHBhdGggZD0iTTM1IDgzIDY2IDUybDU0IDEgMjkgMjktMjkgMjktNTQgMS0zMS0yOVoiIGZpbGw9IiMxNzE5MjMiIG9wYWNpdHk9Ii4xOCIvPgogICAgPHBhdGggZD0iTTM1IDgzIDM1IDEzN2MwIDE3IDEzIDMwIDMwIDMwaDQyTDM1IDgzWiIgZmlsbD0iI0YyNkIzQSIvPgogICAgPHBhdGggZD0ibTEyMCA1MyAzNCAzNC0zNCAzNFY5N0wxMDMgODBsMTctMjdaIiBmaWxsPSIjNEIzRjlGIi8+CiAgICA8cGF0aCBkPSJtMTU0IDg2IDI3IDI3LTI3IDI3Vjg2WiIgZmlsbD0iI0YyNkIzQSIvPgoKICAgIDxyZWN0IHg9IjU3IiB5PSI1MSIgd2lkdGg9Ijc5IiBoZWlnaHQ9IjgyIiByeD0iMTYiIGZpbGw9IiNGNUYxRTgiLz4KICAgIDxjaXJjbGUgY3g9IjExMiIgY3k9IjcyIiByPSIxMSIgZmlsbD0iI0YyNkIzQSIvPgogICAgPHBhdGggZD0ibTY2IDExOSAxOC0yMGMzLTQgOC00IDExIDBsOCA5IDgtMTBjMy00IDgtNCAxMSAwbDEyIDE1djIwSDY2di0xNFoiIGZpbGw9IiMxNzE5MjMiLz4KICAgIDxwYXRoIGQ9Im01OCA1MiAyNy0yOCAzNCAzNC0yMiAyMy0zOS0xWiIgZmlsbD0iI0Y1RjFFOCIgb3BhY2l0eT0iLjkiLz4KCiAgICA8Y2lyY2xlIGN4PSIxNDgiIGN5PSIxNDgiIHI9IjIxIiBmaWxsPSIjMjc4NjZBIi8+CiAgICA8cGF0aCBkPSJtMTM3IDE0OCA3IDcgMTUtMTciIHN0cm9rZT0iI0Y1RjFFOCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjYiLz4KICA8L2c+Cjwvc3ZnPgo="/>
+	</defs>
+	<style>
+	</style>
+	<use id="rastry-mark" href="#img1" transform="matrix(.261,0,0,.261,0,0)"/>
 </svg>
