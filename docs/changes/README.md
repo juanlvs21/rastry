@@ -45,3 +45,5 @@ live in their own dedicated areas when those sections are introduced.
 | [Change 0013: Canonical repository links](./0013-canonical-repository-links.md)                                       | Implemented |
 | [Change 0014: Hugeicons for documentation navigation](./0014-hugeicons-documentation-icons.md)                        | Superseded  |
 | [Change 0015: Direct Lucide Astro icons](./0015-lucide-astro-documentation-icons.md)                                  | Implemented |
+| [Change 0016: Cross-platform release artifacts](./0016-cross-platform-release-artifacts.md)                           | Implemented |
+| [Change 0017: Simplified landing page calls to action](./0017-simplified-landing-page-ctas.md)                        | Implemented |
