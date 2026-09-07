@@ -256,6 +256,8 @@ Watch mode is reserved for v0.4 because it requires careful design: watched fold
 
 Rastry will be released under the Apache License 2.0. It is a permissive license compatible with commercial use and enterprise contributions, and it includes an explicit patent grant. The repository should include `LICENSE`, `NOTICE` when applicable, copyright headers where appropriate, and a clear contribution policy.
 
+The Apache License 2.0 applies to Rastry's source code and does not grant permission to use the Rastry name, word mark, logos, icons, domain names, color palette, typography, layouts, or other elements of its visual identity. Forks and redistributed versions may use and modify the code, but must not use the Rastry brand in a way that suggests official status, affiliation, sponsorship, or endorsement. Use of the name is limited to accurately identifying the unmodified project or describing its origin; other uses require separate written permission.
+
 ### Monetization principle
 
 Core functionality will remain open: CLI, desktop app, conversion, compression, batches, pipelines, and presets. If the project eventually monetizes, users will pay for convenience, support, or distribution—not to regain access to basic capabilities.

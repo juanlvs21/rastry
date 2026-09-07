@@ -126,3 +126,7 @@ Read [rastry.md](./rastry.md) for the product definition and [CONTRIBUTING.md](.
 ## License
 
 Licensed under the [Apache License 2.0](./LICENSE).
+
+The Apache license covers the source code only. The Rastry name, logo, and
+visual identity are protected and may not be used to imply an official or
+affiliated version. See the [brand notice](./NOTICE) for details.

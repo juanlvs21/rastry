@@ -47,3 +47,4 @@ live in their own dedicated areas when those sections are introduced.
 | [Change 0015: Direct Lucide Astro icons](./0015-lucide-astro-documentation-icons.md)                                  | Implemented |
 | [Change 0016: Cross-platform release artifacts](./0016-cross-platform-release-artifacts.md)                           | Implemented |
 | [Change 0017: Simplified landing page calls to action](./0017-simplified-landing-page-ctas.md)                        | Implemented |
+| [Change 0018: Explicit Rastry brand restrictions](./0018-explicit-rastry-brand-restrictions.md)                       | Implemented |

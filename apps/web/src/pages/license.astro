@@ -3,13 +3,16 @@ import SiteLayout from "../layouts/SiteLayout.astro";
 import { ArrowUpRight } from "@lucide/astro";
 import { repositoryUrl } from "../lib/content";
 ---
-<SiteLayout title="License · Rastry" description="Rastry is released under the Apache License 2.0." breadcrumbs={[{ name: "Rastry", path: "/" }, { name: "License", path: "/license/" }]}>
+<SiteLayout title="License · Rastry" description="Rastry source code is released under the Apache License 2.0; the Rastry brand and visual identity are reserved." breadcrumbs={[{ name: "Rastry", path: "/" }, { name: "License", path: "/license/" }]}>
   <div class="article-shell">
     <header><p class="kicker">Project</p><h1>Apache License 2.0.</h1><p class="article-shell__summary">Rastry is open source and intended to be useful in personal, commercial, and team workflows.</p></header>
     <article class="article">
       <h2>What this means</h2>
       <p>The Apache License 2.0 permits use, modification, distribution, and commercial work, subject to the license terms and notices. It also includes an express patent grant.</p>
       <p>Read the complete license in the repository: <a class="icon-link" href={repositoryUrl + "/blob/main/LICENSE"} target="_blank" rel="noopener noreferrer">LICENSE <ArrowUpRight size={14} /></a>. The project notice is available in <a class="icon-link" href={repositoryUrl + "/blob/main/NOTICE"} target="_blank" rel="noopener noreferrer">NOTICE <ArrowUpRight size={14} /></a>.</p>
+      <h2>Rastry name and visual identity</h2>
+      <p>The Apache License 2.0 covers the Rastry source code. It does not grant permission to use the Rastry name, word mark, logo, icons, domain names, color palette, typography, layouts, or other elements of the Rastry visual identity.</p>
+      <p>You may fork, modify, and redistribute the code, but you must not use the Rastry brand to suggest that a modified or redistributed work is official, affiliated with, sponsored by, or endorsed by Rastry or its contributors. Use of the Rastry name is limited to accurately identifying the unmodified project or describing its origin. Other uses require separate written permission.</p>
       <h2>Third-party dependencies</h2>
       <p>Dependencies retain their own licenses. Release artifacts and future distributions should preserve the required notices.</p>
     </article>
