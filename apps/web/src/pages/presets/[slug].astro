@@ -1,7 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
+import { ArrowRight, ArrowUpRight } from "@lucide/astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
-import HugeIcon from "../../components/HugeIcon.astro";
 import { assertUniqueSlugs, canonicalUrl, repositoryUrl } from "../../lib/content";
 
 export async function getStaticPaths() {
@@ -37,8 +37,8 @@ const { Content } = await render(entry);
       <p class="article-shell__summary">{entry.data.description}</p>
       <div class="meta-row">
         <span class="tag tag--green">Output · {entry.data.outputFormat.toUpperCase()}</span>
-        <a class="tag tag--warm" href={repositoryUrl + "/blob/main/" + entry.data.sourcePath} target="_blank" rel="noopener noreferrer">View JSON <HugeIcon name="arrow-up-right" size={14} /></a>
-        <a class="tag" href={entry.data.docsPath}>Read the docs <HugeIcon name="arrow-right" size={14} /></a>
+        <a class="tag tag--warm" href={repositoryUrl + "/blob/main/" + entry.data.sourcePath} target="_blank" rel="noopener noreferrer">View JSON <ArrowUpRight size={14} /></a>
+        <a class="tag" href={entry.data.docsPath}>Read the docs <ArrowRight size={14} /></a>
       </div>
     </header>
     <article class="article">

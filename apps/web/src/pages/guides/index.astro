@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
+import { ArrowRight } from "@lucide/astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
-import HugeIcon from "../../components/HugeIcon.astro";
 import { assertUniqueSlugs } from "../../lib/content";
 
 const entries = await getCollection("guides");
@@ -22,7 +22,7 @@ const description = "Practical, local-first guides for web image optimization, P
           <span class="tag tag--warm">{entry.data.audience}</span>
           <h2>{entry.data.title}</h2>
           <p>{entry.data.description}</p>
-          <span class="catalog-card__link">Read guide <HugeIcon name="arrow-right" size={16} /></span>
+          <span class="catalog-card__link">Read guide <ArrowRight size={16} /></span>
         </a>
       ))}
     </section>

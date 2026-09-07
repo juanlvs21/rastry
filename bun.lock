@@ -60,7 +60,7 @@
         "@astrojs/sitemap": "3.7.4",
         "@astrojs/starlight": "0.41.5",
         "@fontsource-variable/nunito": "5.3.0",
-        "@hugeicons/core-free-icons": "4.3.0",
+        "@lucide/astro": "1.41.0",
         "astro": "7.1.6",
       },
       "devDependencies": {
@@ -309,7 +309,7 @@
 
     "@fontsource-variable/nunito": ["@fontsource-variable/nunito@5.3.0", "", {}, ""],
 
-    "@hugeicons/core-free-icons": ["@hugeicons/core-free-icons@4.3.0", "", {}, "sha512-5DC5gq2psNDKBQThOjpuFCtMco8nl2FkrBzZgG15cFGM0kSwUoych/pw0DmjBygF9qRDITdBPtmzJqLsOeImMg=="],
+    "@lucide/astro": ["@lucide/astro@1.41.0", "", { "peerDependencies": { "astro": "^4 || ^5 || ^6 || ^7" } }, "sha512-B6i+gssCkaI9o2mTGLslHOSNyFUv5i6bqxATozpFepdT5XH/n3gjcH4jQ6efqMRGIrqaKsFr5TRwgfKEMqlHiQ=="],
 
     "@img/colour": ["@img/colour@1.1.0", "", {}, "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ=="],
 

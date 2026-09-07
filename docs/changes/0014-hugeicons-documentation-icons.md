@@ -1,6 +1,6 @@
 # Change 0014: Hugeicons for documentation navigation
 
-Status: Implemented
+Status: Superseded by Change 0015
 
 ## Context
 
@@ -49,4 +49,4 @@ Documentation navigation has a more consistent visual vocabulary and a reusable 
 
 ## Follow-up
 
-Use the HugeIcon Astro component for new documentation actions and status cues instead of adding Unicode pictograms.
+The implementation was replaced by the direct Lucide Astro package in Change 0015.

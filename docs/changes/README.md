@@ -43,4 +43,5 @@ live in their own dedicated areas when those sections are introduced.
 | [Change 0011: Shared dark visual language](./0011-shared-dark-visual-language.md)                                     | Implemented |
 | [Change 0012: Documentation contrast and CLI demo animation](./0012-documentation-contrast-and-cli-animation.md)      | Implemented |
 | [Change 0013: Canonical repository links](./0013-canonical-repository-links.md)                                       | Implemented |
-| [Change 0014: Hugeicons for documentation navigation](./0014-hugeicons-documentation-icons.md)                        | Implemented |
+| [Change 0014: Hugeicons for documentation navigation](./0014-hugeicons-documentation-icons.md)                        | Superseded  |
+| [Change 0015: Direct Lucide Astro icons](./0015-lucide-astro-documentation-icons.md)                                  | Implemented |

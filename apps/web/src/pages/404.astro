@@ -1,6 +1,6 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-import HugeIcon from "../components/HugeIcon.astro";
+import { ArrowRight } from "@lucide/astro";
 ---
 <SiteLayout title="Page not found · Rastry" description="The Rastry page you requested could not be found." noindex>
   <div class="article-shell">
@@ -10,8 +10,8 @@ import HugeIcon from "../components/HugeIcon.astro";
       <p class="article-shell__summary">The page may have moved, or the URL may be incomplete.</p>
     </header>
     <article class="article">
-      <p><a class="icon-link" href="/">Return to Rastry home <HugeIcon name="arrow-right" size={16} /></a></p>
-      <p><a class="icon-link" href="/docs/">Open the documentation <HugeIcon name="arrow-right" size={16} /></a></p>
+      <p><a class="icon-link" href="/">Return to Rastry home <ArrowRight size={16} /></a></p>
+      <p><a class="icon-link" href="/docs/">Open the documentation <ArrowRight size={16} /></a></p>
     </article>
   </div>
 </SiteLayout>

@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
+import { ArrowRight } from "@lucide/astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
-import HugeIcon from "../../components/HugeIcon.astro";
 import { assertUniqueSlugs, repositoryUrl } from "../../lib/content";
 
 const entries = await getCollection("formats");
@@ -22,7 +22,7 @@ const description = "PNG, JPEG, and WebP are the supported Rastry input and outp
           <span class="tag">{entry.data.format.toUpperCase()}</span>
           <h2>{entry.data.title}</h2>
           <p>{entry.data.description}</p>
-          <span class="catalog-card__link">Read format guide <HugeIcon name="arrow-right" size={16} /></span>
+          <span class="catalog-card__link">Read format guide <ArrowRight size={16} /></span>
         </a>
       ))}
     </section>
