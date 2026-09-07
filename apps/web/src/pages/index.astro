@@ -1,5 +1,6 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
+import HugeIcon from "../components/HugeIcon.astro";
 import { repositoryUrl, siteUrl } from "../lib/content";
 
 const title = "Rastry · Local-first image workflows";
@@ -29,8 +30,8 @@ const softwareSchema = {
           predictable command line. Your files stay on your machine.
         </p>
         <div class="button-row">
-          <a class="button" href="/docs/quickstart/">Start with the quickstart <span aria-hidden="true">→</span></a>
-          <a class="button button--quiet" href={repositoryUrl} target="_blank" rel="noopener noreferrer">View source <span aria-hidden="true">↗</span></a>
+          <a class="button" href="/docs/quickstart/">Start with the quickstart <HugeIcon name="arrow-right" size={16} /></a>
+          <a class="button button--quiet" href={repositoryUrl} target="_blank" rel="noopener noreferrer">View source <HugeIcon name="arrow-up-right" size={16} /></a>
         </div>
       </div>
       <div class="hero-card" aria-label="Example Rastry pipeline">
@@ -42,14 +43,14 @@ const softwareSchema = {
               <span class="terminal__command" data-cli-command>rastry run ./public --preset web</span><span
                 class="terminal__caret"
                 data-cli-caret
-              ></span><span class="terminal__enter" data-cli-enter>↵</span>
+              ></span><span class="terminal__enter" data-cli-enter><HugeIcon name="corner-down-left" size={15} class="terminal__enter-icon" /></span>
             </div>
             <div class="terminal__output" data-cli-output>
               <div class="muted">Planning 4 files…</div>
               <br />
-              <div>✓ hero.png <span class="muted">→ hero-rastry.webp</span></div>
-              <div>✓ card.jpg <span class="muted">→ card-rastry.webp</span></div>
-              <div>✓ logo.png <span class="muted">→ logo-rastry.webp</span></div>
+              <div class="terminal__output-line"><HugeIcon name="check" size={15} /><span>hero.png</span><HugeIcon name="arrow-right" size={14} class="terminal__output-arrow" /><span class="muted">hero-rastry.webp</span></div>
+              <div class="terminal__output-line"><HugeIcon name="check" size={15} /><span>card.jpg</span><HugeIcon name="arrow-right" size={14} class="terminal__output-arrow" /><span class="muted">card-rastry.webp</span></div>
+              <div class="terminal__output-line"><HugeIcon name="check" size={15} /><span>logo.png</span><HugeIcon name="arrow-right" size={14} class="terminal__output-arrow" /><span class="muted">logo-rastry.webp</span></div>
               <br />
               <div><span class="accent">Dry run complete.</span></div>
               <div class="muted">No files changed.</div>
@@ -61,7 +62,7 @@ const softwareSchema = {
           </p>
         </div>
         <div class="trust-note">
-          <span aria-hidden="true">◎</span>
+          <HugeIcon name="shield-check" size={20} />
           <span><strong>Private by default.</strong> No account, upload, or telemetry is required to process an image.</span>
         </div>
       </div>
@@ -79,14 +80,17 @@ const softwareSchema = {
       </div>
       <div class="card-grid">
         <article class="card card--indigo">
+          <span class="card__icon"><HugeIcon name="shield-check" size={23} /></span>
           <h3>Local by design</h3>
           <p>Processing happens in the Bun runtime on your device. Images never cross a web API or an account boundary.</p>
         </article>
         <article class="card card--accent">
+          <span class="card__icon"><HugeIcon name="workflow" size={23} /></span>
           <h3>Repeatable by default</h3>
           <p>Express a workflow as a versioned pipeline or a readable preset, then use the same rules from CLI or desktop.</p>
         </article>
         <article class="card card--forest">
+          <span class="card__icon"><HugeIcon name="check" size={23} /></span>
           <h3>Safe before fast</h3>
           <p>Every run starts with a plan. Outputs get a derived name, originals are protected, and conflicts are visible before writing.</p>
         </article>
@@ -107,17 +111,17 @@ const softwareSchema = {
         <a class="card link-card" href="/formats/">
           <h3>PNG · JPEG · WebP</h3>
           <p>Read the tradeoffs and use each format deliberately.</p>
-          <span class="catalog-card__link">Explore formats →</span>
+          <span class="catalog-card__link">Explore formats <HugeIcon name="arrow-right" size={16} /></span>
         </a>
         <a class="card link-card" href="/operations/">
           <h3>Resize · crop · trim</h3>
           <p>Shape dimensions, remove transparent borders, and prepare assets for their destination.</p>
-          <span class="catalog-card__link">Explore operations →</span>
+          <span class="catalog-card__link">Explore operations <HugeIcon name="arrow-right" size={16} /></span>
         </a>
         <a class="card link-card" href="/presets/">
           <h3>Web · ecommerce · social</h3>
           <p>Start with shipped recipes that map to real delivery contexts.</p>
-          <span class="catalog-card__link">Explore presets →</span>
+          <span class="catalog-card__link">Explore presets <HugeIcon name="arrow-right" size={16} /></span>
         </a>
       </div>
       <ul class="tag-list" aria-label="Supported operations">
@@ -142,16 +146,20 @@ const softwareSchema = {
       </div>
       <div class="workflow-grid">
         <article class="workflow">
+          <span class="card__icon"><HugeIcon name="command" size={23} /></span>
           <h3>CLI for scripts and agents</h3>
           <p>Plan a one-off conversion, run a preset over a folder, or capture a JSON summary for automation.</p>
           <pre><code>rastry photo.png --to webp --quality 82 --dry-run</code></pre>
-          <div class="button-row"><a class="button button--quiet" href="/docs/cli/">Read CLI reference →</a></div>
+          <div class="button-row"><a class="button button--quiet" href="/docs/cli/">Read CLI reference <HugeIcon name="arrow-right" size={16} /></a></div>
         </article>
         <article class="workflow">
+          <span class="card__icon"><HugeIcon name="laptop" size={23} /></span>
           <h3>Desktop for visual tasks</h3>
           <p>Select files or folders, configure operations, review the plan, then execute only after the output paths look right.</p>
-          <pre><code>Select → Configure → Preview → Execute</code></pre>
-          <div class="button-row"><a class="button button--quiet" href="/docs/desktop/">See Desktop workflow →</a></div>
+          <div class="pipeline-sequence" aria-label="Select, configure, preview, and execute">
+            <span>Select</span><HugeIcon name="arrow-right" size={15} /><span>Configure</span><HugeIcon name="arrow-right" size={15} /><span>Preview</span><HugeIcon name="arrow-right" size={15} /><span>Execute</span>
+          </div>
+          <div class="button-row"><a class="button button--quiet" href="/docs/desktop/">See Desktop workflow <HugeIcon name="arrow-right" size={16} /></a></div>
         </article>
       </div>
     </div>
@@ -163,13 +171,13 @@ const softwareSchema = {
         <p class="kicker">Trust is a feature</p>
         <h2 id="safety-title">Nothing happens silently.</h2>
         <p class="lede">Rastry favors a visible, deterministic plan over a surprising shortcut.</p>
-        <div class="button-row"><a class="button" href="/docs/safety/">Read the safety model →</a></div>
+        <div class="button-row"><a class="button" href="/docs/safety/">Read the safety model <HugeIcon name="arrow-right" size={16} /></a></div>
       </div>
       <ul class="safety__list">
-        <li><span><strong>Dry-run first.</strong> See files, operations, output paths, and conflicts without writing.</span></li>
-        <li><span><strong>Originals stay intact.</strong> Outputs go to a chosen directory or use the <code>-rastry</code> suffix.</span></li>
-        <li><span><strong>Batch failures are isolated.</strong> One bad input does not hide the rest of the summary.</span></li>
-        <li><span><strong>Telemetry is off.</strong> The product does not add analytics or uploads by default.</span></li>
+        <li><HugeIcon name="check" size={20} class="safety__icon" /><span><strong>Dry-run first.</strong> See files, operations, output paths, and conflicts without writing.</span></li>
+        <li><HugeIcon name="check" size={20} class="safety__icon" /><span><strong>Originals stay intact.</strong> Outputs go to a chosen directory or use the <code>-rastry</code> suffix.</span></li>
+        <li><HugeIcon name="check" size={20} class="safety__icon" /><span><strong>Batch failures are isolated.</strong> One bad input does not hide the rest of the summary.</span></li>
+        <li><HugeIcon name="check" size={20} class="safety__icon" /><span><strong>Telemetry is off.</strong> The product does not add analytics or uploads by default.</span></li>
       </ul>
     </div>
   </section>
@@ -184,10 +192,10 @@ const softwareSchema = {
         <p>Rastry is foundation-stage software. The roadmap is a promise about sequence, not a claim that every item is shipped.</p>
       </div>
       <div class="roadmap">
-        <div class="roadmap__item roadmap__item--current"><strong>v0.1 · Foundations</strong><p>Core, Bun.Image adapter, safe CLI, formats, operations, batches, and dry-run.</p></div>
-        <div class="roadmap__item roadmap__item--current"><strong>v0.2 · Desktop</strong><p>Electrobun + React workflow with typed RPC, plan preview, progress, and summary.</p></div>
-        <div class="roadmap__item"><strong>v0.3 · Reuse</strong><p>Local presets, import/export, execution history, and recipe documentation.</p></div>
-        <div class="roadmap__item"><strong>v0.4 · Integration</strong><p>Explicit watch mode, installers, updates, and performance work.</p></div>
+        <div class="roadmap__item roadmap__item--current"><HugeIcon name="check" size={19} class="roadmap__icon" /><div><strong>v0.1 · Foundations</strong><p>Core, Bun.Image adapter, safe CLI, formats, operations, batches, and dry-run.</p></div></div>
+        <div class="roadmap__item roadmap__item--current"><HugeIcon name="check" size={19} class="roadmap__icon" /><div><strong>v0.2 · Desktop</strong><p>Electrobun + React workflow with typed RPC, plan preview, progress, and summary.</p></div></div>
+        <div class="roadmap__item"><HugeIcon name="route" size={19} class="roadmap__icon" /><div><strong>v0.3 · Reuse</strong><p>Local presets, import/export, execution history, and recipe documentation.</p></div></div>
+        <div class="roadmap__item"><HugeIcon name="route" size={19} class="roadmap__icon" /><div><strong>v0.4 · Integration</strong><p>Explicit watch mode, installers, updates, and performance work.</p></div></div>
       </div>
     </div>
   </section>
@@ -199,8 +207,8 @@ const softwareSchema = {
         <h2 id="contribute-title">Help make the boring parts dependable.</h2>
         <p>Read the contribution guide, try a real web-asset workflow, and report what felt unclear. The project is deliberately early enough for useful feedback to change the shape.</p>
         <div class="button-row">
-          <a class="button" href="/docs/contribution/">Contribute to Rastry →</a>
-          <a class="button button--quiet" href={repositoryUrl} target="_blank" rel="noopener noreferrer">Open GitHub ↗</a>
+          <a class="button" href="/docs/contribution/">Contribute to Rastry <HugeIcon name="arrow-right" size={16} /></a>
+          <a class="button button--quiet" href={repositoryUrl} target="_blank" rel="noopener noreferrer">Open GitHub <HugeIcon name="arrow-up-right" size={16} /></a>
         </div>
       </div>
     </div>

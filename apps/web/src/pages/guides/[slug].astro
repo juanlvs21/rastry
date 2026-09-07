@@ -1,6 +1,7 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import SiteLayout from "../../layouts/SiteLayout.astro";
+import HugeIcon from "../../components/HugeIcon.astro";
 import { assertUniqueSlugs, canonicalUrl } from "../../lib/content";
 
 export async function getStaticPaths() {
@@ -38,7 +39,7 @@ const { Content } = await render(entry);
     <article class="article">
       <Content />
       <h2>More from Rastry</h2>
-      <p><a href={entry.data.docsPath}>Open the related documentation →</a></p>
+      <p><a class="icon-link" href={entry.data.docsPath}>Open the related documentation <HugeIcon name="arrow-right" size={16} /></a></p>
     </article>
   </div>
 </SiteLayout>

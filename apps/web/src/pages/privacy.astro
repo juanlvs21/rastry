@@ -1,5 +1,6 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
+import HugeIcon from "../components/HugeIcon.astro";
 import { repositoryUrl } from "../lib/content";
 ---
 <SiteLayout title="Local-first privacy · Rastry" description="Rastry processes images locally, without accounts, uploads, or telemetry enabled by default." breadcrumbs={[{ name: "Rastry", path: "/" }, { name: "Privacy", path: "/privacy/" }]}>
@@ -14,7 +15,7 @@ import { repositoryUrl } from "../lib/content";
       <p>The repository does not enable analytics or telemetry by default. Any future opt-in measurement must be explicit, documented, and privacy-preserving.</p>
       <h2>What the site does</h2>
       <p>This static site serves HTML, CSS, fonts, SVG brand assets, and a local release feed. It does not send submitted image files anywhere because it does not accept them.</p>
-      <p>For implementation details, see the <a href={repositoryUrl + "/blob/main/rastry.md"} target="_blank" rel="noopener noreferrer">product definition ↗</a> and <a href="/docs/safety/">safety documentation →</a>.</p>
+      <p>For implementation details, see the <a class="icon-link" href={repositoryUrl + "/blob/main/rastry.md"} target="_blank" rel="noopener noreferrer">product definition <HugeIcon name="arrow-up-right" size={14} /></a> and <a class="icon-link" href="/docs/safety/">safety documentation <HugeIcon name="arrow-right" size={14} /></a>.</p>
     </article>
   </div>
 </SiteLayout>

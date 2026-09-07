@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 
+import HugeIcon from "../components/HugeIcon.astro";
 import { breadcrumbSchema, canonicalUrl, pageSchema, repositoryUrl } from "../lib/content";
 
 interface Props {
@@ -66,7 +67,9 @@ const schemas = [
           <a href="/docs/">Docs</a>
           <a href="/guides/">Guides</a>
           <a href="/releases/">Changelog</a>
-          <a href={repositoryUrl} target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+          <a class="icon-link" href={repositoryUrl} target="_blank" rel="noopener noreferrer">
+            GitHub <HugeIcon name="arrow-up-right" size={15} />
+          </a>
         </nav>
       </div>
     </header>

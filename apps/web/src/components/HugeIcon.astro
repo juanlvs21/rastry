@@ -1,0 +1,77 @@
+---
+import {
+  ArrowRight01Icon,
+  ArrowUpRight01Icon,
+  CheckmarkCircle02Icon,
+  CommandIcon,
+  CornerDownLeftIcon,
+  LaptopIcon,
+  RssIcon,
+  Route01Icon,
+  ShieldCheckIcon,
+  WorkflowIcon,
+} from "@hugeicons/core-free-icons";
+
+type IconAttribute = string | number;
+type IconDefinition = ReadonlyArray<readonly [string, Readonly<Record<string, IconAttribute>>]>;
+
+const icons = {
+  "arrow-right": ArrowRight01Icon,
+  "arrow-up-right": ArrowUpRight01Icon,
+  check: CheckmarkCircle02Icon,
+  command: CommandIcon,
+  "corner-down-left": CornerDownLeftIcon,
+  laptop: LaptopIcon,
+  rss: RssIcon,
+  route: Route01Icon,
+  "shield-check": ShieldCheckIcon,
+  workflow: WorkflowIcon,
+} satisfies Record<string, IconDefinition>;
+
+type IconName = keyof typeof icons;
+
+interface Props {
+  name: IconName;
+  size?: number;
+  label?: string;
+  class?: string;
+}
+
+const { name, size = 18, label, class: className = "" } = Astro.props as Props;
+const icon = icons[name];
+
+function attributeName(attribute: string) {
+  return attribute.replace(/[A-Z]/g, (letter) => "-" + letter.toLowerCase());
+}
+
+function escapeAttribute(value: IconAttribute) {
+  return String(value).replaceAll("&", "&amp;").replaceAll('"', "&quot;");
+}
+
+const content = icon
+  .map(([tagName, attributes]) => {
+    const markup = Object.entries(attributes)
+      .filter(([key]) => key !== "key")
+      .map(([key, value]) => `${attributeName(key)}="${escapeAttribute(value)}"`)
+      .join(" ");
+    return `<${tagName} ${markup} />`;
+  })
+  .join("");
+
+const classes = ["huge-icon", className].filter(Boolean).join(" ");
+---
+<svg
+  class={classes}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  focusable="false"
+  role={label ? "img" : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : "true"}
+>
+  {label ? <title>{label}</title> : null}
+  <Fragment set:html={content} />
+</svg>

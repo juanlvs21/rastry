@@ -1,5 +1,6 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
+import HugeIcon from "../components/HugeIcon.astro";
 import { repositoryUrl } from "../lib/content";
 ---
 <SiteLayout title="Trademark · Rastry" description="Guidance for using the Rastry name and brand assets." breadcrumbs={[{ name: "Rastry", path: "/" }, { name: "Trademark", path: "/trademark/" }]}>
@@ -18,7 +19,7 @@ import { repositoryUrl } from "../lib/content";
         <li>Implying that the project sponsors, certifies, or endorses unrelated software.</li>
         <li>Registering confusingly similar domains, package names, or social accounts.</li>
       </ul>
-      <p>The repository's brand files and project context are available in <a href={repositoryUrl + "/tree/main"} target="_blank" rel="noopener noreferrer">the source tree ↗</a>. Questions about a specific use should be raised with the maintainers before publication.</p>
+      <p>The repository's brand files and project context are available in <a class="icon-link" href={repositoryUrl + "/tree/main"} target="_blank" rel="noopener noreferrer">the source tree <HugeIcon name="arrow-up-right" size={14} /></a>. Questions about a specific use should be raised with the maintainers before publication.</p>
     </article>
   </div>
 </SiteLayout>

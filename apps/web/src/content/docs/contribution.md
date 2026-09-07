@@ -10,7 +10,7 @@ Rastry is early-stage open source software. Contributions are most useful when t
 
 Read the repository <a href="https://github.com/juanlvs21/rastry/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">contribution guide</a>, the <a href="https://github.com/juanlvs21/rastry/blob/main/rastry.md" target="_blank" rel="noopener noreferrer">product definition</a>, and the relevant <a href="https://github.com/juanlvs21/rastry/tree/main/docs/changes" target="_blank" rel="noopener noreferrer">change records</a>.
 
-The dependency direction is apps → core/image-engine → contracts. The web package is intentionally independent: do not import Desktop code, Electrobun, Bun.Image, or user filesystem APIs into it.
+The dependency direction runs from apps through core/image-engine to contracts. The web package is intentionally independent: do not import Desktop code, Electrobun, Bun.Image, or user filesystem APIs into it.
 
 ## Checks
 

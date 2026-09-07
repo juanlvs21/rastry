@@ -21,6 +21,18 @@
   box-sizing: border-box;
 }
 
+.huge-icon {
+  display: inline-block;
+  flex: 0 0 auto;
+  vertical-align: -0.16em;
+}
+
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
 html {
   scroll-behavior: smooth;
   background: var(--ivory);
@@ -300,6 +312,10 @@ h3 {
   transition: opacity 120ms ease;
 }
 
+.terminal__enter-icon {
+  vertical-align: -0.2em;
+}
+
 .terminal__enter--visible {
   opacity: 1;
 }
@@ -337,6 +353,20 @@ h3 {
   color: #f3c969;
 }
 
+.terminal__output-line {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.terminal__output-line .huge-icon {
+  color: var(--forest);
+}
+
+.terminal__output-arrow {
+  color: #9ea4b3;
+}
+
 .trust-note {
   position: relative;
   right: auto;
@@ -353,6 +383,12 @@ h3 {
   background: rgba(245, 241, 232, 0.1);
   color: #f5f1e8;
   font-size: 0.92rem;
+}
+
+.trust-note > .huge-icon {
+  flex: 0 0 auto;
+  margin-top: 0.15rem;
+  color: var(--forest);
 }
 
 .trust-note strong {
@@ -417,6 +453,22 @@ h3 {
   background: var(--paper);
 }
 
+.card__icon {
+  display: grid;
+  width: 2.7rem;
+  height: 2.7rem;
+  place-items: center;
+  margin-bottom: 1rem;
+  border-radius: 0.75rem;
+  background: rgb(166 156 241 / 0.16);
+  color: var(--indigo-dark);
+}
+
+.workflow .card__icon {
+  background: rgb(242 107 58 / 0.16);
+  color: #ffb59b;
+}
+
 .card--accent {
   border-top: 4px solid var(--mandarin);
 }
@@ -456,6 +508,8 @@ h3 {
 .tag-list a,
 .tag {
   display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   padding: 0.35rem 0.7rem;
   border-radius: 999px;
   background: rgb(75 63 159 / 0.24);
@@ -506,6 +560,24 @@ h3 {
   font-size: 0.86rem;
 }
 
+.pipeline-sequence {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 0.55rem;
+  background: #282b38;
+  color: #f3c969;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.86rem;
+}
+
+.pipeline-sequence .huge-icon {
+  color: var(--slate);
+}
+
 .safety {
   display: grid;
   grid-template-columns: 0.8fr 1.2fr;
@@ -528,17 +600,10 @@ h3 {
   border-bottom: 1px solid var(--line);
 }
 
-.safety__list li::before {
+.safety__icon {
   flex: 0 0 auto;
-  width: 1.4rem;
-  height: 1.4rem;
-  border-radius: 50%;
-  background: var(--forest);
-  color: white;
-  content: "✓";
-  font-weight: 900;
-  line-height: 1.4rem;
-  text-align: center;
+  margin-top: 0.1rem;
+  color: var(--forest);
 }
 
 .roadmap {
@@ -548,12 +613,24 @@ h3 {
 }
 
 .roadmap__item {
+  display: flex;
+  gap: 0.7rem;
   padding: 1.25rem;
   border-left: 3px solid var(--line);
 }
 
+.roadmap__icon {
+  flex: 0 0 auto;
+  margin-top: 0.08rem;
+  color: var(--slate);
+}
+
 .roadmap__item--current {
   border-color: var(--mandarin);
+}
+
+.roadmap__item--current .roadmap__icon {
+  color: var(--mandarin);
 }
 
 .roadmap__item strong {
@@ -606,6 +683,9 @@ h3 {
 }
 
 .catalog-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
   margin-top: auto;
   font-weight: 800;
 }
