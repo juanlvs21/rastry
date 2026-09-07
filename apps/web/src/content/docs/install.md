@@ -23,7 +23,8 @@ Extract the archive, place the rastry binary on PATH, and verify it:
 
 ## Install the Desktop app
 
-- Windows: run rastry-windows-x64-desktop-setup.exe.
+- Windows: extract rastry-windows-x64-desktop-setup.zip and run Rastry-Setup.exe.
+  Keep the extracted .installer folder beside Rastry-Setup.exe.
 - macOS: open rastry-macos-desktop.dmg and drag Rastry to Applications.
 - Linux: install rastry-linux-x64-desktop.deb with sudo apt install
   ./rastry-linux-x64-desktop.deb.

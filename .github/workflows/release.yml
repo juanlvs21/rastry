@@ -191,11 +191,11 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
-          $setup = Get-ChildItem -Path 'apps/desktop/build', 'apps/desktop/artifacts' -Filter 'Rastry-Setup.exe' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
-          if ($null -eq $setup) {
-            throw 'Electrobun did not produce Rastry-Setup.exe.'
+          $package = Get-ChildItem -Path 'apps/desktop/build', 'apps/desktop/artifacts' -Filter '*Rastry-Setup.zip' -File -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($null -eq $package) {
+            throw 'Electrobun did not produce the Windows installer ZIP with its .installer directory.'
           }
-          Copy-Item $setup.FullName 'release-assets/rastry-windows-x64-desktop-setup.exe' -Force
+          Copy-Item $package.FullName 'release-assets/rastry-windows-x64-desktop-setup.zip' -Force
 
       - name: Package macOS desktop installer
         if: runner.os == 'macOS'
@@ -281,7 +281,7 @@ jobs:
           - Windows CLI: rastry-windows-x64-cli.zip
           - macOS CLI: rastry-macos-cli.tar.gz
           - Linux CLI: rastry-linux-x64-cli.tar.gz
-          - Windows Desktop: rastry-windows-x64-desktop-setup.exe
+          - Windows Desktop: rastry-windows-x64-desktop-setup.zip (extract it and keep .installer beside Rastry-Setup.exe)
           - macOS Desktop: rastry-macos-desktop.dmg
           - Linux Desktop: rastry-linux-x64-desktop.deb
 
@@ -300,6 +300,7 @@ jobs:
 
           if gh release view "$TAG_NAME" --repo "$REPOSITORY" >/dev/null 2>&1; then
             gh release edit "$TAG_NAME" --repo "$REPOSITORY" --title "Rastry $version" --notes-file release-notes.md --draft=false --prerelease=false
+            gh release delete-asset "$TAG_NAME" rastry-windows-x64-desktop-setup.exe --repo "$REPOSITORY" --yes >/dev/null 2>&1 || true
             gh release upload "$TAG_NAME" --repo "$REPOSITORY" release-assets/* --clobber
           else
             gh release create "$TAG_NAME" --repo "$REPOSITORY" release-assets/* --verify-tag --title "Rastry $version" --notes-file release-notes.md

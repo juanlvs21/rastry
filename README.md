@@ -45,7 +45,8 @@ After installation, use the binary directly:
 
 ### Desktop
 
-- Windows: run rastry-windows-x64-desktop-setup.exe.
+- Windows: extract rastry-windows-x64-desktop-setup.zip and run Rastry-Setup.exe.
+  Keep the extracted .installer folder beside Rastry-Setup.exe.
 - macOS: open rastry-macos-desktop.dmg and move Rastry to Applications.
 - Linux: install rastry-linux-x64-desktop.deb with your package manager, for
   example sudo apt install ./rastry-linux-x64-desktop.deb.
