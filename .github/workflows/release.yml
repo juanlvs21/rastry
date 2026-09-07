@@ -291,15 +291,18 @@ jobs:
       - name: Create or update GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
           TAG_NAME: ${{ github.ref_name }}
         shell: bash
         run: |
           set -euo pipefail
           version="$(printf '%s' "$TAG_NAME" | sed 's/^v//')"
 
-          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
-            gh release edit "$TAG_NAME" --title "Rastry $version" --notes-file release-notes.md
-            gh release upload "$TAG_NAME" release-assets/* --clobber
+          if gh release view "$TAG_NAME" --repo "$REPOSITORY" >/dev/null 2>&1; then
+            gh release edit "$TAG_NAME" --repo "$REPOSITORY" --title "Rastry $version" --notes-file release-notes.md --draft=false --prerelease=false
+            gh release upload "$TAG_NAME" --repo "$REPOSITORY" release-assets/* --clobber
           else
-            gh release create "$TAG_NAME" release-assets/* --verify-tag --title "Rastry $version" --notes-file release-notes.md
+            gh release create "$TAG_NAME" --repo "$REPOSITORY" release-assets/* --verify-tag --title "Rastry $version" --notes-file release-notes.md
           fi
+
+          gh release view "$TAG_NAME" --repo "$REPOSITORY" --json tagName,isDraft,isPrerelease,assets --jq '.tagName + " draft=" + (.isDraft | tostring) + " prerelease=" + (.isPrerelease | tostring) + " assets=" + ((.assets | length) | tostring)'
