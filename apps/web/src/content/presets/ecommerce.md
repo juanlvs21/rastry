@@ -45,4 +45,4 @@ rastry run ./products --preset ecommerce --output ./optimized --execute
 }
 ```
 
-The canonical file is [examples/presets/ecommerce.json](https://github.com/juanldev/rastry/blob/main/examples/presets/ecommerce.json).
+The canonical file is <a href="https://github.com/juanlvs21/rastry/blob/main/examples/presets/ecommerce.json" target="_blank" rel="noopener noreferrer">examples/presets/ecommerce.json</a>.

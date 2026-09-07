@@ -37,7 +37,7 @@ const sourceUrl = repositoryUrl + "/blob/main/" + entry.data.sourcePath;
       <p class="article-shell__summary">{entry.data.description}</p>
       <div class="meta-row">
         <span class="tag">Pipeline v1</span>
-        <a class="tag tag--warm" href={sourceUrl}>View source ↗</a>
+        <a class="tag tag--warm" href={sourceUrl} target="_blank" rel="noopener noreferrer">View source ↗</a>
         <a class="tag tag--green" href={entry.data.docsPath}>Read the docs →</a>
       </div>
     </header>

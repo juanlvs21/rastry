@@ -1,7 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 
 export const siteUrl = "https://rastry.juanl.dev";
-export const repositoryUrl = "https://github.com/juanldev/rastry";
+export const repositoryUrl = "https://github.com/juanlvs21/rastry";
 
 type CatalogEntry =
   | CollectionEntry<"operations">

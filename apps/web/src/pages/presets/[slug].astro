@@ -36,7 +36,7 @@ const { Content } = await render(entry);
       <p class="article-shell__summary">{entry.data.description}</p>
       <div class="meta-row">
         <span class="tag tag--green">Output · {entry.data.outputFormat.toUpperCase()}</span>
-        <a class="tag tag--warm" href={repositoryUrl + "/blob/main/" + entry.data.sourcePath}>View JSON ↗</a>
+        <a class="tag tag--warm" href={repositoryUrl + "/blob/main/" + entry.data.sourcePath} target="_blank" rel="noopener noreferrer">View JSON ↗</a>
         <a class="tag" href={entry.data.docsPath}>Read the docs →</a>
       </div>
     </header>

@@ -23,4 +23,4 @@ resize accepts a positive width and/or height, plus contain, cover, or fill. cov
 
 trim accepts an optional alpha threshold from 0 to 255. padding requires at least one non-zero side and a transparent background or #RRGGBB color with optional alpha. convert accepts png, jpeg, or webp and an optional integer quality from 1 to 100. strip-metadata has no extra fields.
 
-The [pipeline schema](https://github.com/juanldev/rastry/blob/main/packages/contracts/schema/pipeline.schema.json) is the source of truth for serialized configuration. See [operations](/docs/operations/) for examples.
+The <a href="https://github.com/juanlvs21/rastry/blob/main/packages/contracts/schema/pipeline.schema.json" target="_blank" rel="noopener noreferrer">pipeline schema</a> is the source of truth for serialized configuration. See [operations](/docs/operations/) for examples.

@@ -42,3 +42,4 @@ live in their own dedicated areas when those sections are introduced.
 | [Change 0010: Official web and public documentation](./0010-official-web-and-public-documentation.md)                 | Implemented |
 | [Change 0011: Shared dark visual language](./0011-shared-dark-visual-language.md)                                     | Implemented |
 | [Change 0012: Documentation contrast and CLI demo animation](./0012-documentation-contrast-and-cli-animation.md)      | Implemented |
+| [Change 0013: Canonical repository links](./0013-canonical-repository-links.md)                                       | Implemented |

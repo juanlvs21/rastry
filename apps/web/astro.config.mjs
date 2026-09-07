@@ -19,10 +19,11 @@ export default defineConfig({
         src: "./src/assets/rastry-mark.svg",
         alt: "Rastry",
       },
-      social: [{ icon: "github", label: "GitHub", href: "https://github.com/juanldev/rastry" }],
+      social: [{ icon: "github", label: "GitHub", href: "https://github.com/juanlvs21/rastry" }],
       customCss: ["./src/styles/starlight.css"],
       components: {
         Head: "./src/components/Head.astro",
+        SocialIcons: "./src/components/SocialIcons.astro",
         ThemeProvider: "./src/components/ThemeProvider.astro",
         ThemeSelect: "./src/components/ThemeSelect.astro",
       },

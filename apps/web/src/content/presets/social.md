@@ -39,4 +39,4 @@ The preset's exact contract is:
 }
 ```
 
-The canonical file is [examples/presets/social.json](https://github.com/juanldev/rastry/blob/main/examples/presets/social.json).
+The canonical file is <a href="https://github.com/juanlvs21/rastry/blob/main/examples/presets/social.json" target="_blank" rel="noopener noreferrer">examples/presets/social.json</a>.

@@ -45,4 +45,4 @@ rastry run ./public --preset web --output ./optimized --execute
 }
 ```
 
-The canonical file is [examples/presets/web.json](https://github.com/juanldev/rastry/blob/main/examples/presets/web.json).
+The canonical file is <a href="https://github.com/juanlvs21/rastry/blob/main/examples/presets/web.json" target="_blank" rel="noopener noreferrer">examples/presets/web.json</a>.

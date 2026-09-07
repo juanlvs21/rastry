@@ -33,4 +33,4 @@ Before processing, the shared core rejects:
 - unsupported output formats; and
 - incompatible combinations such as an anchored crop without width and height.
 
-The canonical schema is [packages/contracts/schema/pipeline.schema.json](https://github.com/juanldev/rastry/blob/main/packages/contracts/schema/pipeline.schema.json). Read [configuration](/docs/configuration/) for field-level guidance.
+The canonical schema is <a href="https://github.com/juanlvs21/rastry/blob/main/packages/contracts/schema/pipeline.schema.json" target="_blank" rel="noopener noreferrer">packages/contracts/schema/pipeline.schema.json</a>. Read [configuration](/docs/configuration/) for field-level guidance.
