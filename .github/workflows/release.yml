@@ -32,33 +32,36 @@ jobs:
           bun-version: 1.4.0
 
       - name: Generate and commit release metadata
-        shell: bash
+        shell: pwsh
         run: |
-          set -euo pipefail
-          version="${TAG_NAME#v}"
-          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "The tag must use the vMAJOR.MINOR.PATCH format." >&2
-            exit 1
-          fi
+          $ErrorActionPreference = "Stop"
+          $version = $env:TAG_NAME.Substring(1)
+          if ($version -notmatch '^\d+\.\d+\.\d+$') {
+            throw "The tag must use the vMAJOR.MINOR.PATCH format."
+          }
 
           git fetch origin --tags
-          release_date="$(git show -s --format=%cs "$TAG_NAME")"
-          previous_tag="$(git tag --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | grep -Fvx "$TAG_NAME" | head -n 1 || true)"
-          if [[ -n "$previous_tag" ]]; then
-            bun run release:changelog -- "$version" --from "$previous_tag" --to "$TAG_NAME" --date "$release_date" --write
-          else
-            bun run release:changelog -- "$version" --to "$TAG_NAME" --date "$release_date" --write
-          fi
+          $releaseDate = (git log -1 --format=%cs $env:TAG_NAME).Trim()
+          $previousTag = @(git tag --sort=-version:refname | Where-Object {
+            $_ -match '^v\d+\.\d+\.\d+$' -and $_ -ne $env:TAG_NAME
+          } | Select-Object -First 1)
+
+          if ($previousTag.Count -gt 0) {
+            bun run release:changelog -- $version --from $previousTag[0] --to $env:TAG_NAME --date $releaseDate --write
+          } else {
+            bun run release:changelog -- $version --to $env:TAG_NAME --date $releaseDate --write
+          }
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add CHANGELOG.md package.json "apps/web/src/content/releases/$version.md"
-          if git diff --cached --quiet; then
-            echo "Release metadata is already current."
-          else
+          $stagedFiles = @(git diff --cached --name-only)
+          if ($stagedFiles.Count -eq 0) {
+            Write-Host "Release metadata is already current."
+          } else {
             git commit -m "chore(docs): prepare release $version"
-            git push origin "HEAD:$DEFAULT_BRANCH"
-          fi
+            git push origin "HEAD:$env:DEFAULT_BRANCH"
+          }
 
   checks:
     name: Verify release
@@ -261,7 +264,7 @@ jobs:
         run: |
           set -euo pipefail
           version="$(printf '%s' "$TAG_NAME" | sed 's/^v//')"
-          release_date="$(git show -s --format=%cs "$TAG_NAME")"
+          release_date="$(git log -1 --format=%cs "$TAG_NAME")"
           previous_tag="$(git tag --sort=-version:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | grep -Fvx "$TAG_NAME" | head -n 1 || true)"
           printf '# Rastry %s\n\n' "$version" > release-notes.md
           if [[ -n "$previous_tag" ]]; then
